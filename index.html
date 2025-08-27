@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="te">
 <head>
   <meta charset="UTF-8" />
@@ -17,7 +17,7 @@
     // Your web app's Firebase configuration
     // IMPORTANT: For production, manage these keys securely using environment variables or a backend service.
     const firebaseConfig = {
-   apiKey: "AIzaSyC7VAfNuteFemO91NxAJeuYEVeDsEvimfw",
+       apiKey: "AIzaSyC7VAfNuteFemO91NxAJeuYEVeDsEvimfw",
   authDomain: "manatractor-9b96b.firebaseapp.com",
   projectId: "manatractor-9b96b",
   storageBucket: "manatractor-9b96b.firebasestorage.app",
@@ -854,7 +854,7 @@
             .then((result) => {
                 const user = result.user;
                 showMessage(`Welcome, ${user.displayName}!`, 'success');
-                showAppView(user);
+                // showAppView is called by onAuthStateChanged
             }).catch((error) => {
                 const errorMessage = error.message;
                 showMessage(`Google Sign-In Error: ${errorMessage}`, 'error');
@@ -875,7 +875,7 @@
             .then((userCredential) => {
                 const user = userCredential.user;
                 showMessage('Account created successfully!', 'success');
-                showAppView(user);
+                // showAppView is called by onAuthStateChanged
             })
             .catch((error) => {
                 const errorMessage = error.message;
@@ -897,7 +897,7 @@
             .then((userCredential) => {
                 const user = userCredential.user;
                 showMessage(`Welcome back!`, 'success');
-                showAppView(user);
+                // showAppView is called by onAuthStateChanged
             })
             .catch((error) => {
                 const errorMessage = error.message;
@@ -915,10 +915,28 @@
         });
     }
     
-    // Check authentication state
+    // **MODIFIED**: New function to silently activate free trial
+    function initiateAutomaticFreeTrial() {
+        const expiryDate = new Date();
+        expiryDate.setDate(expiryDate.getDate() + 30); // Set expiry to 30 days
+        localStorage.setItem('freeTrialExpiryDate', expiryDate.toISOString());
+        localStorage.setItem('hasUsedFreeTrial', 'true');
+        console.log('Automatic free trial activated for new user.'); // For debugging
+    }
+
+    // **MODIFIED**: Check authentication state and activate trial for new users
     function checkAuthState() {
         window.onAuthStateChanged(window.auth, (user) => {
             if (user) {
+                // Check if this is a new user without any existing trial or subscription
+                const hasSubscription = localStorage.getItem('subscriptionExpiryDate');
+                const hasTrial = localStorage.getItem('freeTrialExpiryDate');
+                const hasUsedTrial = localStorage.getItem('hasUsedFreeTrial');
+
+                if (!hasSubscription && !hasTrial && !hasUsedTrial) {
+                    initiateAutomaticFreeTrial();
+                }
+
                 showAppView(user);
             } else {
                 showLoginView();
@@ -1341,7 +1359,7 @@
       },
       annual_price_info: {
         te: "(₹62.50/నెల)",
-        en: "(₹62.50/month)",
+        en: "(\$62.50/month)",
         hi: "(₹62.50/महीना)",
         ar: "(₹62.50/شهر)",
         ur: "(₹62.50/ماہ)"
@@ -2596,7 +2614,7 @@
         return;
       }
 
-      // NEW: Check subscription status before rendering logs
+      // Check subscription status before rendering logs
       const isExpired = isSubscriptionExpired();
       const actionButtonsDisabled = isExpired ? 'disabled' : '';
 
@@ -3178,7 +3196,7 @@
         window.location.href = `sms:${phoneNumber}?body=${encodedSmsBody}`;
     }
 
-    // NEW: Function to download log details as a .txt file
+    // **MODIFIED**: Function to download log details as a .txt file without restrictions
     function downloadLog(timestamp) {
         const allRecords = JSON.parse(localStorage.getItem('tractorRecords') || '[]');
         const record = allRecords.find(rec => rec.timestamp === timestamp);
