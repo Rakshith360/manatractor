@@ -17,7 +17,7 @@
     // Your web app's Firebase configuration
     // IMPORTANT: For production, manage these keys securely using environment variables or a backend service.
     const firebaseConfig = {
-        apiKey: "AIzaSyC7VAfNuteFemO91NxAJeuYEVeDsEvimfw",
+       apiKey: "AIzaSyC7VAfNuteFemO91NxAJeuYEVeDsEvimfw",
   authDomain: "manatractor-9b96b.firebaseapp.com",
   projectId: "manatractor-9b96b",
   storageBucket: "manatractor-9b96b.firebasestorage.app",
@@ -319,6 +319,11 @@
             Monthly Dashboard
         </button>
 
+        <!-- NEW: Diesel Monitoring Button -->
+        <button id="dieselBtnMenu" onclick="showDieselView(); toggleHamburgerMenu();" class="bg-orange-500 text-white rounded-lg p-3 font-semibold hover:bg-orange-600 w-full">
+            Diesel Monitoring
+        </button>
+
         <!-- NEW: Feedback Option with mailto link and onclick handler -->
         <a href="javascript:void(0);" id="feedbackLinkMenu" onclick="handleFeedbackClick('manatractor77@gmail.com');" class="bg-teal-500 text-white rounded-lg p-3 font-semibold hover:bg-teal-600 w-full text-center">
             Feedback
@@ -580,6 +585,92 @@
             <p id="footerTextMonthlyDashboard"></p>
         </footer>
       </div>
+
+      <!-- NEW: Diesel Monitoring Section -->
+      <div id="dieselSection" class="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 mx-auto relative hidden">
+        <h1 id="dieselHeading" class="text-2xl font-bold text-orange-700 mb-4 text-center">Diesel Monitoring</h1>
+        
+        <div class="mb-4">
+            <label id="dieselDateLabel" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+            <input id="dieselDate" type="date" class="w-full border border-gray-300 rounded-lg p-2" />
+        </div>
+
+        <div class="mb-4">
+            <label id="dieselTimeLabel" class="block text-sm font-medium text-gray-700 mb-1">Time</label>
+            <input id="dieselTime" type="time" class="w-full border border-gray-300 rounded-lg p-2" />
+        </div>
+
+        <div class="mb-4">
+            <label id="dieselPriceLabel" class="block text-sm font-medium text-gray-700 mb-1">Price per Litre (₹)</label>
+            <input id="dieselPrice" type="number" class="w-full border border-gray-300 rounded-lg p-2" placeholder="e.g., 95.50" />
+        </div>
+
+        <div class="mb-4">
+            <label id="dieselLitresLabel" class="block text-sm font-medium text-gray-700 mb-1">Number of Litres</label>
+            <input id="dieselLitres" type="number" class="w-full border border-gray-300 rounded-lg p-2" placeholder="e.g., 20" />
+        </div>
+        
+        <div class="bg-orange-100 p-4 rounded-xl text-center my-4">
+            <p id="dieselTotalCostLabel" class="text-lg text-orange-800 font-semibold">Total Cost</p>
+            <h2 id="dieselTotalCost" class="text-3xl font-extrabold text-orange-700">₹0</h2>
+        </div>
+
+        <div class="flex gap-4 mt-6">
+            <button id="dieselCalculateBtn" onclick="calculateDieselCost()" class="flex-1 bg-orange-600 text-white rounded-lg p-3 font-semibold hover:bg-orange-700">Calculate</button>
+            <button id="dieselSaveBtn" onclick="saveDieselData()" class="flex-1 bg-blue-600 text-white rounded-lg p-3 font-semibold hover:bg-blue-700">Save</button>
+        </div>
+
+        <div class="mt-4 text-center">
+            <button id="dieselHistoryBtn" onclick="showDieselHistoryView()" class="text-indigo-600 hover:underline">View Diesel History</button>
+             <span class="mx-2 text-gray-400">|</span>
+            <button id="dieselDashboardBtn" onclick="showDieselDashboardView()" class="text-indigo-600 hover:underline">View Diesel Dashboard</button>
+        </div>
+
+        <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
+            <p id="footerTextDiesel"></p>
+        </footer>
+      </div>
+
+      <!-- NEW: Diesel History Section -->
+        <div id="dieselHistorySection" class="bg-white w-full max-w-xl rounded-2xl shadow-xl p-6 relative hidden mx-auto">
+            <button onclick="showDieselView()" class="absolute top-4 right-4 bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+            </button>
+            <h1 id="dieselHistoryHeading" class="text-2xl font-bold text-orange-700 mb-4 text-center mt-4">Diesel History</h1>
+            <div id="dieselHistoryContainer" class="log-container space-y-4 max-h-[65vh] overflow-y-auto pr-2">
+                <!-- Diesel logs will be loaded here -->
+            </div>
+            <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
+                <p id="footerTextDieselHistory"></p>
+            </footer>
+        </div>
+
+        <!-- NEW: Diesel Dashboard Section -->
+        <div id="dieselDashboardSection" class="bg-gray-50 w-full max-w-2xl rounded-2xl shadow-xl p-6 relative hidden mx-auto">
+             <button onclick="showDieselView()" class="absolute top-4 right-4 bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+            </button>
+            <h1 id="dieselDashboardHeading" class="text-2xl font-bold text-gray-800 mb-2 text-center">Monthly Diesel Summary</h1>
+            <div class="mb-6 max-w-xs mx-auto">
+                <label for="dieselMonthSelector" id="dieselMonthSelectorLabel" class="block text-sm font-medium text-gray-700 mb-1 text-center">Select Month:</label>
+                <select id="dieselMonthSelector" onchange="renderDieselDashboard()" class="w-full bg-white border border-gray-300 rounded-lg p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <!-- Options will be populated by JS -->
+                </select>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gradient-to-br from-orange-400 to-red-500 text-white p-6 rounded-xl shadow-lg">
+                    <p id="dieselTotalSpentLabel" class="text-lg font-semibold opacity-80">Total Spent</p>
+                    <h2 id="dieselDashboardTotalSpent" class="text-4xl font-bold tracking-tight">₹0</h2>
+                </div>
+                <div class="bg-gradient-to-br from-yellow-400 to-amber-500 text-white p-6 rounded-xl shadow-lg">
+                    <p id="dieselTotalLitresLabel" class="text-lg font-semibold opacity-80">Total Litres</p>
+                    <h2 id="dieselDashboardTotalLitres" class="text-4xl font-bold tracking-tight">0 L</h2>
+                </div>
+            </div>
+            <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
+                <p id="footerTextDieselDashboard"></p>
+            </footer>
+        </div>
   </div>
 
 
@@ -806,7 +897,7 @@
       date_label: {
         te: "తేదీ",
         en: "Date",
-        hi: "تारीख",
+        hi: "तारीख",
         ar: "التاريخ",
         ur: "تاریخ"
       },
@@ -821,7 +912,7 @@
         te: "ముగింపు సమయం",
         en: "End Time",
         hi: "समाप्ति का समय",
-        ar: "وقت ख़त्म होने کا",
+        ar: "وقت ख़त्म ہونے کا",
         ur: "اختتام کا وقت"
       },
       rate_per_hour_label: {
@@ -1023,6 +1114,25 @@
       total_hours_label: { te: "మొత్తం గంటలు", en: "Total Hours", hi: "कुल घंटे", ar: "إجمالي الساعات", ur: "کل گھنٹے" },
       total_trips_label: { te: "మొత్తం ట్రిప్పులు", en: "Total Trips", hi: "कुल यात्राएं", ar: "إجمالي الرحلات", ur: "کل ٹرپس" },
       
+      // Diesel Monitoring
+        diesel_button: { te: "డీజిల్ పర్యవేక్షణ", en: "Diesel Monitoring", hi: "डीजल निगरानी", ar: "مراقبة الديزل", ur: "ڈیزل مانیٹرنگ" },
+        diesel_heading: { te: "డీజిల్ పర్యవేక్షణ", en: "Diesel Monitoring", hi: "डीजल निगरानी", ar: "مراقبة الديزل", ur: "ڈیزل مانیٹرنگ" },
+        diesel_date_label: { te: "తేదీ", en: "Date", hi: "तारीख", ar: "التاريخ", ur: "تاریخ" },
+        diesel_time_label: { te: "సమయం", en: "Time", hi: "समय", ar: "الوقت", ur: "وقت" },
+        diesel_price_label: { te: "లీటరుకు ధర (₹)", en: "Price per Litre (₹)", hi: "प्रति लीटर मूल्य (₹)", ar: "السعر لكل لتر (₹)", ur: "فی لیٹر قیمت (₹)" },
+        diesel_litres_label: { te: "లీటర్ల సంఖ్య", en: "Number of Litres", hi: "लीटर की संख्या", ar: "عدد اللترات", ur: "لیٹر کی تعداد" },
+        diesel_total_cost_label: { te: "మొత్తం ఖర్చు", en: "Total Cost", hi: "कुल लागत", ar: "التكلفة الإجمالية", ur: "کل لاگت" },
+        diesel_history_button: { te: "డీజిల్ చరిత్రను వీక్షించండి", en: "View Diesel History", hi: "डीजल इतिहास देखें", ar: "عرض تاريخ الديزل", ur: "ڈیزل کی تاریخ دیکھیں" },
+        diesel_dashboard_button: { te: "డీజిల్ డాష్‌బోర్డ్ వీక్షించండి", en: "View Diesel Dashboard", hi: "डीजल डैशबोर्ड देखें", ar: "عرض لوحة قيادة الديزل", ur: "ڈیزل ڈیش بورڈ دیکھیں" },
+        diesel_history_heading: { te: "డీజిల్ చరిత్ర", en: "Diesel History", hi: "डीजल इतिहास", ar: "تاريخ الديزل", ur: "ڈیزل کی تاریخ" },
+        diesel_dashboard_heading: { te: "నెలవారీ డీజిల్ సారాంశం", en: "Monthly Diesel Summary", hi: "मासिक डीजल सारांश", ar: "ملخص الديزل الشهري", ur: "ماہانہ ڈیزل کا خلاصہ" },
+        diesel_month_selector_label: { te: "నెల ఎంచుకోండి:", en: "Select Month:", hi: "महीना चुनें:", ar: "اختر الشهر:", ur: "مہینہ منتخب کریں۔" },
+        diesel_total_spent_label: { te: "మొత్తం ఖర్చు", en: "Total Spent", hi: "कुल खर्च", ar: "إجمالي الإنفاق", ur: "کل خرچ" },
+        diesel_total_litres_label: { te: "మొత్తం లీటర్లు", en: "Total Litres", hi: "कुल लीटर", ar: "إجمالي اللترات", ur: "کل لیٹر" },
+        no_diesel_logs_saved: { te: "డీజిల్ లాగ్‌లు ఇంకా సేవ్ చేయబడలేదు.", en: "No diesel logs saved yet.", hi: "अभी तक कोई डीजल लॉग सहेजा नहीं गया है।", ar: "لم يتم حفظ سجلات الديزل بعد.", ur: "ابھی تک کوئی ڈیزل لاگ محفوظ نہیں ہوا۔" },
+        diesel_data_saved_success: { te: "డీజిల్ డేటా విజయవంతంగా సేవ్ చేయబడింది!", en: "Diesel data saved successfully!", hi: "डीजल डेटा सफलतापूर्वक सहेजा गया!", ar: "تم حفظ بيانات الديزل بنجاح!", ur: "ڈیزل کا ڈیٹا کامیابی سے محفوظ ہو گیا۔" },
+        fill_diesel_details_error: { te: "దయచేసి ధర మరియు లీటర్లను నింపండి.", en: "Please fill price and litres.", hi: "कृपया मूल्य और लीटर भरें।", ar: "يرجى ملء السعر واللترات.", ur: "برائے مہربانی قیمت اور لیٹر بھریں۔" },
+
       // Message Box Messages
       name_updated_success: {
         te: "పేరు విజయవంతంగా నవీకరించబడింది!",
@@ -1037,6 +1147,13 @@
         hi: "कृपया पहले नाम और फोन नंबर दर्ज करें।",
         ar: "الرجاء إدخال الاسم ورقم الهاتف أولاً.",
         ur: "براہ کرم پہلے نام اور فون نمبر درج کریں۔"
+      },
+      phone_exists_error: {
+        te: "ఈ ఫోన్ నంబర్ ఇప్పటికే '{name}' పేరుతో ఉంది. దయచేసి వేరే నంబర్‌ను ఉపయోగించండి.",
+        en: "This phone number already exists with the name '{name}'. Please use a different number.",
+        hi: "यह फ़ोन नंबर पहले से ही '{name}' नाम से मौजूद है। कृपया एक अलग नंबर का उपयोग करें।",
+        ar: "رقم الهاتف هذا موجود بالفعل بالاسم '{name}'. الرجاء استخدام رقم مختلف.",
+        ur: "یہ فون نمبر پہلے سے ہی '{name}' کے نام سے موجود ہے۔ براہ کرم ایک مختلف نمبر استعمال کریں۔"
       },
       fill_time_rate_error: {
         te: "దయచేసి సమయం మరియు రేటు నింపండి.",
@@ -1289,6 +1406,7 @@
       document.getElementById('viewLogsBtnMenu').textContent = T('view_logs_button');
       document.getElementById('leaderboardBtnMenu').textContent = T('leaderboard_button');
       document.getElementById('monthlyDashboardBtnMenu').textContent = T('monthly_dashboard_button');
+      document.getElementById('dieselBtnMenu').textContent = T('diesel_button');
       document.getElementById('feedbackLinkMenu').textContent = T('feedback_option');
 
       document.getElementById('noteContentLabel').textContent = T('note_content_label');
@@ -1311,6 +1429,23 @@
       document.getElementById('totalHoursLabel').textContent = T('total_hours_label');
       document.getElementById('totalTripsLabel').textContent = T('total_trips_label');
 
+       // Diesel Monitoring Section
+      document.getElementById('dieselHeading').textContent = T('diesel_heading');
+      document.getElementById('dieselDateLabel').textContent = T('diesel_date_label');
+      document.getElementById('dieselTimeLabel').textContent = T('diesel_time_label');
+      document.getElementById('dieselPriceLabel').textContent = T('diesel_price_label');
+      document.getElementById('dieselLitresLabel').textContent = T('diesel_litres_label');
+      document.getElementById('dieselTotalCostLabel').textContent = T('diesel_total_cost_label');
+      document.getElementById('dieselCalculateBtn').textContent = T('calculate_button');
+      document.getElementById('dieselSaveBtn').textContent = T('save_button');
+      document.getElementById('dieselHistoryBtn').textContent = T('diesel_history_button');
+      document.getElementById('dieselDashboardBtn').textContent = T('diesel_dashboard_button');
+      document.getElementById('dieselHistoryHeading').textContent = T('diesel_history_heading');
+      document.getElementById('dieselDashboardHeading').textContent = T('diesel_dashboard_heading');
+      document.getElementById('dieselMonthSelectorLabel').textContent = T('diesel_month_selector_label');
+      document.getElementById('dieselTotalSpentLabel').textContent = T('diesel_total_spent_label');
+      document.getElementById('dieselTotalLitresLabel').textContent = T('diesel_total_litres_label');
+
       // Custom Confirm Modal
       document.getElementById('confirmModalCancelBtn').textContent = T('cancel_button');
       document.getElementById('confirmModalConfirmBtn').textContent = T('confirm_button');
@@ -1322,6 +1457,9 @@
       document.getElementById('footerTextLeaderboard').textContent = footerYearText;
       document.getElementById('footerTextCustomerLogs').textContent = footerYearText;
       document.getElementById('footerTextMonthlyDashboard').textContent = footerYearText;
+      document.getElementById('footerTextDiesel').textContent = footerYearText;
+      document.getElementById('footerTextDieselHistory').textContent = footerYearText;
+      document.getElementById('footerTextDieselDashboard').textContent = footerYearText;
 
 
       // Re-render dynamic content that relies on language
@@ -1334,6 +1472,13 @@
       if (document.getElementById('monthlyDashboardSection').classList.contains('hidden') === false) {
         populateMonthSelector();
         renderMonthlyDashboard();
+      }
+       if (document.getElementById('dieselHistorySection').classList.contains('hidden') === false) {
+        loadDieselLogs();
+      }
+       if (document.getElementById('dieselDashboardSection').classList.contains('hidden') === false) {
+        populateDieselMonthSelector();
+        renderDieselDashboard();
       }
       if (document.getElementById('customerLogsSection').classList.contains('hidden') === false) {
         // Re-render customer logs if the section is active
@@ -1348,7 +1493,7 @@
 
     // Function to show/hide sections
     function showSection(sectionId) {
-        const sections = ['dashboardSection', 'logsSection', 'leaderboardSection', 'customerLogsSection', 'monthlyDashboardSection'];
+        const sections = ['dashboardSection', 'logsSection', 'leaderboardSection', 'customerLogsSection', 'monthlyDashboardSection', 'dieselSection', 'dieselHistorySection', 'dieselDashboardSection'];
         sections.forEach(id => {
             const section = document.getElementById(id);
             if (section) {
@@ -1395,6 +1540,22 @@
     function showLeaderboardView() {
       showSection('leaderboardSection');
       generateLeaderboard();
+    }
+
+    function showDieselView() {
+        showSection('dieselSection');
+        setCurrentDieselDateTime();
+    }
+
+    function showDieselHistoryView() {
+        showSection('dieselHistorySection');
+        loadDieselLogs();
+    }
+
+    function showDieselDashboardView() {
+        showSection('dieselDashboardSection');
+        populateDieselMonthSelector();
+        renderDieselDashboard();
     }
 
     // --- NEW MONTHLY DASHBOARD FUNCTIONS ---
@@ -1565,8 +1726,8 @@
             const hours = Math.floor(durationMinutes / 60);
             const minutes = durationMinutes % 60;
             let timeParts = [];
-            if (hours > 0) timeParts.push(`${hours} hr${hours > 1 ? 's' : ''}`);
-            if (minutes > 0) timeParts.push(`${minutes} min${minutes > 1 ? 's' : ''}`);
+            if (hours > 0) parts.push(`${hours} hr${hours > 1 ? 's' : ''}`);
+            if (minutes > 0) parts.push(`${minutes} min${minutes > 1 ? 's' : ''}`);
             const durationString = timeParts.length > 0 ? timeParts.join(' ') : '0 mins';
 
             hourlyHours = durationMinutes / 60; 
@@ -1654,6 +1815,16 @@
         userPhoneNumberInput.classList.add('input-error');
         userPhoneNumberInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
+      }
+
+      // Check for duplicate phone number with a different name
+      const allRecords = JSON.parse(localStorage.getItem('tractorRecords') || '[]');
+      const existingRecord = allRecords.find(record => record.userPhoneNumber === currentUserPhoneNumber && record.userName.toLowerCase() !== currentUserName.toLowerCase());
+
+      if (existingRecord) {
+          showMessage(T('phone_exists_error').replace('{name}', existingRecord.userName), 'error');
+          userPhoneNumberInput.classList.add('input-error');
+          return;
       }
       
       const date = document.getElementById('workDate').value;
@@ -2126,7 +2297,151 @@
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
+// --- DIESEL FUNCTIONS ---
+    function setCurrentDieselDateTime() {
+        const now = new Date();
+        const date = now.toISOString().split('T')[0];
+        const time = now.toTimeString().split(' ')[0].substring(0, 5);
+        document.getElementById('dieselDate').value = date;
+        document.getElementById('dieselTime').value = time;
+    }
 
+    function calculateDieselCost() {
+        const price = parseFloat(document.getElementById('dieselPrice').value) || 0;
+        const litres = parseFloat(document.getElementById('dieselLitres').value) || 0;
+        const totalCost = price * litres;
+        document.getElementById('dieselTotalCost').textContent = `₹${formatNumberWithCommas(totalCost.toFixed(2))}`;
+    }
+
+    function saveDieselData() {
+        const date = document.getElementById('dieselDate').value;
+        const time = document.getElementById('dieselTime').value;
+        const price = parseFloat(document.getElementById('dieselPrice').value);
+        const litres = parseFloat(document.getElementById('dieselLitres').value);
+
+        if (!price || !litres || price <= 0 || litres <= 0) {
+            showMessage(T('fill_diesel_details_error'), 'error');
+            return;
+        }
+
+        const totalCost = price * litres;
+
+        const record = {
+            date,
+            time,
+            price,
+            litres,
+            totalCost,
+            timestamp: new Date().toISOString()
+        };
+
+        const existing = JSON.parse(localStorage.getItem('dieselRecords') || '[]');
+        existing.push(record);
+        localStorage.setItem('dieselRecords', JSON.stringify(existing));
+
+        showMessage(T('diesel_data_saved_success'), 'success');
+        document.getElementById('dieselPrice').value = '';
+        document.getElementById('dieselLitres').value = '';
+        document.getElementById('dieselTotalCost').textContent = '₹0';
+    }
+
+    function loadDieselLogs() {
+        const container = document.getElementById('dieselHistoryContainer');
+        container.innerHTML = '';
+        const allRecords = JSON.parse(localStorage.getItem('dieselRecords') || '[]');
+
+        if (allRecords.length === 0) {
+            container.innerHTML = `<p class="text-center text-gray-500">${T('no_diesel_logs_saved')}</p>`;
+            return;
+        }
+
+        allRecords.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        allRecords.forEach(record => {
+            const logCard = document.createElement('div');
+            logCard.className = 'bg-white border border-gray-200 rounded-xl p-4 shadow-sm';
+            const formattedTime = formatTime12Hour(record.time);
+
+            logCard.innerHTML = `
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="font-semibold text-lg text-orange-800">${record.date} at ${formattedTime}</h3>
+                    <span class="text-sm text-gray-500">${new Date(record.timestamp).toLocaleDateString(currentLang)}</span>
+                </div>
+                <p class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('diesel_price_label')}:</span> ₹${record.price.toFixed(2)}</p>
+                <p class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('diesel_litres_label')}:</span> ${record.litres} L</p>
+                <p class="text-xl font-bold text-orange-700 mt-2 border-t pt-2 border-gray-200">${T('diesel_total_cost_label')}: ₹${formatNumberWithCommas(record.totalCost.toFixed(2))}</p>
+            `;
+            container.appendChild(logCard);
+        });
+    }
+
+    function populateDieselMonthSelector() {
+        const allRecords = JSON.parse(localStorage.getItem('dieselRecords') || '[]');
+        const monthSelector = document.getElementById('dieselMonthSelector');
+        
+        const uniqueMonths = new Set();
+        allRecords.forEach(record => {
+            const recordDate = new Date(record.date);
+            if (isNaN(recordDate.getTime())) return;
+            uniqueMonths.add(`${recordDate.getFullYear()}-${recordDate.getMonth()}`);
+        });
+
+        const now = new Date();
+        uniqueMonths.add(`${now.getFullYear()}-${now.getMonth()}`);
+
+        const sortedMonths = Array.from(uniqueMonths).sort((a, b) => {
+            const [yearA, monthA] = a.split('-').map(Number);
+            const [yearB, monthB] = b.split('-').map(Number);
+            return yearB - yearA || monthB - monthA;
+        });
+
+        const selectedValue = monthSelector.value;
+        monthSelector.innerHTML = '';
+        sortedMonths.forEach(monthStr => {
+            const [year, month] = monthStr.split('-').map(Number);
+            const date = new Date(year, month);
+            const option = document.createElement('option');
+            option.value = monthStr;
+            option.textContent = date.toLocaleString(currentLang, { month: 'long', year: 'numeric' });
+            monthSelector.appendChild(option);
+        });
+
+        if (sortedMonths.includes(selectedValue)) {
+            monthSelector.value = selectedValue;
+        }
+    }
+
+    function renderDieselDashboard() {
+        const monthSelector = document.getElementById('dieselMonthSelector');
+        const selectedMonthStr = monthSelector.value;
+        
+        const totalSpentEl = document.getElementById('dieselDashboardTotalSpent');
+        const totalLitresEl = document.getElementById('dieselDashboardTotalLitres');
+
+        totalSpentEl.textContent = '₹0';
+        totalLitresEl.textContent = '0 L';
+
+        if (!selectedMonthStr) return;
+
+        const [selectedYear, selectedMonth] = selectedMonthStr.split('-').map(Number);
+        const allRecords = JSON.parse(localStorage.getItem('dieselRecords') || '[]');
+        
+        const filteredRecords = allRecords.filter(record => {
+            const recordDate = new Date(record.date);
+            return !isNaN(recordDate.getTime()) && recordDate.getFullYear() === selectedYear && recordDate.getMonth() === selectedMonth;
+        });
+
+        let totalSpent = 0;
+        let totalLitres = 0;
+
+        filteredRecords.forEach(record => {
+            totalSpent += record.totalCost;
+            totalLitres += record.litres;
+        });
+
+        totalSpentEl.textContent = `₹${formatNumberWithCommas(totalSpent.toFixed(2))}`;
+        totalLitresEl.textContent = `${totalLitres.toFixed(2)} L`;
+    }
 
     // Make functions globally accessible
     window.signInWithGoogle = signInWithGoogle;
@@ -2153,6 +2468,12 @@
     window.getContact = getContact;
     window.sendLogViaSms = sendLogViaSms;
     window.downloadLog = downloadLog;
+    window.showDieselView = showDieselView;
+    window.calculateDieselCost = calculateDieselCost;
+    window.saveDieselData = saveDieselData;
+    window.showDieselHistoryView = showDieselHistoryView;
+    window.showDieselDashboardView = showDieselDashboardView;
+    window.renderDieselDashboard = renderDieselDashboard;
 
 
     // Initial load:
@@ -2170,3 +2491,4 @@
   </script>
 </body>
 </html>
+
