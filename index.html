@@ -17,7 +17,7 @@
     // Your web app's Firebase configuration
     // IMPORTANT: For production, manage these keys securely using environment variables or a backend service.
     const firebaseConfig = {
-       apiKey: "AIzaSyC7VAfNuteFemO91NxAJeuYEVeDsEvimfw",
+        apiKey: "AIzaSyC7VAfNuteFemO91NxAJeuYEVeDsEvimfw",
   authDomain: "manatractor-9b96b.firebaseapp.com",
   projectId: "manatractor-9b96b",
   storageBucket: "manatractor-9b96b.firebasestorage.app",
@@ -182,11 +182,6 @@
         border-color: #ef4444 !important; /* red-500 */
         box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
     }
-    /* Styles for disabled UI elements */
-    button:disabled, input:disabled, textarea:disabled, select:disabled {
-        cursor: not-allowed;
-        background-color: #f3f4f6; /* gray-100 */
-    }
   </style>
 </head>
 <body class="bg-green-50 min-h-screen flex items-center justify-center p-4">
@@ -332,11 +327,6 @@
         <button id="logoutBtn" onclick="logout()" class="bg-red-500 text-white rounded-lg p-3 font-semibold hover:bg-red-600 w-full mt-auto">
             Logout
         </button>
-
-        <!-- Renew Subscription Link could also be moved here if desired -->
-        <div class="text-center mt-auto pt-4 border-t border-gray-200">
-          <a href="#" onclick="showSubscriptionView(); toggleHamburgerMenu();" id="renewSubscriptionLinkMenu" class="text-blue-500 underline text-sm"></a>
-        </div>
       </div>
 
 
@@ -451,13 +441,6 @@
               <button id="saveBtn" onclick="saveCombinedData()" class="flex-1 bg-blue-600 text-white rounded-lg p-3 font-semibold hover:bg-blue-700"></button>
             </div>
         </div> <!-- End of dashboardContent -->
-        
-        <!-- NEW: Overlay for expired subscription -->
-        <div id="expiredOverlay" class="hidden absolute inset-0 bg-transparent z-10"></div>
-
-        <div class="text-sm text-gray-500 text-center mt-4">
-          <span id="subscriptionValidityText"></span> <span class="font-bold" id="subscriptionValidityDisplay"></span>
-        </div>
 
         <!-- Footer -->
         <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
@@ -597,175 +580,6 @@
             <p id="footerTextMonthlyDashboard"></p>
         </footer>
       </div>
-
-      <!-- Subscription Plan Section (initially hidden) -->
-      <div id="subscriptionPlanSection" class="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 relative hidden mx-auto">
-        <!-- Back Button -->
-        <button onclick="showDashboardView()" class="absolute top-4 left-4 bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-        </button>
-
-        <h1 id="subscriptionPlansHeading" class="text-2xl font-bold text-green-700 mb-4 text-center mt-4"></h1>
-        <p id="subscriptionPlansTagline" class="text-gray-500 mb-6 text-center"></p>
-
-        <div class="space-y-4">
-          <!-- Free Trial Plan -->
-          <div id="freeTrialPlanCard" class="bg-purple-50 border border-purple-200 rounded-xl p-4 text-center shadow-sm">
-            <h3 id="freeTrialHeading" class="text-xl font-bold text-purple-800 mb-2"></h3>
-            <p id="freeTrialDuration" class="text-2xl font-extrabold text-purple-600 mb-2"></p>
-            <p id="freeTrialTagline" class="text-gray-600 mb-3"></p>
-            <button id="activateFreeTrialBtn" onclick="activateFreeTrial()" class="bg-purple-600 text-white rounded-lg p-2 font-semibold w-full hover:bg-purple-700">
-            </button>
-          </div>
-
-          <!-- Plan 1: Monthly Plan -->
-          <div class="bg-green-50 border border-green-200 rounded-xl p-4 text-center shadow-sm">
-            <h3 id="monthlyPlanHeading" class="text-xl font-bold text-green-800 mb-2"></h3>
-            <p id="monthlyPlanPrice" class="text-2xl font-extrabold text-green-600 mb-2"></p>
-            <p id="monthlyPlanTagline" class="text-gray-600 mb-3"></p>
-            <button id="buyMonthlyBtn" onclick="showPaymentOptions('monthly_plan', 150, 1)" class="bg-green-600 text-white rounded-lg p-2 font-semibold w-full hover:bg-green-700">
-            </button>
-          </div>
-
-          <!-- Plan 2: 6 Months Plan -->
-          <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center shadow-sm">
-            <h3 id="sixMonthPlanHeading" class="text-xl font-bold text-blue-800 mb-2"></h3>
-            <p id="sixMonthPlanPrice" class="text-2xl font-extrabold text-blue-600 mb-2"></p>
-            <p id="sixMonthPlanTagline" class="text-gray-600 mb-3"></p>
-            <button id="buySixMonthBtn" onclick="showPaymentOptions('six_month_plan', 400, 6)" class="bg-blue-600 text-white rounded-lg p-2 font-semibold w-full hover:bg-blue-700">
-            </button>
-          </div>
-
-          <!-- Plan 3: Annual Plan -->
-          <div class="bg-purple-50 border border-purple-200 rounded-xl p-4 text-center shadow-sm">
-            <h3 id="annualPlanHeading" class="text-xl font-bold text-purple-800 mb-2"></h3>
-            <p id="annualPlanPrice" class="text-2xl font-extrabold text-purple-600 mb-2"></p>
-            <p id="annualPlanTagline" class="text-gray-600 mb-3"></p>
-            <button id="buyAnnualBtn" onclick="showPaymentOptions('annual_plan', 750, 12)" class="bg-purple-600 text-white rounded-lg p-2 font-semibold w-full hover:bg-purple-700">
-            </button>
-          </div>
-        </div>
-         <!-- UPDATE: Added Footer to Subscription Section -->
-        <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
-            <p id="footerTextSubscription"></p>
-        </footer>
-      </div>
-
-      <!-- New: Payment Options Section (initially hidden) -->
-      <div id="paymentOptionsSection" class="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 relative hidden mx-auto">
-        <!-- Back Button -->
-        <button onclick="showSubscriptionView()" class="absolute top-4 left-4 bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-        </button>
-
-        <h1 id="paymentOptionsHeading" class="text-2xl font-bold text-green-700 mb-4 text-center mt-4"></h1>
-        <p class="text-gray-500 mb-6 text-center">
-            <span id="selectedPlanInfoPrefix"></span>
-            <span id="selectedPlanName" class="font-semibold text-green-700"></span> -
-            <span id="selectedPlanPrice" class="font-bold text-green-700"></span>
-        </p>
-
-        <div class="space-y-4">
-          <button onclick="showPaymentDetails('upi')" class="flex items-center justify-center gap-3 bg-gray-100 border border-gray-300 rounded-xl p-4 w-full text-lg font-semibold text-gray-800 hover:bg-gray-200">
-            <img src="https://placehold.co/30x30/2A0064/FFFFFF?text=PhonePe" alt="PhonePe Icon" class="w-8 h-8 rounded-full">
-            <span id="upiOptionText"></span>
-          </button>
-
-          <button onclick="showPaymentDetails('card')" class="flex items-center justify-center gap-3 bg-gray-100 border border-gray-300 rounded-xl p-4 w-full text-lg font-semibold text-gray-800 hover:bg-gray-200">
-            <img src="https://placehold.co/30x30/000000/FFFFFF?text=Card" alt="Card Icon" class="w-8 h-8 rounded-full">
-            <span id="cardOptionText"></span>
-          </button>
-
-          <button onclick="showPaymentDetails('netbanking')" class="flex items-center justify-center gap-3 bg-gray-100 border border-gray-300 rounded-xl p-4 w-full text-lg font-semibold text-gray-800 hover:bg-gray-200">
-            <img src="https://placehold.co/30x30/4CAF50/FFFFFF?text=Bank" alt="Bank Icon" class="w-8 h-8 rounded-full">
-            <span id="netbankingOptionText"></span>
-          </button>
-
-          <button onclick="showPaymentDetails('wallet')" class="flex items-center justify-center gap-3 bg-gray-100 border border-gray-300 rounded-xl p-4 w-full text-lg font-semibold text-gray-800 hover:bg-gray-200">
-            <img src="https://placehold.co/30x30/FF9800/FFFFFF?text=Wallet" alt="Wallet Icon" class="w-8 h-8 rounded-full">
-            <span id="walletOptionText"></span>
-          </button>
-        </div>
-
-        <!-- Payment Details Sections (Initially Hidden) -->
-        <div id="upiDetails" class="mt-6 p-4 border border-gray-200 rounded-xl bg-gray-50 hidden">
-          <h3 id="upiDetailsHeading" class="text-lg font-semibold text-gray-700 mb-3"></h3>
-          <div class="mb-4">
-            <label id="upiIdLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
-            <input type="text" id="upiId" class="w-full border border-gray-300 rounded-lg p-2" />
-          </div>
-          <div class="mb-4">
-            <label id="upiNameLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
-            <input type="text" id="upiName" class="w-full border border-gray-300 rounded-lg p-2" />
-          </div>
-          <button onclick="processPayment('UPI')" class="bg-green-600 text-white rounded-lg p-2 font-semibold w-full hover:bg-green-700">
-            <span id="upiPayBtnText"></span> ₹<span id="upiPayAmount">0</span>
-          </button>
-        </div>
-
-        <div id="cardDetails" class="mt-6 p-4 border border-gray-200 rounded-xl bg-gray-50 hidden">
-          <h3 id="cardDetailsHeading" class="text-lg font-semibold text-gray-700 mb-3"></h3>
-          <div class="mb-4">
-            <label id="cardNumberLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
-            <input type="text" id="cardNumber" class="w-full border border-gray-300 rounded-lg p-2" maxlength="19" />
-          </div>
-          <div class="mb-4">
-            <label id="cardNameLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
-            <input type="text" id="cardName" class="w-full border border-gray-300 rounded-lg p-2" />
-          </div>
-          <div class="flex gap-4 mb-4">
-            <div class="flex-1">
-              <label id="cardExpiryLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
-              <input type="text" id="cardExpiry" class="w-full border border-gray-300 rounded-lg p-2" maxlength="5" />
-            </div>
-            <div class="flex-1">
-              <label id="cardCvvLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
-              <input type="text" id="cardCvv" class="w-full border border-gray-300 rounded-lg p-2" maxlength="4" />
-            </div>
-          </div>
-          <button onclick="processPayment('Card')" class="bg-green-600 text-white rounded-lg p-2 font-semibold w-full hover:bg-green-700">
-            <span id="cardPayBtnText"></span> ₹<span id="cardPayAmount">0</span>
-          </button>
-        </div>
-
-        <div id="netbankingDetails" class="mt-6 p-4 border border-gray-200 rounded-xl bg-gray-50 hidden">
-          <h3 id="netbankingDetailsHeading" class="text-lg font-semibold text-gray-700 mb-3"></h3>
-          <div class="mb-4">
-            <label id="bankSelectLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
-            <select id="bankSelect" class="w-full border border-gray-300 rounded-lg p-2">
-              <!-- Options dynamically translated -->
-            </select>
-          </div>
-          <div class="mb-4">
-            <label id="netbankingIdLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
-            <input type="text" id="netbankingId" class="w-full border border-gray-300 rounded-lg p-2" />
-          </div>
-          <button onclick="processPayment('Net Banking')" class="bg-green-600 text-white rounded-lg p-2 font-semibold w-full hover:bg-green-700">
-            <span id="netbankingPayBtnText"></span> ₹<span id="netbankingPayAmount">0</span>
-          </button>
-        </div>
-
-        <div id="walletDetails" class="mt-6 p-4 border border-gray-200 rounded-xl bg-gray-50 hidden">
-          <h3 id="walletDetailsHeading" class="text-lg font-semibold text-gray-700 mb-3"></h3>
-          <div class="mb-4">
-            <label id="walletSelectLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
-            <select id="walletSelect" class="w-full border border-gray-300 rounded-lg p-2">
-              <!-- Options dynamically translated -->
-            </select>
-          </div>
-          <div class="mb-4">
-            <label id="walletPhoneNumberLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
-            <input type="tel" id="walletPhoneNumber" class="w-full border border-gray-300 rounded-lg p-2" />
-          </div>
-          <button onclick="processPayment('Wallet')" class="bg-green-600 text-white rounded-lg p-2 font-semibold w-full hover:bg-green-700">
-            <span id="walletPayBtnText"></span> ₹<span id="walletPayAmount">0</span>
-          </button>
-        </div>
-      </div>
   </div>
 
 
@@ -843,8 +657,6 @@
         }
         
         showDashboardView();
-        // Check subscription status and lock UI if needed
-        checkSubscriptionAndSetUIState(); 
     }
 
     // Google Sign-In
@@ -915,28 +727,10 @@
         });
     }
     
-    // **MODIFIED**: New function to silently activate free trial
-    function initiateAutomaticFreeTrial() {
-        const expiryDate = new Date();
-        expiryDate.setDate(expiryDate.getDate() + 30); // Set expiry to 30 days
-        localStorage.setItem('freeTrialExpiryDate', expiryDate.toISOString());
-        localStorage.setItem('hasUsedFreeTrial', 'true');
-        console.log('Automatic free trial activated for new user.'); // For debugging
-    }
-
-    // **MODIFIED**: Check authentication state and activate trial for new users
+    // Check authentication state
     function checkAuthState() {
         window.onAuthStateChanged(window.auth, (user) => {
             if (user) {
-                // Check if this is a new user without any existing trial or subscription
-                const hasSubscription = localStorage.getItem('subscriptionExpiryDate');
-                const hasTrial = localStorage.getItem('freeTrialExpiryDate');
-                const hasUsedTrial = localStorage.getItem('hasUsedFreeTrial');
-
-                if (!hasSubscription && !hasTrial && !hasUsedTrial) {
-                    initiateAutomaticFreeTrial();
-                }
-
                 showAppView(user);
             } else {
                 showLoginView();
@@ -949,8 +743,6 @@
     // Global variables
     let currentUserName = '';
     let currentUserPhoneNumber = '';
-    let selectedPlanAmount = 0;
-    let selectedPlanDuration = 0; // in months
     let currentLang = 'te'; // Default language
 
     // Global variables for holding calculated values before saving
@@ -1102,48 +894,6 @@
         ar: "المبلغ الإجمالي",
         ur: "کل رقم"
       },
-      subscription_status_label: {
-        te: "సభ్యత్వ స్థితి:",
-        en: "Subscription Status:",
-        hi: "सदस्यता स्थिति:",
-        ar: "حالة الاشتراك:",
-        ur: "سبسکرپشن کی حیثیت:"
-      },
-      subscription_valid_till_text: {
-        te: "సభ్యత్వం దీని వరకు చెల్లుబాటు అవుతుంది:",
-        en: "Subscription valid till:",
-        hi: "सदस्यता यहाँ तक मान्य है:",
-        ar: "الاشتراك صالح حتى:",
-        ur: "سبسکرپشن اس وقت تک درست ہے:"
-      },
-      free_trial_status_text: {
-        te: "ఉచిత ట్రయల్",
-        en: "Free Trial",
-        hi: "मुफ्त ट्रायल",
-        ar: "تجربة مجانية",
-        ur: "مفت ٹرائل"
-      },
-      subscription_expired_text: {
-        te: "గడువు ముగిసింది",
-        en: "Expired",
-        hi: "समाप्त हो गया है",
-        ar: "منتهي الصلاحية",
-        ur: "میعاد ختم"
-      },
-      no_subscription_text: {
-        te: "సభ్యత్వం లేదు",
-        en: "No Subscription",
-        hi: "कोई सदस्यता नहीं",
-        ar: "لا يوجد اشتراك",
-        ur: "کوئی سبسکرپشن نہیں"
-      },
-      renew_subscription_link: {
-        te: "సభ్యత్వాన్ని పునరుద్ధరించు",
-        en: "Renew Subscription",
-        hi: "सदस्यता नवीनीकृत करें",
-        ar: "تجديد الاشتراك",
-        ur: "سبسکرپشن کی تجدید کریں"
-      },
       view_logs_button: {
         te: "సేవ్ చేసిన వివరాలను చూడు",
         en: "View Saved Logs",
@@ -1263,7 +1013,7 @@
       leaderboard_tagline: { te: "ఎక్కువగా సేవ్ చేయబడిన కస్టమర్‌లు", en: "Most Frequently Saved Customers", hi: "सबसे ज़्यादा सहेजे गए ग्राहक", ar: "العملاء الأكثر حفظًا", ur: "سب سے زیادہ محفوظ کردہ صارفین" },
       no_leaderboard_data: { te: "లీడర్‌బోర్డ్ కోసం డేటా లేదు.", en: "No data for the leaderboard yet.", hi: "लीडरबोर्ड के लिए अभी कोई डेटा नहीं है।", ar: "لا توجد بيانات للوحة الصدارة بعد.", ur: "لیڈر بورڈ کے لئے ابھی تک کوئی ڈیٹا نہیں ہے۔" },
       saves: { te: "సేవ్‌లు", en: "Saves", hi: "सहेजें", ar: "الحفظ", ur: "محفوظ کریں" },
-      customer_logs_heading: { te: "{name} యొక్క లాగ్‌లు", en: "Logs for {name}", hi: "{name} के लॉग", ar: "سجلات {name}", ur: "{name} کے لاگز" },
+      customer_logs_heading: { te: "{name} యొక్క లాగ్‌లు", en: "Logs for {name}", hi: "{name} के लॉग", ar: "سجلات {name}", ur: "{name} के لاگز" },
       // NEW: Monthly Dashboard Translations
       monthly_dashboard_button: { te: "నెలవారీ డాష్‌బోర్డ్", en: "Monthly Dashboard", hi: "मासिक डैशबोर्ड", ar: "لوحة القيادة الشهرية", ur: "ماہانہ ڈیش بورڈ" },
       monthly_dashboard_heading: { te: "నెలవారీ సారాంశం", en: "Monthly Summary", hi: "मासिक सारांश", ar: "ملخص شهري", ur: "ماہانہ خلاصہ" },
@@ -1272,406 +1022,8 @@
       total_amount_label: { te: "మొత్తం ఆదాయం", en: "Total Earnings", hi: "कुल कमाई", ar: "إجمالي الأرباح", ur: "کل کمائی" },
       total_hours_label: { te: "మొత్తం గంటలు", en: "Total Hours", hi: "कुल घंटे", ar: "إجمالي الساعات", ur: "کل گھنٹے" },
       total_trips_label: { te: "మొత్తం ట్రిప్పులు", en: "Total Trips", hi: "कुल यात्राएं", ar: "إجمالي الرحلات", ur: "کل ٹرپس" },
-      // Subscription Plan Section
-      subscription_plans_heading: {
-        te: "మా సభ్యత్వ ప్లాన్‌లు",
-        en: "Our Subscription Plans",
-        hi: "हमारी सदस्यता योजनाएँ",
-        ar: "خطط اشتراكنا",
-        ur: "हमारी सब्सक्रपशन प्लान्स"
-      },
-      subscription_plans_tagline: {
-        te: "మీరు మీ అవసరాలకు సరిపోయే ప్లాన్‌ను ఎంచుకోవచ్చు.",
-        en: "You can choose a plan that suits your needs.",
-        hi: "आप अपनी ज़रूरतों के अनुरूप योजना चुन सकते हैं।",
-        ar: "يمكنك اختيار الخطة التي تناسب احتياجاتك.",
-        ur: "آپ اپنی ضروریات کے مطابق پلان کا انتخاب کر سکتے ہیں۔"
-      },
-      free_trial_heading: {
-        te: "ఉచిత ట్రయల్",
-        en: "Free Trial",
-        hi: "मुफ्त ट्रायल",
-        ar: "تجربة مجانية",
-        ur: "مفت ٹرائل"
-      },
-      free_trial_duration: {
-        te: "1 నెల ఉచితం",
-        en: "1 Month Free",
-        hi: "1 महीना मुफ़्त",
-        ar: "شهر واحد مجاني",
-        ur: "1 مہینہ مفت"
-      },
-      free_trial_tagline: {
-        te: "ప్రయాస లేకుండా ట్రాక్ చేయండి",
-        en: "Track effortlessly",
-        hi: "प्रयास के बिना ट्रैक करें",
-        ar: "تتبع بسهولة",
-        ur: "آسانی سے ट्रैक کریں"
-      },
-      activate_now_button: {
-        te: "ఇప్పుడు ప్రారంభించండి!",
-        en: "Activate Now!",
-        hi: "अभी सक्रिय करें!",
-        ar: "تفعيل الآن!",
-        ur: "ابھی فعال کریں!"
-      },
-      monthly_plan_heading: {
-        te: "నెలవారీ ప్లాన్",
-        en: "Monthly Plan",
-        hi: "मासिक योजना",
-        ar: "الخطة الشهرية",
-        ur: "ماہانہ پلان"
-      },
-      buy_now_button: {
-        te: "ఇప్పుడు కొనుగోలు చేయండి",
-        en: "Buy Now",
-        hi: "अभी खरीदें",
-        ar: "اشتري الآن",
-        ur: "ابھی خریدیں"
-      },
-      six_month_plan_heading: {
-        te: "6 నెలల ప్లాన్",
-        en: "6 Months Plan",
-        hi: "6 महीने की योजना",
-        ar: "خطة 6 أشهر",
-        ur: "6 ماہ کا پلان"
-      },
-      six_month_price_info: {
-        te: "(₹66.66/నెల)",
-        en: "(₹66.66/month)",
-        hi: "(₹66.66/महीना)",
-        ar: "(₹66.66/شهر)",
-        ur: "(₹66.66/ماہ)"
-      },
-      six_month_tagline: {
-        te: "అన్ని ప్రాథమిక ఫీచర్‌లతో",
-        en: "With all basic features",
-        hi: "सभी बुनियादी सुविधाओं के साथ",
-        ar: "مع جميع الميزات الأساسية",
-        ur: "تمام بنیادی خصوصیات کے ساتھ"
-      },
-      annual_plan_heading: {
-        te: "వార్షిక ప్లాన్",
-        en: "Annual Plan",
-        hi: "वार्षिक योजना",
-        ar: "الخطة السنوية",
-        ur: "سالانہ پلان"
-      },
-      annual_price_info: {
-        te: "(₹62.50/నెల)",
-        en: "(\$62.50/month)",
-        hi: "(₹62.50/महीना)",
-        ar: "(₹62.50/شهر)",
-        ur: "(₹62.50/ماہ)"
-      },
-      annual_tagline: {
-        te: "అపరిమిత వివరాలు & పూర్తి మద్దతు",
-        en: "Unlimited details & full support",
-        hi: "असीमित विवरण और पूर्ण समर्थन",
-        ar: "تفاصيل غير محدودة ودعم كامل",
-        ur: "لامحدود تفصیلات اور مکمل سپورٹ"
-      },
-      // Payment Options Section
-      payment_options_heading: {
-        te: "చెల్లింపు ఎంపికలు",
-        en: "Payment Options",
-        hi: "भुगतान विकल्प",
-        ar: "خيارات الدفع",
-        ur: "ادائیگی کے اختیارات"
-      },
-      selected_plan_info: {
-        te: "మీరు ఎంచుకున్న ప్లాన్:",
-        en: "You selected plan:",
-        hi: "आपने योजना चुनी है:",
-        ar: "الخطة التي اخترتها:",
-        ur: "آپ نے پلان منتخب کیا ہے:"
-      },
-      upi_option: {
-        te: "ఫోన్‌పే / UPI",
-        en: "PhonePe / UPI",
-        hi: "फ़ोनपे / UPI",
-        ar: "فون بي / UPI",
-        ur: "فون پے / یو پی آئی"
-      },
-      card_option: {
-        te: "డెబిట్ / క్రెడిట్ కార్డులు",
-        en: "Debit / Credit Cards",
-        hi: "డెబిట్ / క్రెడిట్ कार्ड",
-        ar: "بطاقات الخصم / الائتمان",
-        ur: "ڈیبٹ / کریڈٹ کارڈز"
-      },
-      netbanking_option: {
-        te: "నెట్ బ్యాంకింగ్",
-        en: "Net Banking",
-        hi: "नेट బ్యాంకింగ్",
-        ar: "الخدمات المصرفية عبر الإنترنت",
-        ur: "نیٹ بینکنگ"
-      },
-      wallet_option: {
-        te: "వాలెట్లు (Google Pay, Paytm)",
-        en: "Wallets (Google Pay, Paytm)",
-        hi: "वॉలెట్స్ (गूగుల్ పే, पेटीएम)",
-        ar: "المحافظ (جوجل باي، بي تي إం)",
-        ur: "والٹس (گوگل پے، پے ٹی ایم)"
-      },
-      // UPI Details
-      upi_details_heading: {
-        te: "UPI / ఫోన్‌పే వివరాలు",
-        en: "UPI / PhonePe Details",
-        hi: "UPI / फ़ोनपे विवरण",
-        ar: "تفاصيل UPI / فون بي",
-        ur: "یو پی آئی / فون پے کی تفصیلات"
-      },
-      upi_id_label: {
-        te: "UPI ID",
-        en: "UPI ID",
-        hi: "UPI ID",
-        ar: "معرف UPI",
-        ur: "یو پی آئی آئی ڈی"
-      },
-      upi_id_placeholder: {
-        te: "మీ UPI IDని నమోదు చేయండి (ఉదా: example@upi)",
-        en: "Enter your UPI ID (e.g., example@upi)",
-        hi: "अपनी UPI ID दर्ज करें (उदा: example@upi)",
-        ar: "أدخل معرف UPI الخاص بك (مثال: example@upi)",
-        ur: "اپنی یو پی آئی آئی ڈی درج کریں (مثال: example@upi)"
-      },
-      upi_name_label: {
-        te: "ఖాతాదారుని పేరు",
-        en: "Account Holder Name",
-        hi: "खाताधारक का नाम",
-        ar: "اسم صاحب الحساب",
-        ur: "کھاتہ دار کا نام"
-      },
-      upi_name_placeholder: {
-        te: "ఖాతాదారుని పేరును నమోదు చేయండి",
-        en: "Enter account holder's name",
-        hi: "खाताधारक का नाम दर्ज करें",
-        ar: "أدخل اسم صاحب الحساب",
-        ur: "کھاتہ دار کا نام درج کریں"
-      },
-      pay_button: {
-        te: "చెల్లించండి",
-        en: "Pay",
-        hi: "भुगतान करें",
-        ar: "ادفع",
-        ur: "ادائیگی کریں"
-      },
-      // Card Details
-      card_details_heading: {
-        te: "కార్డ్ వివరాలు",
-        en: "Card Details",
-        hi: "कार्ड विवरण",
-        ar: "تفاصيل البطاقة",
-        ur: "کارڈ کی تفصیلات"
-      },
-      card_number_label: {
-        te: "కార్డ్ నంబర్",
-        en: "Card Number",
-        hi: "कार्ड नंबर",
-        ar: "رقم البطاقة",
-        ur: "کارڈ نمبر"
-      },
-      card_number_placeholder: {
-        te: "xxxx xxxx xxxx xxxx",
-        en: "xxxx xxxx xxxx xxxx",
-        hi: "xxxx xxxx xxxx xxxx",
-        ar: "xxxx xxxx xxxx xxxx",
-        ur: "xxxx xxxx xxxx xxxx"
-      },
-      card_name_label: {
-        te: "కార్డుదారుని పేరు",
-        en: "Card Holder Name",
-        hi: "कार्डधारक का नाम",
-        ar: "اسم حامل البطاقة",
-        ur: "کارڈ ہولڈر کا نام"
-      },
-      card_name_placeholder: {
-        te: "కార్డుదారుని పేరును నమోదు చేయండి",
-        en: "Enter card holder's name",
-        hi: "कार्डधारक का नाम दर्ज करें",
-        ar: "أدخل اسم حامل البطاقة",
-        ur: "کارڈ ہولڈر کا نام درج کریں"
-      },
-      card_expiry_label: {
-        te: "గడువు తేదీ",
-        en: "Expiry Date",
-        hi: "समाप्ति तिथि",
-        ar: "تاريخ الانتهاء",
-        ur: "میعاد ختم ہونے کی تاریخ"
-      },
-      card_expiry_placeholder: {
-        te: "MM/YY",
-        en: "MM/YY",
-        hi: "MM/YY",
-        ar: "شهر/سنة",
-        ur: "MM/YY"
-      },
-      card_cvv_label: {
-        te: "CVV",
-        en: "CVV",
-        hi: "CVV",
-        ar: "رمز CVV",
-        ur: "سی وی وی"
-      },
-      card_cvv_placeholder: {
-        te: "xxx",
-        en: "xxx",
-        hi: "xxx",
-        ar: "xxx",
-        ur: "xxx"
-      },
-      // Net Banking Details
-      netbanking_details_heading: {
-        te: "నెట్ బ్యాంకింగ్ వివరాలు",
-        en: "Net Banking Details",
-        hi: "नेट बैंकिंग विवरण",
-        ar: "تفاصيل الخدمات المصرفية عبر الإنترنت",
-        ur: "نیٹ بینکنگ کی تفصیلات"
-      },
-      bank_select_label: {
-        te: "బ్యాంకును ఎంచుకోండి",
-        en: "Select Bank",
-        hi: "बैंक चुनें",
-        ar: "حدد البنك",
-        ur: "بینک منتخب کریں"
-      },
-      select_bank_option: {
-        te: "బ్యాంకును ఎంచుకోండి",
-        en: "Select Bank",
-        hi: "बैंक चुनें",
-        ar: "حدد البنك",
-        ur: "بینک منتخب کریں"
-      },
-      sbi_bank: {
-        te: "స్టేట్ బ్యాంక్ ఆఫ్ ఇండియా",
-        en: "State Bank of India",
-        hi: "भारतीय स्टेट बैंक",
-        ar: "بنك الدولة الهندي",
-        ur: "اسٹیٹ بینک آف انڈیا"
-      },
-      hdfc_bank: {
-        te: "HDFC బ్యాంక్",
-        en: "HDFC Bank",
-        hi: "एचडीएफसी बैंक",
-        ar: "بنك HDFC",
-        ur: "ایچ ڈی ایف سی بینک"
-      },
-      icici_bank: {
-        te: "ICICI బ్యాంక్",
-        en: "ICICI Bank",
-        hi: "आईसीआईसीआई बैंक",
-        ar: "بنك ICICI",
-        ur: "آئی سی آئی سی آئی بینک"
-      },
-      axis_bank: {
-        te: "యాక్సిస్ బ్యాంక్",
-        en: "Axis Bank",
-        hi: "एक्सिस बैंक",
-        ar: "بنك أكسيس",
-        ur: "ایکسس بینک"
-      },
-      other_banks: {
-        te: "ఇతర బ్యాంకులు",
-        en: "Other Banks",
-        hi: "अन्य बैंक",
-        ar: "بنوك أخرى",
-        ur: "دیگر بینک"
-      },
-      netbanking_id_label: {
-        te: "యూజర్ ID / ఖాతా సంఖ్య",
-        en: "User ID / Account Number",
-        hi: "यूज़र आईडी / खाता संख्या",
-        ar: "معرف المستخدم / رقم الحساب",
-        ur: "یوزر آئی ڈی / اکاؤنٹ نمبر"
-      },
-      netbanking_id_placeholder: {
-        te: "మీ యూజర్ ID లేదా ఖాతా సంఖ్యను నమోదు చేయండి",
-        en: "Enter your User ID or Account Number",
-        hi: "अपना यूज़र आईडी या खाता संख्या दर्ज करें",
-        ar: "أدخل معرف المستخدم أو رقم الحساب الخاص بك",
-        ur: "اپنی یوزر آئی ڈی یا اکاؤنٹ نمبر درج کریں"
-      },
-      // Wallet Details
-      wallet_details_heading: {
-        te: "వాలెట్ వివరాలు",
-        en: "Wallet Details",
-        hi: "वॉलेट विवरण",
-        ar: "تفاصيل المحفظة",
-        ur: "والٹ کی تفصیلات"
-      },
-      wallet_select_label: {
-        te: "వాలెట్‌ను ఎంచుకోండి",
-        en: "Select Wallet",
-        hi: "वॉलेट चुनें",
-        ar: "حدد المحفظة",
-        ur: "والٹ منتخب کریں"
-      },
-      select_wallet_option: {
-        te: "వాలెట్‌ను ఎంచుకోండి",
-        en: "Select Wallet",
-        hi: "वॉलेट चुनें",
-        ar: "حدد المحفظة",
-        ur: "والٹ منتخب کریں"
-      },
-      googlepay_wallet: {
-        te: "Google Pay",
-        en: "Google Pay",
-        hi: "गूగుల్ पे",
-        ar: "جوجل باي",
-        ur: "گوگل پے"
-      },
-      paytm_wallet: {
-        te: "Paytm",
-        en: "Paytm",
-        hi: "पेटीएम",
-        ar: "بي تي إం",
-        ur: "پے ٹی ایم"
-      },
-      phonepe_wallet_option: { 
-        te: "PhonePe",
-        en: "PhonePe",
-        hi: "फ़ोनपे",
-        ar: "فون بي",
-        ur: "فون پے"
-      },
-      amazonpay_wallet: {
-        te: "Amazon Pay",
-        en: "Amazon Pay",
-        hi: "أमेज़ॅन पे",
-        ar: "أمازون باي",
-        ur: "ایمیزون پے"
-      },
-      wallet_phone_label: {
-        te: "వాలెట్ ఫోన్ నంబర్",
-        en: "Wallet Phone Number",
-        hi: "वॉलेट फ़ोन नंबर",
-        ar: "رقم هاتف المحفظة",
-        ur: "فون نمبر"
-      },
-      wallet_phone_placeholder: {
-        te: "మీ రిజిస్టర్డ్ ఫోన్ నంబర్‌ను నమోదు చేయండి",
-        en: "Enter your registered phone number",
-        hi: "अपना पंजीकृत फ़ोन नंबर दर्ज करें",
-        ar: "أدخل رقم هاتفك المسجل",
-        ur: "اپنی رجسٹرڈ فون نمبر درج کریں"
-      },
-      wallet_phone_invalid: {
-        te: "దయచేసి చెల్లుబాటు అయ్యే ఫోన్ నంబర్‌ను నమోదు చేయండి (కనీసం 10 అంకెలు).",
-        en: "Please enter a valid phone number (at least 10 digits).",
-        hi: "कृपया एक मान्य फ़ोन नंबर दर्ज करें (कम से कम 10 अंक)।",
-        ar: "يرجى إدخال رقم هاتف صالح (10 أرقام على الأقل).",
-        ur: "براہ کرم ایک درست فون نمبر درج کریں (کم از کم 10 ہندسے)۔"
-      },
-
+      
       // Message Box Messages
-      please_buy_plan_message: {
-        te: "దయచేసి ప్లాన్ కొనండి.",
-        en: "Please buy the plan.",
-        hi: "कृपया योजना खरीदें।",
-        ar: "الرجاء شراء الخطة.",
-        ur: "براہ کرم پلان خریدیں۔"
-      },
       name_updated_success: {
         te: "పేరు విజయవంతంగా నవీకరించబడింది!",
         en: "Name updated successfully!",
@@ -1742,83 +1094,6 @@
         ar: "تم حفظ البيانات بنجاح!",
         ur: "ڈیٹا کامیابی سے محفوظ کیا گیا!"
       },
-      already_on_free_trial: {
-        te: "మీరు ఇప్పటికే ఉచిత ట్రయల్‌లో ఉన్నారు!",
-        en: "You are already on a free trial!",
-        hi: "आप पहले से ही एक मुफ्त ट्रायल पर हैं!",
-        ar: "أنت بالفعل في فترة تجريبية مجانية!",
-        ur: "آپ پہلے ہی مفت ٹرائل پر ہیں!"
-      },
-      free_trial_activated: {
-        te: "మీ ఉచిత ట్రయల్ ప్రారంభించబడింది! ఇది 1 నెల వరకు చెల్లుతుంది.",
-        en: "Your free trial has been activated! It is valid for 1 month.",
-        hi: "आपका मुफ्त ट्रायल सक्रिय हो गया है! यह 1 महीने के लिए मान्य है।",
-        ar: "تم تفعيل الفترة التجريبية المجانية الخاصة بك! إنها صالحة لمدة شهر واحد.",
-        ur: "آپ کا مفت ٹرائل فعال کر دیا گیا ہے! यह 1 مہینے کے لیے درست ہے۔"
-      },
-      payment_successful: {
-        te: "ద్వారా ₹{amount} చెల్లింపు విజయవంతమైంది! మీ సభ్యత్వం సక్రియం చేయబడింది.",
-        en: "Payment of ₹{amount} via {method} successful! Your subscription is activated.",
-        hi: "₹{amount} का भुगतान {method} के माध्यम से सफलतापूर्वक हो गया! आपकी सदस्यता सक्रिय हो गई है।",
-        ar: "تم دفع {amount} ر.س عبر {method} بنجاح! تم تفعيل اشتراكك.",
-        ur: "₹{amount} کی ادائیگی {method} کے ذریعے کامیاب ہو گئی! آپ کی سبسکرپشن فعال ہو گئی ہے۔"
-      },
-      upi_details_missing: {
-        te: "దయచేసి మీ UPI ID మరియు పేరును నమోదు చేయండి.",
-        en: "Please enter your UPI ID and name.",
-        hi: "कृपया अपनी UPI ID और नाम दर्ज करें।",
-        ar: "الرجاء إدخال معرف UPI واسمك.",
-        ur: "براہ کرم اپنی یو پی آئی آئی ڈی اور نام درج کریں۔"
-      },
-      upi_id_invalid: {
-        te: "దయచేసి సరైన UPI IDని నమోదు చేయండి (ఉదా: example@bank).",
-        en: "Please enter a valid UPI ID (e.g., example@bank).",
-        hi: "कृपया एक मान्य UPI ID दर्ज करें (उदा: example@bank)।",
-        ar: "الرجاء إدخال معرف UPI صالح (مثال: example@bank).",
-        ur: "براہ کرم ایک درست یو پی آئی آئی ڈی درج کریں (مثال: example@bank)۔"
-      },
-      card_details_missing: {
-        te: "దయచేసి అన్ని కార్డ్ వివరాలను నమోదు చేయండి.",
-        en: "Please enter all card details.",
-        hi: "कृपया सभी कार्ड विवरण दर्ज करें।",
-        ar: "الرجاء إدخال جميع تفاصيل البطاقة.",
-        ur: "براہ کرم کارڈ کی تمام تفصیلات درج کریں۔"
-      },
-      card_number_invalid: {
-        te: "దయచేసి 16-అంకెల చెల్లుబాటు అయ్యే కార్డ్ నంబర్‌ను నమోదు చేయండి.",
-        en: "Please enter a valid 16-digit card number.",
-        hi: "कृपया 16-अंकीय मान्य कार्ड नंबर दर्ज करें।",
-        ar: "الرجاء إدخال رقم بطاقة صالح مكون من 16 رقمًا.",
-        ur: "براہ کرم 16 ہندسوں کا درست کارڈ نمبر درج کریں۔"
-      },
-      card_expiry_invalid: {
-        te: "గడువు తేదీని MM/YY ఆకృతిలో నమోదు చేయండి.",
-        en: "Please enter expiry date in MM/YY format.",
-        hi: "कृपया समाप्ति तिथि को MM/YY प्रारूप में दर्ज करें।",
-        ar: "الرجاء إدخال تاريخ انتهاء الصلاحية بتنسيق MM/YY.",
-        ur: "براہ کرم میعاد ختم ہونے کی تاریخ MM/YY فارمیٹ میں درج کریں۔"
-      },
-      card_cvv_invalid: {
-        te: "దయచేసి 3 లేదా 4-అంకెల చెల్లుబాటు అయ్యే CVVని నమోదు చేయండి.",
-        en: "Please enter a valid 3 or 4-digit CVV.",
-        hi: "कृपया 3 లేదా 4-अंकीय मान्य CVV दर्ज करें।",
-        ar: "الرجاء إدخال رمز CVV صالح مكون من 3 أو 4 أرقا.",
-        ur: "براہ کرم 3 یا 4 ہندسوں کا درست سی وی وی درج کریں۔"
-      },
-      netbanking_details_missing: {
-        te: "దయచేసి మీ బ్యాంకును మరియు యూజర్ ID/ఖాతా సంఖ్యను ఎంచుకోండి/నమోదు చేయండి.",
-        en: "Please select your bank and enter User ID/Account Number.",
-        hi: "कृपया अपना बैंक चुनें और यूज़र आईडी/खाता संख्या दर्ज करें।",
-        ar: "الرجاء تحديد البنك الخاص بك وإدخال معرف المستخدم/رقم الحساب.",
-        ur: "براہ کرم اپنا بینک منتخب کریں اور یوزر آئی डी/اکاؤنٹ نمبر درج کریں۔"
-      },
-      wallet_details_missing: {
-        te: "దయచేసి మీ వాలెట్‌ను ఎంచుకోండి మరియు ఫోన్ నంబర్‌ను నమోదు చేయండి.",
-        en: "Please select your wallet and enter phone number.",
-        hi: "कृपया अपना वॉलेट चुनें और फ़ोन नंबर दर्ज करें।",
-        ar: "الرجاء تحديد المحفظة وإدخال رقم الهاتف.",
-        ur: "براہ کرమ్ اپنا والٹ منتخب کریں اور فون نمبر درج کریں۔"
-      },
       back_button: {
         te: "వెనుకకు",
         en: "Back",
@@ -1839,55 +1114,6 @@
         hi: "पुष्टि करें",
         ar: "تأكيد",
         ur: "تصدیق کریں"
-      },
-      months: {
-        te: "నెలలు",
-        en: "Months",
-        hi: "महीने",
-        ar: "أشهر",
-        ur: "مہینے"
-      },
-      year: {
-        te: "సంవత్సరం",
-        en: "Year",
-        hi: "साल",
-        ar: "سنة",
-        ur: "سال"
-      },
-      monthly_plan: {
-        te: "నెలవారీ ప్లాన్",
-        en: "Monthly Plan",
-        hi: "मासिक योजना",
-        ar: "الخطة الشهرية",
-        ur: "ماہانہ پلان"
-      },
-      six_month_plan: {
-        te: "6 నెలల ప్లాన్",
-        en: "6 Months Plan",
-        hi: "6 महीने की योजना",
-        ar: "خطة 6 أشهر",
-        ur: "6 ماہ کا پلان"
-      },
-      annual_plan: {
-        te: "వార్షిక ప్లాన్",
-        en: "Annual Plan",
-        hi: "वार्षिक योजना",
-        ar: "الخطة السنوية",
-        ur: "سالانہ پلان"
-      },
-      monthly_plan_price: { 
-        te: "₹150 / నెల",
-        en: "₹150 / month",
-        hi: "₹150 / महीना",
-        ar: "₹150 / شهر",
-        ur: "₹150 / ماہ"
-      },
-      monthly_plan_tagline: { 
-        te: "అన్ని ప్రాథమిక ఫీచర్‌లతో",
-        en: "With all basic features",
-        hi: "सभी बुनियादी सुविधाओं के साथ",
-        ar: "مع جميع الميزات الأساسية",
-        ur: "تمام بنیادی خصوصیات کے ساتھ"
       },
       note_details_missing: { 
         te: "దయచేసి నోట్ కంటెంట్ నింపండి.",
@@ -2063,7 +1289,6 @@
       document.getElementById('viewLogsBtnMenu').textContent = T('view_logs_button');
       document.getElementById('leaderboardBtnMenu').textContent = T('leaderboard_button');
       document.getElementById('monthlyDashboardBtnMenu').textContent = T('monthly_dashboard_button');
-      document.getElementById('renewSubscriptionLinkMenu').textContent = T('renew_subscription_link');
       document.getElementById('feedbackLinkMenu').textContent = T('feedback_option');
 
       document.getElementById('noteContentLabel').textContent = T('note_content_label');
@@ -2086,86 +1311,6 @@
       document.getElementById('totalHoursLabel').textContent = T('total_hours_label');
       document.getElementById('totalTripsLabel').textContent = T('total_trips_label');
 
-      // Subscription Plans Section
-      document.getElementById('subscriptionPlansHeading').textContent = T('subscription_plans_heading');
-      document.getElementById('subscriptionPlansTagline').textContent = T('subscription_plans_tagline');
-      document.getElementById('freeTrialHeading').textContent = T('free_trial_heading');
-      document.getElementById('freeTrialDuration').textContent = T('free_trial_duration');
-      document.getElementById('freeTrialTagline').textContent = T('free_trial_tagline');
-      document.getElementById('activateFreeTrialBtn').textContent = T('activate_now_button');
-      
-      document.getElementById('monthlyPlanHeading').textContent = T('monthly_plan_heading');
-      document.getElementById('monthlyPlanPrice').textContent = T('monthly_plan_price');
-      document.getElementById('monthlyPlanTagline').textContent = T('monthly_plan_tagline');
-      document.getElementById('buyMonthlyBtn').textContent = T('buy_now_button');
-
-      document.getElementById('sixMonthPlanHeading').textContent = T('six_month_plan_heading');
-      document.getElementById('sixMonthPlanPrice').innerHTML = `₹400 / 6 ${T('months')} <span class="text-sm text-gray-500">${T('six_month_price_info')}</span>`;
-      document.getElementById('sixMonthPlanTagline').textContent = T('six_month_tagline');
-      document.getElementById('buySixMonthBtn').textContent = T('buy_now_button');
-      document.getElementById('annualPlanHeading').textContent = T('annual_plan_heading');
-      document.getElementById('annualPlanPrice').innerHTML = `₹750 / ${T('year')} <span class="text-sm text-gray-500">${T('annual_price_info')}</span>`;
-      document.getElementById('annualPlanTagline').textContent = T('annual_tagline');
-      document.getElementById('buyAnnualBtn').textContent = T('buy_now_button');
-
-      // Payment Options Section
-      document.getElementById('paymentOptionsHeading').textContent = T('payment_options_heading');
-      document.getElementById('upiOptionText').textContent = T('upi_option');
-      document.getElementById('cardOptionText').textContent = T('card_option');
-      document.getElementById('netbankingOptionText').textContent = T('netbanking_option');
-      document.getElementById('walletOptionText').textContent = T('wallet_option');
-
-      // UPI Details
-      document.getElementById('upiDetailsHeading').textContent = T('upi_details_heading');
-      document.getElementById('upiIdLabel').textContent = T('upi_id_label');
-      document.getElementById('upiId').placeholder = T('upi_id_placeholder');
-      document.getElementById('upiNameLabel').textContent = T('upi_name_label');
-      document.getElementById('upiName').placeholder = T('upi_name_placeholder');
-      document.getElementById('upiPayBtnText').textContent = T('pay_button');
-
-      // Card Details
-      document.getElementById('cardDetailsHeading').textContent = T('card_details_heading');
-      document.getElementById('cardNumberLabel').textContent = T('card_number_label');
-      document.getElementById('cardNumber').placeholder = T('card_number_placeholder');
-      document.getElementById('cardNameLabel').textContent = T('card_name_label');
-      document.getElementById('cardName').placeholder = T('card_name_placeholder');
-      document.getElementById('cardExpiryLabel').textContent = T('card_expiry_label');
-      document.getElementById('cardExpiry').placeholder = T('card_expiry_placeholder');
-      document.getElementById('cardCvvLabel').textContent = T('card_cvv_label');
-      document.getElementById('cardCvv').placeholder = 'xxx';
-      document.getElementById('cardPayBtnText').textContent = T('pay_button');
-
-      // Net Banking Details
-      document.getElementById('netbankingDetailsHeading').textContent = T('netbanking_details_heading');
-      document.getElementById('bankSelectLabel').textContent = T('bank_select_label');
-      const bankSelect = document.getElementById('bankSelect');
-      bankSelect.innerHTML = `
-        <option value="">${T('select_bank_option')}</option>
-        <option value="sbi">${T('sbi_bank')}</option>
-        <option value="hdfc">${T('hdfc_bank')}</option>
-        <option value="icici">${T('icici_bank')}</option>
-        <option value="axis">${T('axis_bank')}</option>
-        <option value="other">${T('other_banks')}</option>
-      `;
-      document.getElementById('netbankingIdLabel').textContent = T('netbanking_id_label');
-      document.getElementById('netbankingId').placeholder = T('netbanking_id_placeholder');
-      document.getElementById('netbankingPayBtnText').textContent = T('pay_button');
-
-      // Wallet Details
-      document.getElementById('walletDetailsHeading').textContent = T('wallet_details_heading');
-      document.getElementById('walletSelectLabel').textContent = T('wallet_select_label');
-      const walletSelect = document.getElementById('walletSelect');
-      walletSelect.innerHTML = `
-        <option value="">${T('select_wallet_option')}</option>
-        <option value="googlepay">${T('googlepay_wallet')}</option>
-        <option value="paytm">${T('paytm_wallet')}</option>
-        <option value="phonepe">${T('phonepe_wallet_option')}</option>
-        <option value="amazonpay">${T('amazonpay_wallet')}</option>
-      `;
-      document.getElementById('walletPhoneNumberLabel').textContent = T('wallet_phone_label');
-      document.getElementById('walletPhoneNumber').placeholder = T('wallet_phone_placeholder');
-      document.getElementById('walletPayBtnText').textContent = T('pay_button');
-
       // Custom Confirm Modal
       document.getElementById('confirmModalCancelBtn').textContent = T('cancel_button');
       document.getElementById('confirmModalConfirmBtn').textContent = T('confirm_button');
@@ -2174,14 +1319,12 @@
       const footerYearText = T('footer_text').replace('{year}', new Date().getFullYear());
       document.getElementById('footerText').textContent = footerYearText;
       document.getElementById('footerTextLogs').textContent = footerYearText;
-      document.getElementById('footerTextSubscription').textContent = footerYearText;
       document.getElementById('footerTextLeaderboard').textContent = footerYearText;
       document.getElementById('footerTextCustomerLogs').textContent = footerYearText;
       document.getElementById('footerTextMonthlyDashboard').textContent = footerYearText;
 
 
       // Re-render dynamic content that relies on language
-      updateSubscriptionDisplay();
       if (document.getElementById('logsSection').classList.contains('hidden') === false) {
         loadLogs();
       }
@@ -2201,17 +1344,11 @@
             showCustomerLogs(customerName, customerPhone);
         }
       }
-      if (document.getElementById('paymentOptionsSection').classList.contains('hidden') === false) {
-        const selectedPlanNameElement = document.getElementById('selectedPlanName');
-        const planKey = selectedPlanNameElement.getAttribute('data-plan-key');
-        document.getElementById('selectedPlanInfoPrefix').textContent = T('selected_plan_info');
-        document.getElementById('selectedPlanName').textContent = T(planKey);
-      }
     }
 
     // Function to show/hide sections
     function showSection(sectionId) {
-        const sections = ['dashboardSection', 'logsSection', 'subscriptionPlanSection', 'paymentOptionsSection', 'leaderboardSection', 'customerLogsSection', 'monthlyDashboardSection'];
+        const sections = ['dashboardSection', 'logsSection', 'leaderboardSection', 'customerLogsSection', 'monthlyDashboardSection'];
         sections.forEach(id => {
             const section = document.getElementById(id);
             if (section) {
@@ -2224,19 +1361,8 @@
         });
     }
 
-    // Function to hide all specific payment detail sections
-    function hideAllPaymentDetails() {
-        document.getElementById('upiDetails').classList.add('hidden');
-        document.getElementById('cardDetails').classList.add('hidden');
-        document.getElementById('netbankingDetails').classList.add('hidden');
-        document.getElementById('walletDetails').classList.add('hidden');
-    }
-
     function showDashboardView() {
       showSection('dashboardSection');
-      updateSubscriptionDisplay();
-      checkSubscriptionAndSetUIState();
-      hideAllPaymentDetails();
       
       // UPDATE: Clear name and phone number fields
       document.getElementById('userName').value = '';
@@ -2264,19 +1390,11 @@
     function showLogsView() {
       showSection('logsSection');
       loadLogs();
-      hideAllPaymentDetails();
-    }
-
-    function showSubscriptionView() {
-        showSection('subscriptionPlanSection');
-        updateFreeTrialCardVisibility();
-        hideAllPaymentDetails();
     }
 
     function showLeaderboardView() {
       showSection('leaderboardSection');
       generateLeaderboard();
-      hideAllPaymentDetails();
     }
 
     // --- NEW MONTHLY DASHBOARD FUNCTIONS ---
@@ -2284,7 +1402,6 @@
         showSection('monthlyDashboardSection');
         populateMonthSelector();
         renderMonthlyDashboard();
-        hideAllPaymentDetails();
     }
 
     function populateMonthSelector() {
@@ -2613,12 +1730,7 @@
         logsContainer.innerHTML = `<p class="text-center text-gray-500">${T('no_logs_saved')}</p>`;
         return;
       }
-
-      // Check subscription status before rendering logs
-      const isExpired = isSubscriptionExpired();
-      const actionButtonsDisabled = isExpired ? 'disabled' : '';
-
-
+      
       recordsToDisplay.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
       recordsToDisplay.forEach(record => {
@@ -2682,10 +1794,10 @@
             <button onclick="updatePaymentStatus('${record.timestamp}', 'due')" class="px-3 py-1 text-sm font-semibold rounded-md bg-red-100 text-red-700 hover:bg-red-200">${T('due_status')}</button>
             <button onclick="updatePaymentStatus('${record.timestamp}', 'advance')" class="px-3 py-1 text-sm font-semibold rounded-md bg-pink-100 text-pink-700 hover:bg-pink-200">${T('advance_status')}</button>
             <!-- Call, SMS, and Download buttons -->
-            <button onclick="callLoggedNumber('${record.userPhoneNumber}')" class="p-2 text-sm font-semibold rounded-full bg-purple-100 text-purple-700 hover:bg-purple-200 flex items-center justify-center" ${actionButtonsDisabled} title="${T('call_button')}">
+            <button onclick="callLoggedNumber('${record.userPhoneNumber}')" class="p-2 text-sm font-semibold rounded-full bg-purple-100 text-purple-700 hover:bg-purple-200 flex items-center justify-center" title="${T('call_button')}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.103 6.103l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
             </button>
-            <button onclick="sendLogViaSms('${record.timestamp}')" class="p-2 text-sm font-semibold rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200 flex items-center justify-center" ${actionButtonsDisabled} title="${T('sms_button')}">
+            <button onclick="sendLogViaSms('${record.timestamp}')" class="p-2 text-sm font-semibold rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200 flex items-center justify-center" title="${T('sms_button')}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2h-8zM9 4a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zM9 8a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zM9 12a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" /><path d="M2 6a2 2 0 012-2h3v12H4a2 2 0 01-2-2V6z" /></svg>
             </button>
             <button onclick="downloadLog('${record.timestamp}')" class="p-2 text-sm font-semibold rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 flex items-center justify-center" title="${T('download_button')}">
@@ -2848,211 +1960,6 @@
         });
     }
 
-
-    function activateFreeTrial() {
-        const freeTrialExpiry = localStorage.getItem('freeTrialExpiryDate');
-        const now = new Date();
-
-        if (freeTrialExpiry && new Date(freeTrialExpiry) > now) {
-            showMessage(T('already_on_free_trial'), 'error');
-            return;
-        }
-
-        const expiryDate = new Date();
-        expiryDate.setDate(expiryDate.getDate() + 30); // Set expiry to 30 days (1 month) from now
-
-        localStorage.setItem('freeTrialExpiryDate', expiryDate.toISOString());
-        localStorage.setItem('hasUsedFreeTrial', 'true');
-
-        showMessage(T('free_trial_activated'), 'success');
-        updateSubscriptionDisplay();
-        updateFreeTrialCardVisibility();
-        checkSubscriptionAndSetUIState(); // NEW: Check UI state after activation
-        showDashboardView();
-    }
-
-    function updateFreeTrialCardVisibility() {
-        const freeTrialCard = document.getElementById('freeTrialPlanCard');
-        const hasUsedFreeTrial = localStorage.getItem('hasUsedFreeTrial');
-        if (hasUsedFreeTrial === 'true') {
-            freeTrialCard.classList.add('hidden');
-        } else {
-            freeTrialCard.classList.remove('hidden');
-        }
-    }
-
-    function updateSubscriptionDisplay() {
-        const subscriptionValidityDisplay = document.getElementById('subscriptionValidityDisplay');
-        const validityTextSpan = document.getElementById('subscriptionValidityText');
-        const subscriptionExpiry = localStorage.getItem('subscriptionExpiryDate');
-        const freeTrialExpiry = localStorage.getItem('freeTrialExpiryDate');
-        const now = new Date();
-
-        subscriptionValidityDisplay.classList.remove('text-red-600', 'text-green-600', 'text-gray-600');
-
-        if (subscriptionExpiry && new Date(subscriptionExpiry) > now) {
-            const expiryDate = new Date(subscriptionExpiry);
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            const formattedDate = expiryDate.toLocaleDateString(currentLang, options);
-            validityTextSpan.textContent = T('subscription_valid_till_text');
-            subscriptionValidityDisplay.textContent = formattedDate;
-            subscriptionValidityDisplay.classList.add('text-green-600');
-        } else if (freeTrialExpiry && new Date(freeTrialExpiry) > now) {
-            validityTextSpan.textContent = '';
-            subscriptionValidityDisplay.textContent = T('free_trial_status_text');
-            subscriptionValidityDisplay.classList.add('text-green-600');
-        } else if ((subscriptionExpiry && new Date(subscriptionExpiry) <= now) || (freeTrialExpiry && new Date(freeTrialExpiry) <= now && localStorage.getItem('hasUsedFreeTrial') === 'true')) {
-            validityTextSpan.textContent = T('subscription_status_label');
-            subscriptionValidityDisplay.textContent = T('subscription_expired_text');
-            subscriptionValidityDisplay.classList.add('text-red-600');
-        } else {
-            validityTextSpan.textContent = T('subscription_status_label');
-            subscriptionValidityDisplay.textContent = T('no_subscription_text');
-            subscriptionValidityDisplay.classList.add('text-gray-600');
-        }
-    }
-
-    // Function to check if subscription is expired
-    function isSubscriptionExpired() {
-        const subscriptionExpiry = localStorage.getItem('subscriptionExpiryDate');
-        const freeTrialExpiry = localStorage.getItem('freeTrialExpiryDate');
-        const now = new Date();
-
-        const hasActiveSubscription = subscriptionExpiry && new Date(subscriptionExpiry) > now;
-        const hasActiveFreeTrial = freeTrialExpiry && new Date(freeTrialExpiry) > now;
-
-        return !(hasActiveSubscription || hasActiveFreeTrial);
-    }
-
-    // Function to enable/disable UI elements based on subscription
-    function checkSubscriptionAndSetUIState() {
-        const isExpired = isSubscriptionExpired();
-        const dashboardContent = document.getElementById('dashboardContent');
-        const elementsToDisable = dashboardContent.querySelectorAll('input, textarea, button, select');
-        const expiredOverlay = document.getElementById('expiredOverlay');
-
-        if (isExpired) {
-            dashboardContent.classList.add('opacity-50');
-            elementsToDisable.forEach(el => el.disabled = true);
-            expiredOverlay.classList.remove('hidden');
-        } else {
-            dashboardContent.classList.remove('opacity-50');
-            elementsToDisable.forEach(el => el.disabled = false);
-            expiredOverlay.classList.add('hidden');
-        }
-    }
-
-
-    function showPaymentOptions(planKey, price, durationInMonths) {
-        showSection('paymentOptionsSection');
-        document.getElementById('selectedPlanInfoPrefix').textContent = T('selected_plan_info');
-        document.getElementById('selectedPlanName').textContent = T(planKey);
-        document.getElementById('selectedPlanName').setAttribute('data-plan-key', planKey);
-        document.getElementById('selectedPlanPrice').textContent = `₹${price}`;
-        
-        selectedPlanAmount = price;
-        selectedPlanDuration = durationInMonths;
-        
-        document.getElementById('upiPayAmount').textContent = price;
-        document.getElementById('cardPayAmount').textContent = price;
-        document.getElementById('netbankingPayAmount').textContent = price;
-        document.getElementById('walletPayAmount').textContent = price;
-
-        hideAllPaymentDetails();
-    }
-
-    function showPaymentDetails(method) {
-        hideAllPaymentDetails();
-        const detailSections = {
-            'upi': 'upiDetails',
-            'card': 'cardDetails',
-            'netbanking': 'netbankingDetails',
-            'wallet': 'walletDetails'
-        };
-        if (detailSections[method]) {
-            document.getElementById(detailSections[method]).classList.remove('hidden');
-        }
-    }
-
-    function processPayment(method) {
-        let isValid = true;
-
-        if (method === 'UPI') {
-            const upiId = document.getElementById('upiId').value.trim();
-            const upiName = document.getElementById('upiName').value.trim();
-            if (!upiId || !upiName) {
-                showMessage(T('upi_details_missing'), 'error');
-                isValid = false;
-            } else if (!/^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/.test(upiId)) {
-                showMessage(T('upi_id_invalid'), 'error');
-                isValid = false;
-            }
-        } else if (method === 'Card') {
-            const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
-            const cardName = document.getElementById('cardName').value.trim();
-            const cardExpiry = document.getElementById('cardExpiry').value.trim();
-            const cardCvv = document.getElementById('cardCvv').value.trim();
-
-            if (!cardNumber || !cardName || !cardExpiry || !cardCvv) {
-                showMessage(T('card_details_missing'), 'error');
-                isValid = false;
-            } else if (!/^\d{16}$/.test(cardNumber)) {
-                showMessage(T('card_number_invalid'), 'error');
-                isValid = false;
-            } else if (!/^(0[1-9]|1[0-2])\/?([0-9]{2})$/.test(cardExpiry)) {
-                showMessage(T('card_expiry_invalid'), 'error');
-                isValid = false;
-            } else if (!/^\d{3,4}$/.test(cardCvv)) {
-                showMessage(T('card_cvv_invalid'), 'error');
-                isValid = false;
-            }
-        } else if (method === 'Net Banking') {
-            const bank = document.getElementById('bankSelect').value;
-            const netbankingId = document.getElementById('netbankingId').value.trim();
-            if (!bank || !netbankingId) {
-                showMessage(T('netbanking_details_missing'), 'error');
-                isValid = false;
-            }
-        } else if (method === 'Wallet') {
-            const wallet = document.getElementById('walletSelect').value;
-            const walletPhoneNumber = document.getElementById('walletPhoneNumber').value.trim();
-            if (!wallet || !walletPhoneNumber) {
-                showMessage(T('wallet_details_missing'), 'error');
-                isValid = false;
-            } else {
-                const cleanedWalletPhoneNumber = walletPhoneNumber.replace(/\D/g, '');
-                if (cleanedWalletPhoneNumber.length < 10) {
-                    showMessage(T('wallet_phone_invalid'), 'error');
-                    isValid = false;
-                }
-            }
-        }
-
-        if (!isValid) {
-            return; // Stop if validation fails
-        }
-
-        // Simulate payment success
-        let successMessage = T('payment_successful')
-            .replace('{amount}', selectedPlanAmount)
-            .replace('{method}', method);
-        showMessage(successMessage, 'success');
-        
-        // Set new subscription expiry date
-        let expiryDate = new Date();
-        const currentExpiry = localStorage.getItem('subscriptionExpiryDate');
-        if (currentExpiry && new Date(currentExpiry) > expiryDate) {
-            expiryDate = new Date(currentExpiry);
-        }
-        expiryDate.setMonth(expiryDate.getMonth() + selectedPlanDuration);
-        localStorage.setItem('subscriptionExpiryDate', expiryDate.toISOString());
-        localStorage.removeItem('freeTrialExpiryDate'); // Paid plan overrides free trial
-
-        updateSubscriptionDisplay();
-        checkSubscriptionAndSetUIState(); // NEW: Check UI state after payment
-        showDashboardView(); 
-    }
-
     // Hamburger menu toggle function
     function toggleHamburgerMenu() {
         const sidebar = document.getElementById('hamburgerSidebar');
@@ -3196,7 +2103,7 @@
         window.location.href = `sms:${phoneNumber}?body=${encodedSmsBody}`;
     }
 
-    // **MODIFIED**: Function to download log details as a .txt file without restrictions
+    // Function to download log details as a .txt file without restrictions
     function downloadLog(timestamp) {
         const allRecords = JSON.parse(localStorage.getItem('tractorRecords') || '[]');
         const record = allRecords.find(rec => rec.timestamp === timestamp);
@@ -3231,7 +2138,6 @@
     window.setLanguage = setLanguage;
     window.showDashboardView = showDashboardView;
     window.showLogsView = showLogsView;
-    window.showSubscriptionView = showSubscriptionView;
     window.showLeaderboardView = showLeaderboardView;
     window.showMonthlyDashboardView = showMonthlyDashboardView;
     window.renderMonthlyDashboard = renderMonthlyDashboard;
@@ -3239,10 +2145,6 @@
     window.calculateAllEarnings = calculateAllEarnings;
     window.saveCombinedData = saveCombinedData;
     window.filterLogs = filterLogs;
-    window.activateFreeTrial = activateFreeTrial;
-    window.showPaymentOptions = showPaymentOptions;
-    window.showPaymentDetails = showPaymentDetails;
-    window.processPayment = processPayment;
     window.toggleHamburgerMenu = toggleHamburgerMenu;
     window.handleFeedbackClick = handleFeedbackClick;
     window.updatePaymentStatus = updatePaymentStatus;
@@ -3263,11 +2165,6 @@
       document.getElementById('noteContent').value = localStorage.getItem('manatractorLastNoteContent') || '';
       
       setCurrentDateAndStartTime();
-
-      // NEW: Add listener for expired overlay clicks
-      document.getElementById('expiredOverlay').addEventListener('click', () => {
-        showMessage(T('please_buy_plan_message'), 'error');
-      });
     });
 
   </script>
