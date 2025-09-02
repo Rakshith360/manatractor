@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="te">
 <head>
   <meta charset="UTF-8" />
@@ -17,12 +17,13 @@
     // Your web app's Firebase configuration
     // IMPORTANT: For production, manage these keys securely using environment variables or a backend service.
     const firebaseConfig = {
-           apiKey: "AIzaSyC7VAfNuteFemO91NxAJeuYEVeDsEvimfw",
-  authDomain: "manatractor-9b96b.firebaseapp.com",
-  projectId: "manatractor-9b96b",
-  storageBucket: "manatractor-9b96b.firebasestorage.app",
-  messagingSenderId: "358657800529",
-  appId: "1:358657800529:web:32f311dd3f2ba9ae3fbb70"
+                apiKey: "AIzaSyBQ_2xgn6YM0KyuFOOHQ3MNYhfumRdu_Bw",
+  authDomain: "test-77bb5.firebaseapp.com",
+  projectId: "test-77bb5",
+  storageBucket: "test-77bb5.firebasestorage.app",
+  messagingSenderId: "376928886666",
+  appId: "1:376928886666:web:0260c6e823170ee34a7273",
+  measurementId: "G-7ZL9G7TDS3"
     };
   
     // Initialize Firebase
@@ -247,6 +248,30 @@
         width: 24px;
         height: 24px;
     }
+     /* Microphone listening animation */
+    .mic-listening svg {
+        color: #ef4444; /* red-500 */
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+      }
+    }
+    /* Style for talk-back highlight */
+    .speaking-highlight {
+        background-color: #fef08a; /* Tailwind yellow-200 */
+        border-radius: 4px;
+        padding: 2px 4px;
+        margin: -2px -4px;
+        transition: background-color 0.2s ease-in-out;
+        box-shadow: 0 0 10px rgba(254, 240, 138, 0.7);
+    }
   </style>
 </head>
 <body class="bg-green-50 min-h-screen flex items-center justify-center p-4">
@@ -362,24 +387,24 @@
 
         <!-- Menu Buttons with Icons -->
         <button id="viewLogsBtnMenu" onclick="showLogsView(); toggleHamburgerMenu();" title="View Saved Logs" class="menu-icon-btn bg-gradient-to-r from-blue-400 to-blue-600 text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+             <img src="icons/diskette.png"  style="width: 30px; height: 30px;"  alt="">
         </button>
 
         <button id="leaderboardBtnMenu" onclick="showLeaderboardView(); toggleHamburgerMenu();" title="Leaderboard" class="menu-icon-btn bg-gradient-to-r from-yellow-400 to-yellow-600 text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l7 3-7 4zm-1 2h10M4 21h16" /></svg>
+             <img src="icons/podium.png"  style="width: 30px; height: 30px;"  alt="">
         </button>
 
         <button id="monthlyDashboardBtnMenu" onclick="showMonthlyDashboardView(); toggleHamburgerMenu();" title="Monthly Dashboard" class="menu-icon-btn bg-gradient-to-r from-indigo-400 to-indigo-600 text-white">
-           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17 12H12V17H17V12ZM16 1V3H8V1H6V3H5C3.89 3 3 3.89 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.89 20.1 3 19 3H18V1H16ZM19 19H5V8H19V19Z"></path>
-            </svg>
+          <img src="icons/wages.png"  style="width: 30px; height: 30px;"  alt="">
+        </button>
+
+        <!-- NEW: Monthly Net Button -->
+        <button id="monthlyNetBtnMenu" onclick="showMonthlyNetView(); toggleHamburgerMenu();" title="Monthly Net Earnings" class="menu-icon-btn bg-gradient-to-r from-cyan-400 to-cyan-600 text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.75A.75.75 0 013 4.5h.75m0 0h.75a.75.75 0 01.75.75v.75m0 0H3m9 3.75v.75a.75.75 0 01-.75.75h-.75m0 0v-.75a.75.75 0 01.75-.75h.75m0 0h.75a.75.75 0 01.75.75v.75m0 0h-.75M9.75 8.25v.75a.75.75 0 01-.75.75H9m0 0v-.75a.75.75 0 01.75-.75h.75m0 0h.75a.75.75 0 01.75.75v.75m0 0H9.75M3 15h12m0 0V9h-3.75M3 15h-1.5a.75.75 0 01-.75-.75V9.75A.75.75 0 011.5 9H3m12 6v-1.5a.75.75 0 00-.75-.75H9.75m0 0v1.5a.75.75 0 01-.75.75H3.75m0 0v-1.5a.75.75 0 00-.75-.75H1.5M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
         </button>
 
         <button id="dieselBtnMenu" onclick="showDieselView(); toggleHamburgerMenu();" title="Diesel Monitoring" class="menu-icon-btn bg-gradient-to-r from-orange-400 to-orange-600 text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7">
-              <path d="M14 4H18V5.5C18 6.32843 17.3284 7 16.5 7H14V4Z"></path>
-              <path fill-rule="evenodd" d="M4 3C4 2.44772 4.44772 2 5 2H12C13.6569 2 15 3.34315 15 5V10C15 11.6569 13.6569 13 12 13H8.5V18C8.5 20.2091 6.70914 22 4.5 22C2.29086 22 0.5 20.2091 0.5 18C0.5 15.7909 2.29086 14 4.5 14H6.5V13H5C4.44772 13 4 12.5523 4 12V3ZM6 5V11H12C12.5523 11 13 10.5523 13 10V5C13 4.44772 12.5523 4 12 4H6V5Z" clip-rule="evenodd"></path>
-            </svg>
+             <img src="icons/fuel.png"  style="width: 30px; height: 30px;"  alt="">
         </button>
 
         <a href="javascript:void(0);" id="feedbackLinkMenu" onclick="handleFeedbackClick('manatractor77@gmail.com');" title="Feedback" class="menu-icon-btn bg-gradient-to-r from-teal-400 to-teal-600 text-white">
@@ -403,28 +428,43 @@
             <div class="mb-4">
               <label id="nameLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
               <div class="relative">
-                <input id="userName" type="text" class="w-full border border-gray-300 rounded-lg p-2 pr-10" autocomplete="off"/>
+                <input id="userName" type="text" class="w-full border border-gray-300 rounded-lg p-2 pr-20" autocomplete="off"/>
                 <div id="autocomplete-list" class="absolute z-10 w-full bg-white border border-gray-200 rounded-b-lg shadow-lg mt-1 max-h-60 overflow-y-auto hidden">
                     <!-- Suggestions are injected here -->
                 </div>
-                <button onclick="getContact()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-green-600 focus:outline-none">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6zm4 2a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM6 13a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" clip-rule="evenodd" />
-                  </svg>
-                </button>
+                <div class="absolute inset-y-0 right-0 pr-2 flex items-center space-x-1">
+                    <!-- microphone button -->
+                    <button id="micUserName" onclick="startSpeechRecognition('userName')" title="Speak Name" class="text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                         <img src="icons/music.png" style="width: 19px; height: 19px;" alt="">
+                    </button>
+                    <!-- Contact picker button -->
+                    <button onclick="getContact()" title="Pick from Contacts" class="text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6zm4 2a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM6 13a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
               </div>
             </div>
 
             <div class="mb-4">
-              <label id="phoneLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
-              <div class="relative">
-                <input id="userPhoneNumber" type="tel" class="w-full border border-gray-300 rounded-lg p-2 pr-10" />
-                <button onclick="callPhoneNumber()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-green-600 focus:outline-none">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.103 6.103l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                  </svg>
-                </button>
-              </div>
+                <label id="phoneLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                <div class="relative">
+                    <input id="userPhoneNumber" type="tel" class="w-full border border-gray-300 rounded-lg p-2 pr-20" />
+                    <div class="absolute inset-y-0 right-0 pr-2 flex items-center space-x-1">
+                        <button id="micUserPhoneNumber" onclick="startSpeechRecognition('userPhoneNumber')" title="Speak Phone Number" class="text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z" />
+                                <path fill-rule="evenodd" d="M5.5 8a.5.5 0 00.5.5 2.5 2.5 0 105 0 .5.5 0 00.5-.5V4a.5.5 0 00-.5-.5 3.5 3.5 0 10-7 0v4a.5.5 0 00.5.5z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <button onclick="callPhoneNumber()" title="Call Number" class="text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.103 6.103l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- Hourly Work Form (now combined with trip inputs) -->
@@ -448,26 +488,41 @@
                 </div>
 
                 <div class="mb-4">
-                  <label id="ratePerHourLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
-                  <input id="ratePerHour" type="number" value="2000" class="w-full border border-gray-300 rounded-lg p-2" />
+                    <label id="ratePerHourLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                    <div class="relative">
+                        <input id="ratePerHour" type="number" value="2000" class="w-full border border-gray-300 rounded-lg p-2 pr-10" />
+                        <button id="micRatePerHour" onclick="startSpeechRecognition('ratePerHour')" title="Speak Rate" class="absolute inset-y-0 right-0 pr-2 flex items-center text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                             <img src="icons/music.png" style="width: 19px; height: 19px;" alt="">
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Moved Trip fields here -->
                 <div class="mb-4">
                     <label id="numberOfTripsLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
                     <div class="relative">
-                        <input id="numberOfTrips" type="number" value="0" min="0" class="w-full border border-gray-300 rounded-lg p-2 pr-10" />
-                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v5a1 1 0 001 1h2.05a2.5 2.5 0 014.9 0H21a1 1 0 001-1v-5a1 1 0 00-1-1h-7z"></path></svg>
+                        <input id="numberOfTrips" type="number" value="0" min="0" class="w-full border border-gray-300 rounded-lg p-2 pr-20" />
+                        <div class="absolute inset-y-0 right-0 pr-2 flex items-center space-x-1">
+                            <button id="micNumberOfTrips" onclick="startSpeechRecognition('numberOfTrips')" title="Speak Number of Trips" class="text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                                 <img src="icons/music.png" style="width: 19px; height: 19px;" alt="">
+                            </button>
+                            <div class="pointer-events-none text-gray-400 p-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v5a1 1 0 001 1h2.05a2.5 2.5 0 014.9 0H21a1 1 0 001-1v-5a1 1 0 00-1-1h-7z"></path></svg>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="mb-4">
                     <label id="costPerTripLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
                      <div class="relative">
-                        <input id="costPerTrip" type="number" value="500" min="0" class="w-full border border-gray-300 rounded-lg p-2 pr-10" />
-                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
-                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v5a1 1 0 001 1h2.05a2.5 2.5 0 014.9 0H21a1 1 0 001-1v-5a1 1 0 00-1-1h-7z"></path></svg>
+                        <input id="costPerTrip" type="number" value="500" min="0" class="w-full border border-gray-300 rounded-lg p-2 pr-20" />
+                        <div class="absolute inset-y-0 right-0 pr-2 flex items-center space-x-1">
+                           <button id="micCostPerTrip" onclick="startSpeechRecognition('costPerTrip')" title="Speak Cost per Trip" class="text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                                <img src="icons/music.png" style="width: 19px; height: 19px;" alt="">
+                            </button>
+                            <div class="pointer-events-none text-gray-400 p-2">
+                               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v5a1 1 0 001 1h2.05a2.5 2.5 0 014.9 0H21a1 1 0 001-1v-5a1 1 0 00-1-1h-7z"></path></svg>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -475,14 +530,19 @@
 
                 <!-- Note Content field for Combined Work Form -->
                 <div class="mb-4">
-                  <label id="noteContentLabel" class="flex items-center text-sm font-medium text-gray-700 mb-1">
-                      <span id="noteContentLabelText"></span>
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
-                          <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path>
-                      </svg>
-                  </label>
-                  <textarea id="noteContent" class="w-full border border-gray-300 rounded-lg p-2 h-32 resize-none" rows="5" placeholder="Please enter the work info details"></textarea>
+                    <label id="noteContentLabel" class="flex items-center text-sm font-medium text-gray-700 mb-1">
+                        <span id="noteContentLabelText"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
+                            <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path>
+                        </svg>
+                    </label>
+                    <div class="relative">
+                        <textarea id="noteContent" class="w-full border border-gray-300 rounded-lg p-2 pr-10 h-32 resize-none" rows="5" placeholder="Please enter the work info details"></textarea>
+                        <button id="micNoteContent" onclick="startSpeechRecognition('noteContent')" title="Speak Note" class="absolute top-2 right-2 text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                               <img src="icons/music.png" style="width: 19px; height: 19px;" alt="">
+                        </button>
+                    </div>
                 </div>
                 <!-- END Note content field -->
             </div>
@@ -547,8 +607,13 @@
         <p id="logsTagline" class="text-gray-500 mb-6 text-center"></p>
 
         <!-- Search Bar for Logs -->
-        <div class="mb-4">
-          <input type="text" id="logSearchInput" onkeyup="filterLogs()" class="w-full border border-gray-300 rounded-lg p-2" />
+        <div class="relative mb-4">
+          <input type="text" id="logSearchInput" onkeyup="filterLogs()" class="w-full border border-gray-300 rounded-lg p-2 pl-10" />
+           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                </svg>
+            </div>
         </div>
 
         <!-- Logs Container -->
@@ -662,6 +727,43 @@
         
         <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
             <p id="footerTextMonthlyDashboard"></p>
+        </footer>
+      </div>
+
+      <!-- NEW: Monthly Net Section -->
+      <div id="monthlyNetSection" class="bg-gray-50 w-full max-w-2xl rounded-2xl shadow-xl p-6 relative hidden mx-auto">
+        <!-- Back Button -->
+        <button onclick="showDashboardView()" class="absolute top-4 right-4 bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+        </button>
+        <h1 id="monthlyNetHeading" class="text-2xl font-bold text-gray-800 mb-2 text-center">Monthly Net Earnings</h1>
+        <p id="monthlyNetTagline" class="text-gray-500 mb-6 text-center">Your income vs expenses</p>
+        <!-- Month Selector -->
+        <div class="mb-6 max-w-xs mx-auto">
+            <label for="monthlyNetMonthSelector" id="monthlyNetMonthSelectorLabel" class="block text-sm font-medium text-gray-700 mb-1 text-center">Select Month:</label>
+            <select id="monthlyNetMonthSelector" onchange="renderMonthlyNetView()" class="w-full bg-white border border-gray-300 rounded-lg p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></select>
+        </div>
+        <!-- Dashboard Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-gradient-to-br from-green-400 to-blue-500 text-white p-4 rounded-xl shadow-lg">
+                <p id="netTotalEarningsLabel" class="text-md font-semibold opacity-80">Total Earnings</p>
+                <h2 id="netTotalEarningsValue" class="text-3xl font-bold tracking-tight">₹0</h2>
+            </div>
+            <div class="bg-gradient-to-br from-orange-400 to-red-500 text-white p-4 rounded-xl shadow-lg">
+                <p id="netTotalDieselLabel" class="text-md font-semibold opacity-80">Diesel Spent</p>
+                <h2 id="netTotalDieselValue" class="text-3xl font-bold tracking-tight">₹0</h2>
+            </div>
+            <div class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-4 rounded-xl shadow-lg">
+                <p id="netFinalAmountLabel" class="text-md font-semibold opacity-80">Net Amount</p>
+                <h2 id="netFinalAmountValue" class="text-3xl font-bold tracking-tight">₹0</h2>
+            </div>
+        </div>
+        <!-- Transactions History -->
+        <div id="monthlyNetHistoryContainer" class="log-container space-y-3 max-h-[40vh] overflow-y-auto pr-2">
+            <!-- Transaction items will be loaded here -->
+        </div>
+        <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
+            <p id="footerTextMonthlyNet"></p>
         </footer>
       </div>
 
@@ -914,6 +1016,7 @@
     let currentUserName = '';
     let currentUserPhoneNumber = '';
     let currentLang = 'te'; // Default language
+    let currentSpeechTargetId = null; // For tracking speech recognition target
 
     // Global variables for holding calculated values before saving
     let currentHourlyEarnings = 0;
@@ -1015,6 +1118,9 @@
         ar: "السعر بالساعة (₹)",
         ur: "فی گھنٹہ کی شرح (₹)"
       },
+      rate_per_hour_placeholder: {
+        te: "ఉదా: 2000", en: "e.g., 2000", hi: "उदा: 2000", ar: "مثال: 2000", ur: "مثال: 2000"
+      },
       calculate_button_title: {
         te: "లెక్కించు",
         en: "Calculate",
@@ -1050,12 +1156,18 @@
         ar: "عدد الرحلات",
         ur: "ٹرپس کی تعداد"
       },
+       trips_placeholder: {
+        te: "ఉదా: 5", en: "e.g., 5", hi: "उदा: 5", ar: "مثال: 5", ur: "مثال: 5"
+      },
       cost_per_trip_label: {
         te: "ఒక ట్రిప్‌కు ధర (₹)",
         en: "Cost per Trip (₹)",
         hi: "प्रति ट्रिप लागत (₹)",
         ar: "التكلفة لكل رحلة (₹)",
         ur: "فی ٹرپ لاگت"
+      },
+      cost_per_trip_placeholder: {
+        te: "ఉదా: 500", en: "e.g., 500", hi: "उदा: 500", ar: "مثال: 500", ur: "مثال: 500"
       },
       trip_count_display_label: {
         te: "మొత్తం ట్రిప్పులు",
@@ -1198,7 +1310,7 @@
       no_leaderboard_data: { te: "లీడర్‌బోర్డ్ కోసం డేటా లేదు.", en: "No data for the leaderboard yet.", hi: "लीडरबोर्ड के लिए अभी कोई डेटा नहीं है।", ar: "لا توجد بيانات للوحة الصدارة بعد.", ur: "لیڈر بورڈ کے لئے ابھی تک کوئی ڈیٹا نہیں ہے۔" },
       saves: { te: "సేవ్‌లు", en: "Saves", hi: "सहेजें", ar: "الحفظ", ur: "محفوظ کریں" },
       customer_logs_heading: { te: "{name} యొక్క లాగ్‌లు", en: "Logs for {name}", hi: "{name} के लॉग", ar: "سجلات {name}", ur: "{name} के لاگز" },
-      // NEW: Monthly Dashboard Translations
+      // Monthly Dashboard Translations
       monthly_dashboard_button_title: { te: "నెలవారీ డాష్‌బోర్డ్", en: "Monthly Dashboard", hi: "मासिक डैशबोर्ड", ar: "لوحة القيادة الشهرية", ur: "ماہانہ ڈیش بورڈ" },
       monthly_dashboard_heading: { te: "నెలవారీ సారాంశం", en: "Monthly Summary", hi: "मासिक सारांश", ar: "ملخص شهري", ur: "ماہانہ خلاصہ" },
       monthly_dashboard_tagline: { te: "మీ నెలవారీ పనితీరును ట్రాక్ చేయండి", en: "Track your monthly performance", hi: "अपने मासिक प्रदर्शन को ट्रैक करें", ar: "تتبع أدائك الشهري", ur: "اپنی ماہانہ کارکردگی کو ٹریک کریں۔" },
@@ -1206,7 +1318,6 @@
       total_amount_label: { te: "మొత్తం ఆదాయం", en: "Total Earnings", hi: "कुल कमाई", ar: "إجمالي الأرباح", ur: "کل کمائی" },
       total_hours_label: { te: "మొత్తం గంటలు", en: "Total Hours", hi: "कुल घंटे", ar: "إجمالي الساعات", ur: "کل گھنٹے" },
       total_trips_label: { te: "మొత్తం ట్రిప్పులు", en: "Total Trips", hi: "कुल यात्राएं", ar: "إجمالي الرحلات", ur: "کل ٹرپس" },
-      
       // Diesel Monitoring
         diesel_button_title: { te: "డీజిల్ పర్యవేక్షణ", en: "Diesel Monitoring", hi: "डीजल निगरानी", ar: "مراقبة الديزل", ur: "ڈیزل مانیٹرنگ" },
         diesel_heading: { te: "డీజిల్ పర్యవేక్షణ", en: "Diesel Monitoring", hi: "डीजल निगरानी", ar: "مراقبة الديزل", ur: "ڈیزل مانیٹرنگ" },
@@ -1225,8 +1336,15 @@
         no_diesel_logs_saved: { te: "డీజిల్ లాగ్‌లు ఇంకా సేవ్ చేయబడలేదు.", en: "No diesel logs saved yet.", hi: "अभी तक कोई डीजल लॉग सहेजा नहीं गया है।", ar: "لم يتم حفظ سجلات الديزل بعد.", ur: "ابھی تک کوئی ڈیزل لاگ محفوظ نہیں ہوا۔" },
         diesel_data_saved_success: { te: "డీజిల్ డేటా విజయవంతంగా సేవ్ చేయబడింది!", en: "Diesel data saved successfully!", hi: "डीजल डेटा सफलतापूर्वक सहेजा गया!", ar: "تم حفظ بيانات الديزل بنجاح!", ur: "ڈیزل کا ڈیٹا کامیابی سے محفوظ ہو گیا۔" },
         fill_diesel_details_error: { te: "దయచేసి ధర మరియు లీటర్లను నింపండి.", en: "Please fill price and litres.", hi: "कृपया मूल्य और लीटर भरें।", ar: "يرجى ملء السعر واللترات.", ur: "برائے مہربانی قیمت اور لیٹر بھریں۔" },
-
-      // Message Box Messages
+      // NEW: Monthly Net Translations
+      monthly_net_button_title: { te: "నెలవారీ నికర ఆదాయం", en: "Monthly Net Earnings", hi: "मासिक शुद्ध आय", ar: "صافي الأرباح الشهرية", ur: "ماہانہ خالص آمدنی" },
+      monthly_net_heading: { te: "నెలవారీ నికర ఆదాయం", en: "Monthly Net Earnings", hi: "मासिक शुद्ध आय", ar: "صافي الأرباح الشهرية", ur: "ماہانہ خالص آمدنی" },
+      monthly_net_tagline: { te: "మీ ఆదాయం వర్సెస్ ఖర్చులు", en: "Your income vs expenses", hi: "आपकी आय बनाम व्यय", ar: "دخلك مقابل نفقاتك", ur: "آپ کی آمدنی بمقابلہ اخراجات" },
+      net_total_earnings_label: { te: "మొత్తం ఆదాయం", en: "Total Earnings", hi: "कुल कमाई", ar: "إجمالي الأرباح", ur: "کل کمائی" },
+      net_total_diesel_label: { te: "డీజిల్ ఖర్చు", en: "Diesel Spent", hi: "डीजल खर्च", ar: "إنفاق الديزل", ur: "ڈیزل خرچ" },
+      net_final_amount_label: { te: "నికర మొత్తం", en: "Net Amount", hi: "शुद्ध राशि", ar: "المبلغ الصافي", ur: "خالص رقم" },
+      no_transactions_found: { te: "ఈ నెలకు లావాదేవీలు కనుగొనబడలేదు.", en: "No transactions found for this month.", hi: "इस महीने के लिए कोई लेनदेन नहीं मिला।", ar: "لم يتم العثور على معاملات لهذا الشهر.", ur: "اس مہینے کے لئے کوئی لین دین نہیں ملا۔" },
+       // Message Box Messages
       name_updated_success: {
         te: "పేరు విజయవంతంగా నవీకరించబడింది!",
         en: "Name updated successfully!",
@@ -1295,7 +1413,7 @@
         en: "Please fill all details and calculate earnings before saving.",
         hi: "कृपया सभी विवरण भरें और सहेजने से पहले कमाई की गणना करें।",
         ar: "الرجاء تعبئة جميع التفاصيل وحساب الأرباح قبل الحفظ.",
-        ur: "براہ کرم تمام تفصیلات بھریں اور محفوظ کرنے سے پہلے کمائی کا حساب لگائیں۔"
+        ur: "براہ کرم تمام تفصیلات بھریں اور محفوظ کرنے से पहले کمائی کا حساب لگائیں۔"
       },
       data_saved_success: {
         te: "డేటా విజయవంతంగా సేవ్ చేయబడింది!",
@@ -1303,6 +1421,21 @@
         hi: "डेटा सफलतापूर्वक सहेजा गया!",
         ar: "تم حفظ البيانات بنجاح!",
         ur: "ڈیٹا کامیابی سے محفوظ کیا گیا!"
+      },
+       // NEW: Talkback translations
+      calculation_talkback: {
+        te: "మొత్తం మొత్తం {amount} రూపాయలు",
+        en: "Total Amount {amount} rupees",
+        hi: "कुल राशि {amount} रुपये",
+        ar: "المبلغ الإجمالي {amount} روبية",
+        ur: "کل رقم {amount} روپے"
+      },
+      saved_talkback: {
+        te: "డేటా విజయవంతంగా సేవ్ చేయబడింది",
+        en: "Data saved successfully",
+        hi: "डेटा सफलतापूर्वक सहेजा गया",
+        ar: "تم حفظ البيانات بنجاح",
+        ur: "ڈیٹا کامیابی سے محفوظ ہو گیا"
       },
       back_button: {
         te: "వెనుకకు",
@@ -1360,14 +1493,36 @@
         ar: "واجهة برمجة تطبيقات منتقي جهات الاتصال غير مدعومة في هذا المتصفح.",
         ur: "اس براؤزر پر رابطہ چنندہ API کی حمایت نہیں ہے۔"
       },
+      speech_not_supported: {
+        te: "ఈ బ్రౌజర్‌లో స్పీచ్ రికగ్నిషన్‌కు మద్దతు లేదు.",
+        en: "Speech recognition is not supported in this browser.",
+        hi: "इस ब्राउज़र में वाक् पहचान समर्थित नहीं है।",
+        ar: "التعرف على الكلام غير مدعوم في هذا المتصفح.",
+        ur: "اس براؤزر میں اسپیچ ریکگنیشن کی سہولت نہیں ہے۔"
+      },
+       speech_synthesis_not_supported: {
+        te: "ఈ బ్రౌజర్‌లో టెక్స్ట్-టు-స్పీచ్‌కు మద్దతు లేదు.",
+        en: "Text-to-speech is not supported in this browser.",
+        hi: "इस ब्राउज़र में टेक्स्ट-टू-स्पीच समर्थित नहीं है।",
+        ar: "تحويل النص إلى كلام غير مدعوم في هذا المتصفح.",
+        ur: "اس براؤزر میں ٹیکسٹ ٹو اسپیچ کی سہولت نہیں ہے۔"
+      },
+      speech_error: {
+        te: "స్పీచ్ ఎర్రర్: {error}",
+        en: "Speech Error: {error}",
+        hi: "वाक् त्रुटि: {error}",
+        ar: "خطأ في الكلام: {error}",
+        ur: "تقریر میں خرابی: {error}"
+      },
       paid_status: { te: "చెల్లించారు", en: "Paid", hi: "भुगतान किया गया", ar: "مدفوع", ur: "ادا کیا گیا" },
       due_status: { te: "చెల్లించవలసినది", en: "Due", hi: "देय", ar: "مستحق", ur: "واجب الادا" },
       advance_status: { te: "అడ్వాన్స్", en: "Advance", hi: "अग्रिम", ar: "مقدم", ur: "پیشگی" },
       sms_button: { te: "SMS పంపండి", en: "Send SMS", hi: "एसएमएस भेजें", ar: "إرسال رسالة نصية", ur: "ایس ایم ایس بھیجیں" },
       call_button: { te: "కాల్ చేయండి", en: "Call", hi: "कॉल करें", ar: "اتصل", ur: "کال کریں" },
       download_button: { te: "డౌన్‌లోడ్", en: "Download", hi: "डाउनलोड", ar: "تحميل", ur: "ڈاؤن لوڈ کریں" },
+       read_aloud_button: { te: "గట్టిగా చదువు", en: "Read Aloud", hi: "जोर से पढ़ें", ar: "اقرأ بصوت عالٍ", ur: "بلند آواز سے پڑھیں" },
       download_error: { te: "లాగ్‌ను డౌన్‌లోడ్ చేయడంలో విఫలమైంది.", en: "Failed to download log.", hi: "लॉग डाउनलोड करने में विफल।", ar: "فشل تنزيل السجل.", ur: "لاگ ڈاؤن لوڈ کرنے میں ناکام۔" },
-      call_error: { te: "కాల్ చేయడానికి ఫోన్ నంబర్ లేదు.", en: "No phone number available to call.", hi: "कॉल करने के लिए कोई फ़ोन नंबर उपलब्ध नहीं है।", ar: "لا يوجد رقم هاتف متاح للاتصال به.", ur: "کال کرنے کے لیے کوئی فون نمبر دستیاب نہیں ہے۔" },
+      call_error: { te: "కాల్ చేయడానికి ఫోన్ నంబర్ లేదు.", en: "No phone number available to call.", hi: "कॉल करने के लिए कोई फ़ोन नंबर उपलब्ध नहीं है।", ar: "لا يوجد رقم هاتف متاح للاتصال به.", ur: "کال करने کے لیے کوئی فون نمبر دستیاب نہیں ہے۔" },
       sms_send_error: { te: "SMS పంపడానికి ఫోన్ నంబర్ లేదు.", en: "No phone number available to send SMS.", hi: "SMS भेजने के लिए कोई फ़ोन नंबर उपलब्ध नहीं है।", ar: "لا يوجد رقم هاتف متاح لإرسال رسالة نصية.", ur: "ایس ایم ایس بھیجنے کے لیے کوئی فون نمبر دستیاب نہیں ہے۔" },
       sms_body_template: {
         te: "మీ ట్రాక్టర్ పని వివరాలు:\nతేదీ: {date}\nపేరు: {name}\nఫోన్: {phone}\n{hourlyDetails}\n{tripDetails}\nమొత్తం: {totalEarnings}\nనోట్: {noteContent}\nచెల్లింపు స్థితి: {paymentStatus}",
@@ -1446,6 +1601,77 @@
         }
         return Math.round(num).toLocaleString('en-US');
     }
+    
+    // --- SPEECH RECOGNITION ---
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition;
+    let activeMicButton = null;
+
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        recognition.onstart = function() {
+            if (activeMicButton) {
+                activeMicButton.classList.add('mic-listening');
+            }
+        };
+        
+        recognition.onend = function() {
+            if (activeMicButton) {
+                activeMicButton.classList.remove('mic-listening');
+                activeMicButton = null;
+            }
+        };
+
+        recognition.onerror = function(event) {
+            console.error('Speech recognition error', event.error);
+            showMessage(T('speech_error').replace('{error}', event.error), 'error');
+            if (activeMicButton) {
+                activeMicButton.classList.remove('mic-listening');
+                activeMicButton = null;
+            }
+        };
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript.replace(/\.$/, ''); // Remove trailing period
+            const targetElement = document.getElementById(currentSpeechTargetId);
+
+            if (!targetElement) return;
+
+            // For number fields, try to clean the transcript
+            if (targetElement.type === 'number' || targetElement.type === 'tel') {
+                const numbers = transcript.replace(/[^0-9]/g, '');
+                targetElement.value = numbers;
+            } else if(targetElement.tagName.toLowerCase() === 'textarea') {
+                // Append to existing content for textarea
+                targetElement.value += (targetElement.value.length > 0 ? ' ' : '') + transcript;
+            } else {
+                 // Replace content for other inputs
+                 targetElement.value = transcript;
+            }
+        };
+    }
+
+    function startSpeechRecognition(targetId) {
+        if (!SpeechRecognition) {
+            return showMessage(T('speech_not_supported'), 'error');
+        }
+        
+        try { recognition.stop(); } catch(e) {}
+
+        const micButtonId = 'mic' + targetId.charAt(0).toUpperCase() + targetId.slice(1);
+        activeMicButton = document.getElementById(micButtonId);
+        
+        currentSpeechTargetId = targetId;
+        
+        const langMap = { 'te': 'te-IN', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA', 'ur': 'ur-PK' };
+        recognition.lang = langMap[currentLang] || 'en-US';
+        
+        recognition.start();
+    }
+
 
     // --- Autocomplete Logic ---
     let uniqueCustomers = [];
@@ -1567,8 +1793,11 @@
       document.getElementById('startTimeLabel').textContent = T('start_time_label');
       document.getElementById('endTimeLabel').textContent = T('end_time_label');
       document.getElementById('ratePerHourLabel').textContent = T('rate_per_hour_label');
+      document.getElementById('ratePerHour').placeholder = T('rate_per_hour_placeholder');
       document.getElementById('numberOfTripsLabel').textContent = T('total_trips_label');
+      document.getElementById('numberOfTrips').placeholder = T('trips_placeholder');
       document.getElementById('costPerTripLabel').textContent = T('cost_per_trip_label');
+      document.getElementById('costPerTrip').placeholder = T('cost_per_trip_placeholder');
       
       // Update button titles
       document.getElementById('calculateBtn').title = T('calculate_button_title');
@@ -1576,6 +1805,7 @@
       document.getElementById('viewLogsBtnMenu').title = T('view_logs_button_title');
       document.getElementById('leaderboardBtnMenu').title = T('leaderboard_button_title');
       document.getElementById('monthlyDashboardBtnMenu').title = T('monthly_dashboard_button_title');
+      document.getElementById('monthlyNetBtnMenu').title = T('monthly_net_button_title');
       document.getElementById('dieselBtnMenu').title = T('diesel_button_title');
       document.getElementById('feedbackLinkMenu').title = T('feedback_option_title');
       document.getElementById('dieselCalculateBtn').title = T('calculate_button_title');
@@ -1603,6 +1833,13 @@
       document.getElementById('totalHoursLabel').textContent = T('total_hours_label');
       document.getElementById('totalTripsLabel').textContent = T('total_trips_label');
 
+      document.getElementById('monthlyNetHeading').textContent = T('monthly_net_heading');
+      document.getElementById('monthlyNetTagline').textContent = T('monthly_net_tagline');
+      document.getElementById('monthlyNetMonthSelectorLabel').textContent = T('month_selector_label');
+      document.getElementById('netTotalEarningsLabel').textContent = T('net_total_earnings_label');
+      document.getElementById('netTotalDieselLabel').textContent = T('net_total_diesel_label');
+      document.getElementById('netFinalAmountLabel').textContent = T('net_final_amount_label');
+
       document.getElementById('dieselHeadingText').textContent = T('diesel_heading');
       document.getElementById('dieselDateLabel').textContent = T('diesel_date_label');
       document.getElementById('dieselTimeLabel').textContent = T('diesel_time_label');
@@ -1627,6 +1864,7 @@
       if (!document.getElementById('logsSection').classList.contains('hidden')) loadLogs();
       if (!document.getElementById('leaderboardSection').classList.contains('hidden')) generateLeaderboard();
       if (!document.getElementById('monthlyDashboardSection').classList.contains('hidden')) { populateMonthSelector(); renderMonthlyDashboard(); }
+      if (!document.getElementById('monthlyNetSection').classList.contains('hidden')) { populateMonthlyNetMonthSelector(); renderMonthlyNetView(); }
       if (!document.getElementById('dieselHistorySection').classList.contains('hidden')) loadDieselLogs();
       if (!document.getElementById('dieselDashboardSection').classList.contains('hidden')) { populateDieselMonthSelector(); renderDieselDashboard(); }
       if (!document.getElementById('customerLogsSection').classList.contains('hidden')) {
@@ -1681,7 +1919,8 @@
 
     // Function to show/hide sections
     function showSection(sectionId) {
-        const sections = ['dashboardSection', 'logsSection', 'leaderboardSection', 'customerLogsSection', 'monthlyDashboardSection', 'dieselSection', 'dieselHistorySection', 'dieselDashboardSection'];
+        stopSpeech(); // Stop any speech when changing views
+        const sections = ['dashboardSection', 'logsSection', 'leaderboardSection', 'customerLogsSection', 'monthlyDashboardSection', 'monthlyNetSection', 'dieselSection', 'dieselHistorySection', 'dieselDashboardSection'];
         sections.forEach(id => {
             const section = document.getElementById(id);
             if (section) {
@@ -1738,7 +1977,7 @@
         renderDieselDashboard();
     }
 
-    // --- NEW MONTHLY DASHBOARD FUNCTIONS ---
+    // --- MONTHLY DASHBOARD FUNCTIONS ---
     function showMonthlyDashboardView() {
         showSection('monthlyDashboardSection');
         populateMonthSelector();
@@ -1856,6 +2095,112 @@
     }
     // --- END MONTHLY DASHBOARD FUNCTIONS ---
 
+    // --- NEW MONTHLY NET FUNCTIONS ---
+    function showMonthlyNetView() {
+        showSection('monthlyNetSection');
+        populateMonthlyNetMonthSelector();
+        renderMonthlyNetView();
+    }
+
+    function populateMonthlyNetMonthSelector() {
+        const workRecords = JSON.parse(localStorage.getItem('tractorRecords') || '[]');
+        const dieselRecords = JSON.parse(localStorage.getItem('dieselRecords') || '[]');
+        const monthSelector = document.getElementById('monthlyNetMonthSelector');
+        
+        const uniqueMonths = new Set();
+        [...workRecords, ...dieselRecords].forEach(record => {
+            if (!record.date) return;
+            const recordDate = new Date(record.date);
+            if (isNaN(recordDate.getTime())) return;
+            uniqueMonths.add(`${recordDate.getFullYear()}-${recordDate.getMonth()}`);
+        });
+
+        const now = new Date();
+        uniqueMonths.add(`${now.getFullYear()}-${now.getMonth()}`);
+
+        const sortedMonths = Array.from(uniqueMonths).sort((a, b) => new Date(b.split('-')[0], b.split('-')[1]) - new Date(a.split('-')[0], a.split('-')[1]));
+        
+        const selectedValue = monthSelector.value;
+        monthSelector.innerHTML = '';
+        sortedMonths.forEach(monthStr => {
+            const [year, month] = monthStr.split('-').map(Number);
+            const option = document.createElement('option');
+            option.value = monthStr;
+            option.textContent = new Date(year, month).toLocaleString(currentLang, { month: 'long', year: 'numeric' });
+            monthSelector.appendChild(option);
+        });
+
+        if (sortedMonths.includes(selectedValue)) {
+            monthSelector.value = selectedValue;
+        }
+    }
+
+    function renderMonthlyNetView() {
+        const selectedMonthStr = document.getElementById('monthlyNetMonthSelector').value;
+        const totalEarningsEl = document.getElementById('netTotalEarningsValue');
+        const totalDieselEl = document.getElementById('netTotalDieselValue');
+        const finalAmountEl = document.getElementById('netFinalAmountValue');
+        const historyContainer = document.getElementById('monthlyNetHistoryContainer');
+
+        totalEarningsEl.textContent = '₹0';
+        totalDieselEl.textContent = '₹0';
+        finalAmountEl.textContent = '₹0';
+        historyContainer.innerHTML = '';
+
+        if (!selectedMonthStr) return;
+
+        const [selectedYear, selectedMonth] = selectedMonthStr.split('-').map(Number);
+        
+        // Calculate Total Earnings
+        const workRecords = JSON.parse(localStorage.getItem('tractorRecords') || '[]');
+        const filteredWork = workRecords.filter(r => {
+            const d = new Date(r.date);
+            return !isNaN(d.getTime()) && d.getFullYear() === selectedYear && d.getMonth() === selectedMonth;
+        });
+        const totalEarnings = filteredWork.reduce((sum, r) => sum + (r.combinedTotalEarnings || 0), 0);
+
+        // Calculate Total Diesel
+        const dieselRecords = JSON.parse(localStorage.getItem('dieselRecords') || '[]');
+        const filteredDiesel = dieselRecords.filter(r => {
+            const d = new Date(r.date);
+            return !isNaN(d.getTime()) && d.getFullYear() === selectedYear && d.getMonth() === selectedMonth;
+        });
+        const totalDiesel = filteredDiesel.reduce((sum, r) => sum + (r.totalCost || 0), 0);
+        
+        totalEarningsEl.textContent = `₹${formatNumberWithCommas(totalEarnings)}`;
+        totalDieselEl.textContent = `₹${formatNumberWithCommas(totalDiesel)}`;
+        finalAmountEl.textContent = `₹${formatNumberWithCommas(totalEarnings - totalDiesel)}`;
+
+        // Create and render combined history
+        const earningsHistory = filteredWork.map(r => ({ date: r.date, type: 'earning', desc: `Work for ${r.userName}`, amount: r.combinedTotalEarnings }));
+        const dieselHistory = filteredDiesel.map(r => ({ date: r.date, type: 'expense', desc: `${r.litres}L Diesel`, amount: r.totalCost }));
+        
+        const combinedHistory = [...earningsHistory, ...dieselHistory].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        if(combinedHistory.length === 0) {
+            historyContainer.innerHTML = `<p class="text-center text-gray-500">${T('no_transactions_found')}</p>`;
+            return;
+        }
+
+        combinedHistory.forEach(item => {
+            const isEarning = item.type === 'earning';
+            const card = document.createElement('div');
+            card.className = `flex items-center justify-between p-3 rounded-lg ${isEarning ? 'bg-green-50' : 'bg-red-50'}`;
+            card.innerHTML = `
+                <div>
+                    <p class="font-semibold ${isEarning ? 'text-green-800' : 'text-red-800'}">${item.desc}</p>
+                    <p class="text-xs text-gray-500">${item.date}</p>
+                </div>
+                <p class="text-lg font-bold ${isEarning ? 'text-green-600' : 'text-red-600'}">
+                    ${isEarning ? '+' : '-'}₹${formatNumberWithCommas(item.amount)}
+                </p>
+            `;
+            historyContainer.appendChild(card);
+        });
+    }
+
+    // --- END MONTHLY NET FUNCTIONS ---
+
     // Function to set current date and start time
     function setCurrentDateAndStartTime() {
         const today = new Date();
@@ -1935,7 +2280,11 @@
       currentCombinedEarnings = hourlyEarnings + tripEarnings;
       document.getElementById('combinedTotalEarnings').textContent = `₹${formatNumberWithCommas(currentCombinedEarnings)}`;
 
-      if (hourlyCalculationSuccessful || tripCalculationSuccessful) showMessage(T('combined_calculation_success'), 'success');
+      if (hourlyCalculationSuccessful || tripCalculationSuccessful) {
+        showMessage(T('combined_calculation_success'), 'success');
+        const talkbackText = T('calculation_talkback').replace('{amount}', formatNumberWithCommas(currentCombinedEarnings));
+        speakText(talkbackText, 'combinedTotalEarnings'); // Speak and highlight the total
+      }
     }
 
     // Function to save combined data
@@ -2003,6 +2352,7 @@
       populateUniqueCustomers();
 
       showMessage(T('data_saved_success'), 'success');
+      speakText(T('saved_talkback'));
 
       document.getElementById('startTime').value = '';
       document.getElementById('endTime').value = '';
@@ -2039,35 +2389,40 @@
       recordsToDisplay.forEach(record => {
         const logCard = document.createElement('div');
         logCard.className = 'bg-white border border-gray-200 rounded-xl p-4 shadow-sm';
+        const ts = record.timestamp; // for unique IDs
 
         let hourlyDetailsHtml = '';
         if (record.hourly) {
           hourlyDetailsHtml = `
-            <h4 class="font-semibold text-gray-700 mt-2 mb-1">${T('hourly_time_label')}</h4>
-            <p class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('work_time')}:</span> ${formatTime12Hour(record.hourly.start)} - ${formatTime12Hour(record.hourly.end)}</p>
-            <p class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('rate')}:</span> ₹${formatNumberWithCommas(record.hourly.rate)} / hr</p>
-            <p class="text-base text-gray-800"><span class="font-bold">${T('duration')}:</span> ${record.hourly.time}</p>
-            <p class="text-base text-gray-800"><span class="font-bold">${T('earnings')}:</span> ₹${formatNumberWithCommas(record.hourly.earnings)}</p>
+            <div id="hourly_details_${ts}">
+                <h4 id="hourly_details_heading_${ts}" class="font-semibold text-gray-700 mt-2 mb-1">${T('hourly_time_label')}</h4>
+                <p id="hourly_details_work_time_${ts}" class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('work_time')}:</span> ${formatTime12Hour(record.hourly.start)} - ${formatTime12Hour(record.hourly.end)}</p>
+                <p id="hourly_details_rate_${ts}" class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('rate')}:</span> ₹${formatNumberWithCommas(record.hourly.rate)} / hr</p>
+                <p id="hourly_details_duration_${ts}" class="text-base text-gray-800"><span class="font-bold">${T('duration')}:</span> ${record.hourly.time}</p>
+                <p id="hourly_details_earnings_${ts}" class="text-base text-gray-800"><span class="font-bold">${T('earnings')}:</span> ₹${formatNumberWithCommas(record.hourly.earnings)}</p>
+            </div>
           `;
         }
 
         let tripDetailsHtml = '';
         if (record.trip) {
           tripDetailsHtml = `
-            <h4 class="font-semibold text-gray-700 mt-2 mb-1">${T('trip_earnings_label')}</h4>
-            <p class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('trips_count_log')}:</span> ${record.trip.numberOfTrips}</p>
-            <p class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('cost_per_trip_log')}:</span> ₹${formatNumberWithCommas(record.trip.costPerTrip)}</p>
-            <p class="text-base text-gray-800"><span class="font-bold">${T('total_trips_display_log')}:</span> ${record.trip.tripsDisplay}</p>
-            <p class="text-base text-gray-800"><span class="font-bold">${T('earnings')}:</span> ₹${formatNumberWithCommas(record.trip.earnings)}</p>
+            <div id="trip_details_${ts}">
+                <h4 id="trip_details_heading_${ts}" class="font-semibold text-gray-700 mt-2 mb-1">${T('trip_earnings_label')}</h4>
+                <p id="trip_details_count_${ts}" class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('trips_count_log')}:</span> ${record.trip.numberOfTrips}</p>
+                <p id="trip_details_cost_${ts}" class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('cost_per_trip_log')}:</span> ₹${formatNumberWithCommas(record.trip.costPerTrip)}</p>
+                <p id="trip_details_total_display_${ts}" class="text-base text-gray-800"><span class="font-bold">${T('total_trips_display_log')}:</span> ${record.trip.tripsDisplay}</p>
+                <p id="trip_details_earnings_${ts}" class="text-base text-gray-800"><span class="font-bold">${T('earnings')}:</span> ₹${formatNumberWithCommas(record.trip.earnings)}</p>
+            </div>
           `;
         }
         
         let noteDetailsHtml = '';
         if (record.noteContent) {
           noteDetailsHtml = `
-            <div class="mt-3 pt-3 border-t border-gray-100">
-              <h4 class="font-semibold text-gray-700 mb-1"><span class="font-bold">${T('note_content_label')}:</span></h4>
-              <p class="text-sm text-gray-700 whitespace-pre-wrap">${sanitizeHTML(record.noteContent)}</p>
+            <div id="note_content_${ts}" class="mt-3 pt-3 border-t border-gray-100">
+              <h4 id="note_content_heading_${ts}" class="font-semibold text-gray-700 mb-1"><span class="font-bold">${T('note_content_label')}:</span></h4>
+              <p id="note_content_text_${ts}" class="text-sm text-gray-700 whitespace-pre-wrap">${sanitizeHTML(record.noteContent)}</p>
             </div>
           `;
         }
@@ -2079,27 +2434,30 @@
 
         logCard.innerHTML = `
           <div class="flex items-center justify-between mb-2">
-            <h3 class="font-semibold text-lg text-green-800">${record.date}</h3>
-            <span class="text-sm text-gray-500">${T('saved_on')}: ${new Date(record.timestamp).toLocaleString(currentLang)}</span>
+            <h3 id="date_${ts}" class="font-semibold text-lg text-green-800">${record.date}</h3>
+            <span id="saved_on_${ts}" class="text-sm text-gray-500">${T('saved_on')}: ${new Date(record.timestamp).toLocaleString(currentLang)}</span>
           </div>
-          <p class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('name')}:</span> ${sanitizeHTML(record.userName)}</p>
-          <p class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('phone')}:</span> ${sanitizeHTML(record.userPhoneNumber)}</p>
+          <p id="name_${ts}" class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('name')}:</span> ${sanitizeHTML(record.userName)}</p>
+          <p id="phone_${ts}" class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('phone')}:</span> ${sanitizeHTML(record.userPhoneNumber)}</p>
           ${hourlyDetailsHtml}
           ${tripDetailsHtml}
-          <p class="text-xl font-bold ${paymentColorClass} mt-2 border-t pt-2 border-gray-200" id="combinedEarnings_${record.timestamp}">${T('combined_earnings_label')}: ₹${formatNumberWithCommas(record.combinedTotalEarnings)}</p>
+          <p class="text-xl font-bold ${paymentColorClass} mt-2 border-t pt-2 border-gray-200" id="combinedEarnings_${ts}">${T('combined_earnings_label')}: ₹${formatNumberWithCommas(record.combinedTotalEarnings)}</p>
           ${noteDetailsHtml}
           <div class="flex justify-end items-center gap-2 mt-3" style="flex-wrap: wrap;">
-            <button onclick="updatePaymentStatus('${record.timestamp}', 'paid')" class="px-3 py-1 text-sm font-semibold rounded-md bg-green-100 text-green-700 hover:bg-green-200">${T('paid_status')}</button>
-            <button onclick="updatePaymentStatus('${record.timestamp}', 'due')" class="px-3 py-1 text-sm font-semibold rounded-md bg-red-100 text-red-700 hover:bg-red-200">${T('due_status')}</button>
-            <button onclick="updatePaymentStatus('${record.timestamp}', 'advance')" class="px-3 py-1 text-sm font-semibold rounded-md bg-pink-100 text-pink-700 hover:bg-pink-200">${T('advance_status')}</button>
+            <button onclick="updatePaymentStatus('${ts}', 'paid')" class="px-3 py-1 text-sm font-semibold rounded-md bg-green-100 text-green-700 hover:bg-green-200">${T('paid_status')}</button>
+            <button onclick="updatePaymentStatus('${ts}', 'due')" class="px-3 py-1 text-sm font-semibold rounded-md bg-red-100 text-red-700 hover:bg-red-200">${T('due_status')}</button>
+            <button onclick="updatePaymentStatus('${ts}', 'advance')" class="px-3 py-1 text-sm font-semibold rounded-md bg-pink-100 text-pink-700 hover:bg-pink-200">${T('advance_status')}</button>
             <button onclick="callLoggedNumber('${record.userPhoneNumber}')" class="p-2 text-sm font-semibold rounded-full bg-purple-100 text-purple-700 hover:bg-purple-200" title="${T('call_button')}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.103 6.103l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
             </button>
-            <button onclick="sendLogViaSms('${record.timestamp}')" class="p-2 text-sm font-semibold rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200" title="${T('sms_button')}">
+            <button onclick="sendLogViaSms('${ts}')" class="p-2 text-sm font-semibold rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200" title="${T('sms_button')}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2h-8zM9 4a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zM9 8a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zM9 12a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" /><path d="M2 6a2 2 0 012-2h3v12H4a2 2 0 01-2-2V6z" /></svg>
             </button>
-            <button onclick="downloadLog('${record.timestamp}')" class="p-2 text-sm font-semibold rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200" title="${T('download_button')}">
+            <button onclick="downloadLog('${ts}')" class="p-2 text-sm font-semibold rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200" title="${T('download_button')}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </button>
+            <button id="speakBtn_${ts}" onclick="speakLogEntry('${ts}')" class="p-2 text-sm font-semibold rounded-full bg-yellow-100 text-yellow-700 hover:bg-yellow-200" title="${T('read_aloud_button')}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd" /></svg>
             </button>
           </div>
         `;
@@ -2349,6 +2707,150 @@
         totalLitresEl.textContent = `${totalLitres.toFixed(2)} L`;
     }
 
+    // --- SPEECH SYNTHESIS (TALK-BACK) ---
+    let currentSpeakingTimestamp = null;
+    const speakerIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd" /></svg>`;
+    const stopIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 5a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H7a2 2 0 01-2-2V5z" clip-rule="evenodd" /></svg>`;
+
+    function stopSpeech() {
+        speechSynthesis.cancel();
+        if (currentSpeakingTimestamp) {
+            const prevButton = document.getElementById(`speakBtn_${currentSpeakingTimestamp}`);
+            if (prevButton) prevButton.innerHTML = speakerIconSVG;
+            const highlighted = document.querySelectorAll('.speaking-highlight');
+            highlighted.forEach(el => el.classList.remove('speaking-highlight'));
+        }
+        currentSpeakingTimestamp = null;
+    }
+
+    function speakText(text, highlightElementId = null) {
+        if (!('speechSynthesis' in window)) {
+            return;
+        }
+        stopSpeech(); 
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        const langMap = { 'te': 'te-IN', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA', 'ur': 'ur-PK' };
+        utterance.lang = langMap[currentLang] || 'en-US';
+
+        let elementToHighlight = null;
+        if (highlightElementId) {
+            elementToHighlight = document.getElementById(highlightElementId);
+        }
+
+        utterance.onstart = () => {
+            if (elementToHighlight) {
+                elementToHighlight.classList.add('speaking-highlight');
+            }
+        };
+
+        utterance.onend = () => {
+            if (elementToHighlight) {
+                setTimeout(() => elementToHighlight.classList.remove('speaking-highlight'), 500);
+            }
+        };
+
+        utterance.onerror = (e) => {
+            console.error("Speech synthesis error:", e);
+            if (elementToHighlight) {
+                elementToHighlight.classList.remove('speaking-highlight');
+            }
+        };
+
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakLogEntry(timestamp) {
+        if (!('speechSynthesis' in window)) {
+            return showMessage(T('speech_synthesis_not_supported'), 'error');
+        }
+
+        if (currentSpeakingTimestamp === timestamp) {
+            stopSpeech();
+            return;
+        }
+        
+        stopSpeech(); // Stop any previous speech
+        currentSpeakingTimestamp = timestamp;
+        
+        const speakButton = document.getElementById(`speakBtn_${timestamp}`);
+        if(speakButton) speakButton.innerHTML = stopIconSVG;
+
+        const record = JSON.parse(localStorage.getItem('tractorRecords') || '[]').find(rec => rec.timestamp === timestamp);
+        if (!record) {
+            stopSpeech();
+            return;
+        }
+
+        const partsToSpeak = [];
+        const ts = record.timestamp;
+
+        partsToSpeak.push({ text: `${T('name')}: ${record.userName}`, elementId: `name_${ts}` });
+        partsToSpeak.push({ text: `${T('phone')}: ${record.userPhoneNumber}`, elementId: `phone_${ts}` });
+
+        if (record.hourly) {
+            partsToSpeak.push({ text: T('hourly_time_label'), elementId: `hourly_details_heading_${ts}` });
+            partsToSpeak.push({ text: `${T('work_time')}: ${formatTime12Hour(record.hourly.start)} to ${formatTime12Hour(record.hourly.end)}`, elementId: `hourly_details_work_time_${ts}` });
+            partsToSpeak.push({ text: `${T('rate')}: ${formatNumberWithCommas(record.hourly.rate)} rupees per hour`, elementId: `hourly_details_rate_${ts}` });
+            partsToSpeak.push({ text: `${T('duration')}: ${record.hourly.time}`, elementId: `hourly_details_duration_${ts}` });
+            partsToSpeak.push({ text: `${T('earnings')}: ${formatNumberWithCommas(record.hourly.earnings)} rupees`, elementId: `hourly_details_earnings_${ts}` });
+        }
+
+        if (record.trip) {
+            partsToSpeak.push({ text: T('trip_earnings_label'), elementId: `trip_details_heading_${ts}` });
+            partsToSpeak.push({ text: `${T('trips_count_log')}: ${record.trip.numberOfTrips}`, elementId: `trip_details_count_${ts}` });
+            partsToSpeak.push({ text: `${T('cost_per_trip_log')}: ${formatNumberWithCommas(record.trip.costPerTrip)} rupees per trip`, elementId: `trip_details_cost_${ts}` });
+            partsToSpeak.push({ text: `${T('total_trips_display_log')}: ${record.trip.tripsDisplay}`, elementId: `trip_details_total_display_${ts}` });
+            partsToSpeak.push({ text: `${T('earnings')}: ${formatNumberWithCommas(record.trip.earnings)} rupees`, elementId: `trip_details_earnings_${ts}` });
+        }
+
+        partsToSpeak.push({ text: `${T('combined_earnings_label')}: ${formatNumberWithCommas(record.combinedTotalEarnings)} rupees`, elementId: `combinedEarnings_${ts}` });
+
+        if (record.noteContent) {
+            partsToSpeak.push({ text: `${T('note_content_label')}: ${record.noteContent}`, elementId: `note_content_text_${ts}` });
+        }
+
+        let currentIndex = 0;
+        let lastHighlightedElement = null;
+
+        function speakNextPart() {
+            if (lastHighlightedElement) {
+                lastHighlightedElement.classList.remove('speaking-highlight');
+            }
+
+            if (currentIndex >= partsToSpeak.length) {
+                stopSpeech();
+                return;
+            }
+
+            const part = partsToSpeak[currentIndex];
+            const element = document.getElementById(part.elementId);
+            
+            if (element) {
+                element.classList.add('speaking-highlight');
+                lastHighlightedElement = element;
+            }
+
+            const utterance = new SpeechSynthesisUtterance(part.text);
+            const langMap = { 'te': 'te-IN', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA', 'ur': 'ur-PK' };
+            utterance.lang = langMap[currentLang] || 'en-US';
+            
+            utterance.onend = () => {
+                currentIndex++;
+                speakNextPart();
+            };
+            
+            utterance.onerror = (e) => {
+                console.error("Speech synthesis error:", e);
+                stopSpeech();
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        speakNextPart();
+    }
+
     // Make functions globally accessible
     window.signInWithGoogle = signInWithGoogle;
     window.signUpWithEmail = signUpWithEmail;
@@ -2380,6 +2882,11 @@
     window.showDieselHistoryView = showDieselHistoryView;
     window.showDieselDashboardView = showDieselDashboardView;
     window.renderDieselDashboard = renderDieselDashboard;
+    window.startSpeechRecognition = startSpeechRecognition;
+    window.showMonthlyNetView = showMonthlyNetView;
+    window.renderMonthlyNetView = renderMonthlyNetView;
+    window.speakLogEntry = speakLogEntry;
+    window.speakText = speakText;
 
 
     // Initial load:
@@ -2391,9 +2898,11 @@
       setCurrentDateAndStartTime();
       populateUniqueCustomers();
       setupAutocomplete();
+      
+      // Stop speech synthesis when navigating away
+      window.addEventListener('beforeunload', stopSpeech);
     });
 
   </script>
 </body>
 </html>
-
