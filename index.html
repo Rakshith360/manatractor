@@ -1,10 +1,10 @@
-    <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="te">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#16a34a" />
  
-   
   <title>ManaTractor Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Firebase Libraries -->
@@ -17,13 +17,12 @@
     // Your web app's Firebase configuration
     // IMPORTANT: For production, manage these keys securely using environment variables or a backend service.
     const firebaseConfig = {
-                apiKey: "AIzaSyBQ_2xgn6YM0KyuFOOHQ3MNYhfumRdu_Bw",
-  authDomain: "test-77bb5.firebaseapp.com",
-  projectId: "test-77bb5",
-  storageBucket: "test-77bb5.firebasestorage.app",
-  messagingSenderId: "376928886666",
-  appId: "1:376928886666:web:0260c6e823170ee34a7273",
-  measurementId: "G-7ZL9G7TDS3"
+           apiKey: "AIzaSyC7VAfNuteFemO91NxAJeuYEVeDsEvimfw",
+  authDomain: "manatractor-9b96b.firebaseapp.com",
+  projectId: "manatractor-9b96b",
+  storageBucket: "manatractor-9b96b.firebasestorage.app",
+  messagingSenderId: "358657800529",
+  appId: "1:358657800529:web:32f311dd3f2ba9ae3fbb70"
     };
   
     // Initialize Firebase
@@ -272,6 +271,27 @@
         transition: background-color 0.2s ease-in-out;
         box-shadow: 0 0 10px rgba(254, 240, 138, 0.7);
     }
+    /* Styles for the "Paid" cross-out lines */
+    .paid-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        pointer-events: none; /* So it doesn't block clicks */
+        display: none;
+    }
+    .paid-overlay.visible {
+        display: block;
+    }
+    .paid-overlay .cross-line {
+        position: absolute;
+        background-color: rgba(239, 68, 68, 0.6); /* red-500 with opacity */
+        height: 4px;
+        width: 140%; /* extend past edges */
+        top: 50%;
+        left: -20%;
+        border-radius: 2px;
+    }
+    .paid-overlay .cross-line-1 { transform: rotate(20deg); }
+    .paid-overlay .cross-line-2 { transform: rotate(-20deg); }
   </style>
 </head>
 <body class="bg-green-50 min-h-screen flex items-center justify-center p-4">
@@ -381,7 +401,6 @@
                 <option value="en">English</option>
                 <option value="hi">हिन्दी</option>
                 <option value="ar">العربية</option>
-                <option value="ur">اردو</option>
             </select>
         </div>
 
@@ -398,19 +417,6 @@
           <img src="icons/wages.png"  style="width: 30px; height: 30px;"  alt="">
         </button>
 
-        <!-- NEW: Monthly Net Button -->
-        <button id="monthlyNetBtnMenu" onclick="showMonthlyNetView(); toggleHamburgerMenu();" title="Monthly Net Earnings" class="menu-icon-btn bg-gradient-to-r from-cyan-400 to-cyan-600 text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.75A.75.75 0 013 4.5h.75m0 0h.75a.75.75 0 01.75.75v.75m0 0H3m9 3.75v.75a.75.75 0 01-.75.75h-.75m0 0v-.75a.75.75 0 01.75-.75h.75m0 0h.75a.75.75 0 01.75.75v.75m0 0h-.75M9.75 8.25v.75a.75.75 0 01-.75.75H9m0 0v-.75a.75.75 0 01.75-.75h.75m0 0h.75a.75.75 0 01.75.75v.75m0 0H9.75M3 15h12m0 0V9h-3.75M3 15h-1.5a.75.75 0 01-.75-.75V9.75A.75.75 0 011.5 9H3m12 6v-1.5a.75.75 0 00-.75-.75H9.75m0 0v1.5a.75.75 0 01-.75.75H3.75m0 0v-1.5a.75.75 0 00-.75-.75H1.5M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-        </button>
-
-        <button id="dieselBtnMenu" onclick="showDieselView(); toggleHamburgerMenu();" title="Diesel Monitoring" class="menu-icon-btn bg-gradient-to-r from-orange-400 to-orange-600 text-white">
-             <img src="icons/fuel.png"  style="width: 30px; height: 30px;"  alt="">
-        </button>
-
-        <a href="javascript:void(0);" id="feedbackLinkMenu" onclick="handleFeedbackClick('manatractor77@gmail.com');" title="Feedback" class="menu-icon-btn bg-gradient-to-r from-teal-400 to-teal-600 text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-        </a>
-        
         <button id="logoutBtn" onclick="logout()" title="Logout" class="menu-icon-btn bg-gradient-to-r from-red-500 to-red-700 text-white mt-auto">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
         </button>
@@ -578,11 +584,13 @@
 
             <!-- Buttons with Icons -->
             <div class="flex gap-4 mt-6">
-              <button id="calculateBtn" onclick="calculateAllEarnings()" title="Calculate" class="main-calc-btn bg-green-600 text-white hover:bg-green-700">
+              <button id="calculateBtn" onclick="calculateAllEarnings()" title="Calculate" class="main-calc-btn bg-green-600 text-white hover:bg-green-700 flex-col">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 9h14M5 15h14"></path></svg>
+                <span id="calculateBtnText" class="text-xs mt-1">Calculate</span>
               </button>
-              <button id="saveBtn" onclick="saveCombinedData()" title="Save" class="main-calc-btn bg-blue-600 text-white hover:bg-blue-700">
+              <button id="saveBtn" onclick="saveCombinedData()" title="Save" class="main-calc-btn bg-blue-600 text-white hover:bg-blue-700 flex-col">
                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+                 <span id="saveBtnText" class="text-xs mt-1">Save</span>
               </button>
             </div>
         </div> <!-- End of dashboardContent -->
@@ -730,139 +738,6 @@
         </footer>
       </div>
 
-      <!-- NEW: Monthly Net Section -->
-      <div id="monthlyNetSection" class="bg-gray-50 w-full max-w-2xl rounded-2xl shadow-xl p-6 relative hidden mx-auto">
-        <!-- Back Button -->
-        <button onclick="showDashboardView()" class="absolute top-4 right-4 bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-        </button>
-        <h1 id="monthlyNetHeading" class="text-2xl font-bold text-gray-800 mb-2 text-center">Monthly Net Earnings</h1>
-        <p id="monthlyNetTagline" class="text-gray-500 mb-6 text-center">Your income vs expenses</p>
-        <!-- Month Selector -->
-        <div class="mb-6 max-w-xs mx-auto">
-            <label for="monthlyNetMonthSelector" id="monthlyNetMonthSelectorLabel" class="block text-sm font-medium text-gray-700 mb-1 text-center">Select Month:</label>
-            <select id="monthlyNetMonthSelector" onchange="renderMonthlyNetView()" class="w-full bg-white border border-gray-300 rounded-lg p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></select>
-        </div>
-        <!-- Dashboard Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div class="bg-gradient-to-br from-green-400 to-blue-500 text-white p-4 rounded-xl shadow-lg">
-                <p id="netTotalEarningsLabel" class="text-md font-semibold opacity-80">Total Earnings</p>
-                <h2 id="netTotalEarningsValue" class="text-3xl font-bold tracking-tight">₹0</h2>
-            </div>
-            <div class="bg-gradient-to-br from-orange-400 to-red-500 text-white p-4 rounded-xl shadow-lg">
-                <p id="netTotalDieselLabel" class="text-md font-semibold opacity-80">Diesel Spent</p>
-                <h2 id="netTotalDieselValue" class="text-3xl font-bold tracking-tight">₹0</h2>
-            </div>
-            <div class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-4 rounded-xl shadow-lg">
-                <p id="netFinalAmountLabel" class="text-md font-semibold opacity-80">Net Amount</p>
-                <h2 id="netFinalAmountValue" class="text-3xl font-bold tracking-tight">₹0</h2>
-            </div>
-        </div>
-        <!-- Transactions History -->
-        <div id="monthlyNetHistoryContainer" class="log-container space-y-3 max-h-[40vh] overflow-y-auto pr-2">
-            <!-- Transaction items will be loaded here -->
-        </div>
-        <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
-            <p id="footerTextMonthlyNet"></p>
-        </footer>
-      </div>
-
-      <!-- Diesel Monitoring Section -->
-      <div id="dieselSection" class="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 mx-auto relative hidden">
-        <!-- Back Button -->
-        <button onclick="showDashboardView()" class="absolute top-4 right-4 bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-        </button>
-        <h1 id="dieselHeading" class="text-2xl font-bold text-orange-700 mb-4 text-center flex items-center justify-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M16,4H14V2H10V4H8C7.45,4 7,4.45 7,5V11C7,11.55 7.45,12 8,12H9.33L7.8,15.4C7.4,16.2 8,17 8.8,17H10V19H12V21H14V19H16V17H17.2C18,17 18.6,16.2 18.2,15.4L16.67,12H18C18.55,12 19,11.55 19,11V5C19,4.45 18.55,4 18,4Z"></path></svg>
-            <span id="dieselHeadingText">Diesel Monitoring</span>
-        </h1>
-        
-        <div class="mb-4">
-            <label id="dieselDateLabel" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-            <input id="dieselDate" type="date" class="w-full border border-gray-300 rounded-lg p-2" />
-        </div>
-
-        <div class="mb-4">
-            <label id="dieselTimeLabel" class="block text-sm font-medium text-gray-700 mb-1">Time</label>
-            <input id="dieselTime" type="time" class="w-full border border-gray-300 rounded-lg p-2" />
-        </div>
-
-        <div class="mb-4">
-            <label id="dieselPriceLabel" class="block text-sm font-medium text-gray-700 mb-1">Price per Litre (₹)</label>
-            <input id="dieselPrice" type="number" class="w-full border border-gray-300 rounded-lg p-2" placeholder="e.g., 95.50" />
-        </div>
-
-        <div class="mb-4">
-            <label id="dieselLitresLabel" class="block text-sm font-medium text-gray-700 mb-1">Number of Litres</label>
-            <input id="dieselLitres" type="number" class="w-full border border-gray-300 rounded-lg p-2" placeholder="e.g., 20" />
-        </div>
-        
-        <div class="bg-orange-100 p-4 rounded-xl text-center my-4">
-            <p id="dieselTotalCostLabel" class="text-lg text-orange-800 font-semibold">Total Cost</p>
-            <h2 id="dieselTotalCost" class="text-3xl font-extrabold text-orange-700">₹0</h2>
-        </div>
-
-        <div class="flex gap-4 mt-6">
-            <button id="dieselCalculateBtn" onclick="calculateDieselCost()" title="Calculate Diesel Cost" class="main-calc-btn bg-orange-600 text-white hover:bg-orange-700">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 9h14M5 15h14"></path></svg>
-            </button>
-            <button id="dieselSaveBtn" onclick="saveDieselData()" title="Save Diesel Log" class="main-calc-btn bg-blue-600 text-white hover:bg-blue-700">
-                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
-            </button>
-        </div>
-
-        <div class="mt-4 text-center">
-            <button id="dieselHistoryBtn" onclick="showDieselHistoryView()" class="text-indigo-600 hover:underline">View Diesel History</button>
-             <span class="mx-2 text-gray-400">|</span>
-            <button id="dieselDashboardBtn" onclick="showDieselDashboardView()" class="text-indigo-600 hover:underline">View Diesel Dashboard</button>
-        </div>
-
-        <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
-            <p id="footerTextDiesel"></p>
-        </footer>
-      </div>
-
-      <!-- Diesel History Section -->
-        <div id="dieselHistorySection" class="bg-white w-full max-w-xl rounded-2xl shadow-xl p-6 relative hidden mx-auto">
-            <button onclick="showDieselView()" class="absolute top-4 right-4 bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-            </button>
-            <h1 id="dieselHistoryHeading" class="text-2xl font-bold text-orange-700 mb-4 text-center mt-4">Diesel History</h1>
-            <div id="dieselHistoryContainer" class="log-container space-y-4 max-h-[65vh] overflow-y-auto pr-2">
-                <!-- Diesel logs will be loaded here -->
-            </div>
-            <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
-                <p id="footerTextDieselHistory"></p>
-            </footer>
-        </div>
-
-        <!-- Diesel Dashboard Section -->
-        <div id="dieselDashboardSection" class="bg-gray-50 w-full max-w-2xl rounded-2xl shadow-xl p-6 relative hidden mx-auto">
-             <button onclick="showDieselView()" class="absolute top-4 right-4 bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-            </button>
-            <h1 id="dieselDashboardHeading" class="text-2xl font-bold text-gray-800 mb-2 text-center">Monthly Diesel Summary</h1>
-            <div class="mb-6 max-w-xs mx-auto">
-                <label for="dieselMonthSelector" id="dieselMonthSelectorLabel" class="block text-sm font-medium text-gray-700 mb-1 text-center">Select Month:</label>
-                <select id="dieselMonthSelector" onchange="renderDieselDashboard()" class="w-full bg-white border border-gray-300 rounded-lg p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <!-- Options will be populated by JS -->
-                </select>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-gradient-to-br from-orange-400 to-red-500 text-white p-6 rounded-xl shadow-lg">
-                    <p id="dieselTotalSpentLabel" class="text-lg font-semibold opacity-80">Total Spent</p>
-                    <h2 id="dieselDashboardTotalSpent" class="text-4xl font-bold tracking-tight">₹0</h2>
-                </div>
-                <div class="bg-gradient-to-br from-yellow-400 to-amber-500 text-white p-6 rounded-xl shadow-lg">
-                    <p id="dieselTotalLitresLabel" class="text-lg font-semibold opacity-80">Total Litres</p>
-                    <h2 id="dieselDashboardTotalLitres" class="text-4xl font-bold tracking-tight">0 L</h2>
-                </div>
-            </div>
-            <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
-                <p id="footerTextDieselDashboard"></p>
-            </footer>
-        </div>
   </div>
 
 
@@ -1031,526 +906,424 @@
         te: "స్వాగతం, <span id='userNameEditable' contenteditable='true' onblur='saveUserName()'>{userName}</span> అన్న  ",
         en: "Welcome, <span id='userNameEditable' contenteditable='true' onblur='saveUserName()'>{userName}</span> Anna 🚜",
         hi: "स्वागत है, <span id='userNameEditable' contenteditable='true' onblur='saveUserName()'>{userName}</span> अन्ना 🚜",
-        ar: "أهلاً بك، <span id='userNameEditable' contenteditable='true' onblur='saveUserName()'>{userName}</span> أنا🚜 ",
-        ur: "خوش آمدید، <span id='userNameEditable' contenteditable='true' onblur='saveUserName()'>{userName}</span> انا 🚜"
+        ar: "أهلاً بك، <span id='userNameEditable' contenteditable='true' onblur='saveUserName()'>{userName}</span> أنا🚜 "
       },
       tagline: {
         te: "మీ ట్రాక్టర్ పని, సమయం & ఆదాయాన్ని సులభంగా ట్రాక్ చేయండి.",
         en: "Track your tractor work, time & earnings with ease.",
         hi: "अपने ट्रैक्टर के काम, समय और कमाई को आसानी से ट्रैक करें।",
-        ar: "تتبع عمل جرارك، وقته وأرباحه بسهولة.",
-        ur: "اپنے ٹریکٹر کے کام, وقت اور کمائی کو آسانی سے ٹریک کریں۔"
+        ar: "تتبع عمل جرارك، وقته وأرباحه بسهولة."
       },
       name_label: {
         te: "పేరు నమోదు చేయండి",
         en: "Enter Name",
         hi: "नाम दर्ज करें",
-        ar: "أدخل الاسم",
-        ur: "نام درج کریں"
+        ar: "أدخل الاسم"
       },
       name_placeholder: {
         te: "ఉదా: రాము",
         en: "e.g., John Doe",
         hi: "उदा: जॉन डो",
-        ar: "مثال: جون دو",
-        ur: "مثال: جان ڈو"
+        ar: "مثال: جون دو"
       },
        name_placeholder_dynamic: {
         te: ["రైతు పేరు", "కస్టమర్ పేరు"],
         en: ["Farmer Name", "Customer Name"],
         hi: ["किसान का नाम", "ग्राहक का नाम"],
-        ar: ["اسم المزارع", "اسم العميل"],
-        ur: ["کسان کا نام", "گاہک کا نام"]
+        ar: ["اسم المزارع", "اسم العميل"]
       },
       phone_label: {
         te: "ఫోన్ నంబర్",
         en: "Phone Number",
         hi: "फ़ोन नंबर",
-        ar: "رقم الهاتف",
-        ur: "فون نمبر"
+        ar: "رقم الهاتف"
       },
       phone_placeholder: {
         te: "ఉదా: 9876543210",
         en: "e.g., 9876543210",
         hi: "उदा: 9876543210",
-        ar: "مثال: 9876543210",
-        ur: "مثال: 9876543210"
+        ar: "مثال: 9876543210"
       },
       phone_placeholder_dynamic: {
         te: ["9xxxxxxxxx", "8xxxxxxxxx"],
         en: ["9xxxxxxxxx", "8xxxxxxxxx"],
         hi: ["9xxxxxxxxx", "8xxxxxxxxx"],
-        ar: ["9xxxxxxxxx", "8xxxxxxxxx"],
-        ur: ["9xxxxxxxxx", "8xxxxxxxxx"]
+        ar: ["9xxxxxxxxx", "8xxxxxxxxx"]
       },
       phone_invalid: {
         te: "దయచేసి చెల్లుబాటు అయ్యే ఫోన్ నంబర్‌ను నమోదు చేయండి (కనీసం 10 అంకెలు).",
         en: "Please enter a valid phone number (at least 10 digits).",
         hi: "कृपया एक मान्य फ़ोन नंबर दर्ज करें (कम से कम 10 अंक)।",
-        ar: "يرجى إدخال رقم هاتف صالح (10 أرقام على الأقل).",
-        ur: "براہ کرم ایک درست فون نمبر درج کریں (کم از کم 10 ہندسے)۔"
+        ar: "يرجى إدخال رقم هاتف صالح (10 أرقام على الأقل)."
       },
       date_label: {
         te: "తేదీ",
         en: "Date",
         hi: "तारीख",
-        ar: "التاريخ",
-        ur: "تاریخ"
+        ar: "التاريخ"
       },
       start_time_label: {
         te: "ప్రారంభ సమయం",
         en: "Start Time",
         hi: "शुरू करने का समय",
-        ar: "وقت البدء",
-        ur: "آغاز کا وقت"
+        ar: "وقت البدء"
       },
       end_time_label: {
         te: "ముగింపు సమయం",
         en: "End Time",
         hi: "समाप्ति का समय",
-        ar: "وقت ख़त्म ہونے کا",
-        ur: "اختتام کا وقت"
+        ar: "وقت ख़त्म होने का"
       },
       rate_per_hour_label: {
         te: "గంటకు రేటు (₹)",
         en: "Rate per Hour (₹)",
         hi: "प्रति घंटा दर (₹)",
-        ar: "السعر بالساعة (₹)",
-        ur: "فی گھنٹہ کی شرح (₹)"
+        ar: "السعر بالساعة (₹)"
       },
       rate_per_hour_placeholder: {
-        te: "ఉదా: 2000", en: "e.g., 2000", hi: "उदा: 2000", ar: "مثال: 2000", ur: "مثال: 2000"
+        te: "ఉదా: 2000", en: "e.g., 2000", hi: "उदा: 2000", ar: "مثال: 2000"
       },
       calculate_button_title: {
         te: "లెక్కించు",
         en: "Calculate",
         hi: "गणना करें",
-        ar: "احسب",
-        ur: "حساب لگائیں"
+        ar: "احسب"
       },
       save_button_title: {
         te: "సేవ్ చేయి",
         en: "Save",
         hi: "सहेजें",
-        ar: "حفظ",
-        ur: "محفوظ کریں"
+        ar: "حفظ"
       },
       hourly_time_label: {
         te: "గంటల సమయం",
         en: "Hourly Time",
         hi: "घंटे का समय",
-        ar: "وقت بالساعة",
-        ur: "گھنٹے کا وقت"
+        ar: "وقت بالساعة"
       },
       hourly_earnings_label: {
         te: "గంటల ఆదాయం",
         en: "Hourly Earnings",
         hi: "घंटे की कमाई",
-        ar: "أرباح بالساعة",
-        ur: "گھنٹے کی کمائی"
+        ar: "أرباح بالساعة"
       },
       total_trips_label: {
         te: "ట్రిప్పుల సంఖ్య",
         en: "Number of Trips",
         hi: "ट्रिपों की संख्या",
-        ar: "عدد الرحلات",
-        ur: "ٹرپس کی تعداد"
+        ar: "عدد الرحلات"
       },
        trips_placeholder: {
-        te: "ఉదా: 5", en: "e.g., 5", hi: "उदा: 5", ar: "مثال: 5", ur: "مثال: 5"
+        te: "ఉదా: 5", en: "e.g., 5", hi: "उदा: 5", ar: "مثال: 5"
       },
       cost_per_trip_label: {
         te: "ఒక ట్రిప్‌కు ధర (₹)",
         en: "Cost per Trip (₹)",
         hi: "प्रति ट्रिप लागत (₹)",
-        ar: "التكلفة لكل رحلة (₹)",
-        ur: "فی ٹرپ لاگت"
+        ar: "التكلفة لكل رحلة (₹)"
       },
       cost_per_trip_placeholder: {
-        te: "ఉదా: 500", en: "e.g., 500", hi: "उदा: 500", ar: "مثال: 500", ur: "مثال: 500"
+        te: "ఉదా: 500", en: "e.g., 500", hi: "उदा: 500", ar: "مثال: 500"
       },
       trip_count_display_label: {
         te: "మొత్తం ట్రిప్పులు",
         en: "Total Trips",
         hi: "कुल ट्रिप",
-        ar: "إجمالي الرحلات",
-        ur: "کل ٹرپس"
+        ar: "إجمالي الرحلات"
       },
       trip_earnings_label: {
         te: "ట్రిప్ ఆదాయం",
         en: "Trip Earnings",
         hi: "ट्रिप की कमाई",
-        ar: "أرباح الرحلة",
-        ur: "ٹرپ کی کمائی"
+        ar: "أرباح الرحلة"
       },
       combined_earnings_label: {
         te: "మొత్తం",
         en: "Total Amount",
         hi: "कुल राशि",
-        ar: "المبلغ الإجمالي",
-        ur: "کل رقم"
+        ar: "المبلغ الإجمالي"
       },
        view_logs_button_title: {
         te: "సేవ్ చేసిన వివరాలను చూడు",
         en: "View Saved Logs",
         hi: "सहेजे गए लॉग देखें",
-        ar: "عرض السجلات المحفوظة",
-        ur: "محفوظ کردہ لاگز دیکھیں"
+        ar: "عرض السجلات المحفوظة"
       },
       // Logs Section
       logs_heading: {
         te: "ట్రాక్టర్ పని వివరాలు సేవ్ చేయబడ్డాయి",
         en: "Saved Tractor Work Logs",
         hi: "सहेजे गए ट्रैक्टर कार्य लॉग",
-        ar: "سجلات عمل الجرار المحفوظة",
-        ur: "محفوظ کردہ ٹریکٹر کام کے لاگز"
+        ar: "سجلات عمل الجرار المحفوظة"
       },
       logs_tagline: {
         te: "ఇక్కడ మీ సేవ్ చేసిన పని యొక్క రికార్డు ఉంది.",
         en: "Here is the record of your saved work.",
         hi: "यहाँ आपके सहेजे गए कार्य का रिकॉर्ड है।",
-        ar: "هنا سجل عملك المحفوظ.",
-        ur: "یہاں آپ کے محفوظ کردہ کام کا ریکارڈ ہے۔"
+        ar: "هنا سجل عملك المحفوظ."
       },
       no_logs_saved: {
         te: "ఇంకా లాగ్‌లు సేవ్ చేయబడలేదు.",
         en: "No logs saved yet.",
         hi: "साफ़ करने के लिए कोई लॉग नहीं है।",
-        ar: "لا توجد سجلات لمسحها.",
-        ur: "ابھی تک کوئی لاگز محفوظ نہیں کیے گئے ہیں۔"
+        ar: "لا توجد سجلات لمسحها."
       },
       work_time: {
         te: "పని సమయం",
         en: "Work Time",
         hi: "कार्य समय",
-        ar: "وقت العمل",
-        ur: "काम کا वक्त"
+        ar: "وقت العمل"
       },
       rate: {
         te: "రేటు",
         en: "Rate",
         hi: "दर",
-        ar: "السعر",
-        ur: "شرح"
+        ar: "السعر"
       },
       duration: {
         te: "వ్యవధి",
         en: "Duration",
         hi: "अवधि",
-        ar: "المدة",
-        ur: "مدت"
+        ar: "المدة"
       },
       trips_count_log: { 
         te: "ట్రిప్పులు",
         en: "Trips",
         hi: "ट्रिप",
-        ar: "الرحلات",
-        ur: "ٹرپس"
+        ar: "الرحلات"
       },
       cost_per_trip_log: { 
         te: "ఒక ట్రిప్‌కు ధర",
         en: "Cost per Trip",
         hi: "प्रति ट्रिप लागत",
-        ar: "التكلفة لكل رحلة",
-        ur: "فی ٹرپ لاگت"
+        ar: "التكلفة لكل رحلة"
       },
       total_trips_display_log: { 
         te: "మొత్తం ట్రిప్పులు",
         en: "Total Trips",
         hi: "कुल ट्रिप",
-        ar: "إجمالي الرحلات",
-        ur: "کل ٹرپس"
+        ar: "إجمالي الرحلات"
       },
       earnings: {
         te: "ఆదాయం",
         en: "Earnings",
         hi: "कमाई",
-        ar: "الأرباح",
-        ur: "کمائی"
+        ar: "الأرباح"
       },
       saved_on: {
         te: "సేవ్ చేయబడింది",
         en: "Saved on",
         hi: "पर सहेजा गया",
-        ar: "تم الحفظ في",
-        ur: "اس پر محفوظ کیا گیا"
+        ar: "تم الحفظ في"
       },
       name: {
         te: "పేరు",
         en: "Name",
         hi: "नाम",
-        ar: "الاسم",
-        ur: "نام"
+        ar: "الاسم"
       },
       phone: {
         te: "ఫోన్",
         en: "Phone",
         hi: "फ़ोन",
-        ar: "الهاتف",
-        ur: "فون"
+        ar: "الهاتف"
       },
       note_content_label: {
         te: "నోట్ కంటెంట్",
         en: "Note Content",
         hi: "नोट सामग्री",
-        ar: "محتوى الملاحظة",
-        ur: "نوٹ کا مواد"
+        ar: "محتوى الملاحظة"
       },
       note_content_placeholder: {
         te: "దయచేసి పని సమాచార వివరాలను నమోదు చేయండి",
         en: "Please enter the work info details",
         hi: "कृपया कार्य जानकारी विवरण दर्ज करें",
-        ar: "الرجاء إدخال تفاصيل معلومات العمل",
-        ur: "براہ کرم کام کی معلومات کی تفصیلات درج کریں"
+        ar: "الرجاء إدخال تفاصيل معلومات العمل"
       },
       // Leaderboard Section
-      leaderboard_button_title: { te: "లీడర్‌బోర్డ్", en: "Leaderboard", hi: "लीडरबोर्ड", ar: "لوحة الصدارة", ur: "لیڈر بورڈ" },
-      leaderboard_heading: { te: "లీడర్‌బోర్డ్", en: "Leaderboard", hi: "लीडरबोर्ड", ar: "لوحة الصدارة", ur: "لیڈر بورڈ" },
-      leaderboard_tagline: { te: "ఎక్కువగా సేవ్ చేయబడిన కస్టమర్‌లు", en: "Most Frequently Saved Customers", hi: "सबसे ज़्यादा सहेजे गए ग्राहक", ar: "العملاء الأكثر حفظًا", ur: "سب سے زیادہ محفوظ کردہ صارفین" },
-      no_leaderboard_data: { te: "లీడర్‌బోర్డ్ కోసం డేటా లేదు.", en: "No data for the leaderboard yet.", hi: "लीडरबोर्ड के लिए अभी कोई डेटा नहीं है।", ar: "لا توجد بيانات للوحة الصدارة بعد.", ur: "لیڈر بورڈ کے لئے ابھی تک کوئی ڈیٹا نہیں ہے۔" },
-      saves: { te: "సేవ్‌లు", en: "Saves", hi: "सहेजें", ar: "الحفظ", ur: "محفوظ کریں" },
-      customer_logs_heading: { te: "{name} యొక్క లాగ్‌లు", en: "Logs for {name}", hi: "{name} के लॉग", ar: "سجلات {name}", ur: "{name} के لاگز" },
+      leaderboard_button_title: { te: "లీడర్‌బోర్డ్", en: "Leaderboard", hi: "लीडरबोर्ड", ar: "لوحة الصدارة" },
+      leaderboard_heading: { te: "లీడర్‌బోర్డ్", en: "Leaderboard", hi: "लीडरबोर्ड", ar: "لوحة الصدارة" },
+      leaderboard_tagline: { te: "ఎక్కువగా సేవ్ చేయబడిన కస్టమర్‌లు", en: "Most Frequently Saved Customers", hi: "सबसे ज़्यादा सहेजे गए ग्राहक", ar: "العملاء الأكثر حفظًا" },
+      no_leaderboard_data: { te: "లీడర్‌బోర్డ్ కోసం డేటా లేదు.", en: "No data for the leaderboard yet.", hi: "लीडरबोर्ड के लिए अभी कोई डेटा नहीं है।", ar: "لا توجد بيانات للوحة الصدارة بعد." },
+      saves: { te: "సేవ్‌లు", en: "Saves", hi: "सहेजें", ar: "الحفظ" },
+      customer_logs_heading: { te: "{name} యొక్క లాగ్‌లు", en: "Logs for {name}", hi: "{name} के लॉग", ar: "سجلات {name}" },
       // Monthly Dashboard Translations
-      monthly_dashboard_button_title: { te: "నెలవారీ డాష్‌బోర్డ్", en: "Monthly Dashboard", hi: "मासिक डैशबोर्ड", ar: "لوحة القيادة الشهرية", ur: "ماہانہ ڈیش بورڈ" },
-      monthly_dashboard_heading: { te: "నెలవారీ సారాంశం", en: "Monthly Summary", hi: "मासिक सारांश", ar: "ملخص شهري", ur: "ماہانہ خلاصہ" },
-      monthly_dashboard_tagline: { te: "మీ నెలవారీ పనితీరును ట్రాక్ చేయండి", en: "Track your monthly performance", hi: "अपने मासिक प्रदर्शन को ट्रैक करें", ar: "تتبع أدائك الشهري", ur: "اپنی ماہانہ کارکردگی کو ٹریک کریں۔" },
-      month_selector_label: { te: "నెల ఎంచుకోండి:", en: "Select Month:", hi: "महीना चुनें:", ar: "اختر الشهر:", ur: "مہینہ منتخب کریں۔" },
-      total_amount_label: { te: "మొత్తం ఆదాయం", en: "Total Earnings", hi: "कुल कमाई", ar: "إجمالي الأرباح", ur: "کل کمائی" },
-      total_hours_label: { te: "మొత్తం గంటలు", en: "Total Hours", hi: "कुल घंटे", ar: "إجمالي الساعات", ur: "کل گھنٹے" },
-      total_trips_label: { te: "మొత్తం ట్రిప్పులు", en: "Total Trips", hi: "कुल यात्राएं", ar: "إجمالي الرحلات", ur: "کل ٹرپس" },
-      // Diesel Monitoring
-        diesel_button_title: { te: "డీజిల్ పర్యవేక్షణ", en: "Diesel Monitoring", hi: "डीजल निगरानी", ar: "مراقبة الديزل", ur: "ڈیزل مانیٹرنگ" },
-        diesel_heading: { te: "డీజిల్ పర్యవేక్షణ", en: "Diesel Monitoring", hi: "डीजल निगरानी", ar: "مراقبة الديزل", ur: "ڈیزل مانیٹرنگ" },
-        diesel_date_label: { te: "తేదీ", en: "Date", hi: "तारीख", ar: "التاريخ", ur: "تاریخ" },
-        diesel_time_label: { te: "సమయం", en: "Time", hi: "समय", ar: "الوقت", ur: "وقت" },
-        diesel_price_label: { te: "1 లీటరు (₹)", en: "1 litre (₹)", hi: "1 लीटर (₹)", ar: "١ لتر (₹)", ur: "۱ لیٹر (₹)" },
-        diesel_litres_label: { te: "లీటర్ల సంఖ్య", en: "Number of Litres", hi: "लीटर की संख्या", ar: "عدد اللترات", ur: "لیٹر کی تعداد" },
-        diesel_total_cost_label: { te: "మొత్తం ఖర్చు", en: "Total Cost", hi: "कुल लागत", ar: "التكلفة الإجمالية", ur: "کل لاگت" },
-        diesel_history_button: { te: "డీజిల్ చరిత్రను వీక్షించండి", en: "View Diesel History", hi: "डीजल इतिहास देखें", ar: "عرض تاريخ الديزل", ur: "ڈیزل کی تاریخ دیکھیں" },
-        diesel_dashboard_button: { te: "డీజిల్ డాష్‌బోర్డ్ వీక్షించండి", en: "View Diesel Dashboard", hi: "डीजल डैशबोर्ड देखें", ar: "عرض لوحة قيادة الديزل", ur: "ڈیزل ڈیش بورڈ دیکھیں" },
-        diesel_history_heading: { te: "డీజిల్ చరిత్ర", en: "Diesel History", hi: "डीजल इतिहास", ar: "تاريخ الديزل", ur: "ڈیزل کی تاریخ" },
-        diesel_dashboard_heading: { te: "నెలవారీ డీజిల్ సారాంశం", en: "Monthly Diesel Summary", hi: "मासिक डीजल सारांश", ar: "ملخص الديزل الشهري", ur: "ماہانہ ڈیزل کا خلاصہ" },
-        diesel_month_selector_label: { te: "నెల ఎంచుకోండి:", en: "Select Month:", hi: "महीना चुनें:", ar: "اختر الشهر:", ur: "مہینہ منتخب کریں۔" },
-        diesel_total_spent_label: { te: "మొత్తం ఖర్చు", en: "Total Spent", hi: "कुल खर्च", ar: "إجمالي الإنفاق", ur: "کل خرچ" },
-        diesel_total_litres_label: { te: "మొత్తం లీటర్లు", en: "Total Litres", hi: "कुल लीटर", ar: "إجمالي اللترات", ur: "کل لیٹر" },
-        no_diesel_logs_saved: { te: "డీజిల్ లాగ్‌లు ఇంకా సేవ్ చేయబడలేదు.", en: "No diesel logs saved yet.", hi: "अभी तक कोई डीजल लॉग सहेजा नहीं गया है।", ar: "لم يتم حفظ سجلات الديزل بعد.", ur: "ابھی تک کوئی ڈیزل لاگ محفوظ نہیں ہوا۔" },
-        diesel_data_saved_success: { te: "డీజిల్ డేటా విజయవంతంగా సేవ్ చేయబడింది!", en: "Diesel data saved successfully!", hi: "डीजल डेटा सफलतापूर्वक सहेजा गया!", ar: "تم حفظ بيانات الديزل بنجاح!", ur: "ڈیزل کا ڈیٹا کامیابی سے محفوظ ہو گیا۔" },
-        fill_diesel_details_error: { te: "దయచేసి ధర మరియు లీటర్లను నింపండి.", en: "Please fill price and litres.", hi: "कृपया मूल्य और लीटर भरें।", ar: "يرجى ملء السعر واللترات.", ur: "برائے مہربانی قیمت اور لیٹر بھریں۔" },
-      // NEW: Monthly Net Translations
-      monthly_net_button_title: { te: "నెలవారీ నికర ఆదాయం", en: "Monthly Net Earnings", hi: "मासिक शुद्ध आय", ar: "صافي الأرباح الشهرية", ur: "ماہانہ خالص آمدنی" },
-      monthly_net_heading: { te: "నెలవారీ నికర ఆదాయం", en: "Monthly Net Earnings", hi: "मासिक शुद्ध आय", ar: "صافي الأرباح الشهرية", ur: "ماہانہ خالص آمدنی" },
-      monthly_net_tagline: { te: "మీ ఆదాయం వర్సెస్ ఖర్చులు", en: "Your income vs expenses", hi: "आपकी आय बनाम व्यय", ar: "دخلك مقابل نفقاتك", ur: "آپ کی آمدنی بمقابلہ اخراجات" },
-      net_total_earnings_label: { te: "మొత్తం ఆదాయం", en: "Total Earnings", hi: "कुल कमाई", ar: "إجمالي الأرباح", ur: "کل کمائی" },
-      net_total_diesel_label: { te: "డీజిల్ ఖర్చు", en: "Diesel Spent", hi: "डीजल खर्च", ar: "إنفاق الديزل", ur: "ڈیزل خرچ" },
-      net_final_amount_label: { te: "నికర మొత్తం", en: "Net Amount", hi: "शुद्ध राशि", ar: "المبلغ الصافي", ur: "خالص رقم" },
-      no_transactions_found: { te: "ఈ నెలకు లావాదేవీలు కనుగొనబడలేదు.", en: "No transactions found for this month.", hi: "इस महीने के लिए कोई लेनदेन नहीं मिला।", ar: "لم يتم العثور على معاملات لهذا الشهر.", ur: "اس مہینے کے لئے کوئی لین دین نہیں ملا۔" },
+      monthly_dashboard_button_title: { te: "నెలవారీ డాష్‌బోర్డ్", en: "Monthly Dashboard", hi: "मासिक डैशबोर्ड", ar: "لوحة القيادة الشهرية" },
+      monthly_dashboard_heading: { te: "నెలవారీ సారాంశం", en: "Monthly Summary", hi: "मासिक सारांश", ar: "ملخص شهري" },
+      monthly_dashboard_tagline: { te: "మీ నెలవారీ పనితీరును ట్రాక్ చేయండి", en: "Track your monthly performance", hi: "अपने मासिक प्रदर्शन को ट्रैक करें", ar: "تتبع أدائك الشهري" },
+      month_selector_label: { te: "నెల ఎంచుకోండి:", en: "Select Month:", hi: "महीना चुनें:", ar: "اختر الشهر:" },
+      total_amount_label: { te: "మొత్తం ఆదాయం", en: "Total Earnings", hi: "कुल कमाई", ar: "إجمالي الأرباح" },
+      total_hours_label: { te: "మొత్తం గంటలు", en: "Total Hours", hi: "कुल घंटे", ar: "إجمالي الساعات" },
+      total_trips_label: { te: "మొత్తం ట్రిప్పులు", en: "Total Trips", hi: "कुल यात्राएं", ar: "إجمالي الرحلات" },
        // Message Box Messages
       name_updated_success: {
         te: "పేరు విజయవంతంగా నవీకరించబడింది!",
         en: "Name updated successfully!",
         hi: "नाम सफलतापूर्वक अपडेट किया गया!",
-        ar: "تم تحديث الاسم بنجاح!",
-        ur: "نام کامیابی سے اپ ڈیٹ ہو گیا!"
+        ar: "تم تحديث الاسم بنجاح!"
       },
       name_phone_missing_error: {
         te: "దయచేసి మొదట పేరు మరియు ఫోన్ నంబర్‌ను నమోదు చేయండి.",
         en: "Please enter the name and phone number first.",
         hi: "कृपया पहले नाम और फोन नंबर दर्ज करें।",
-        ar: "الرجاء إدخال الاسم ورقم الهاتف أولاً.",
-        ur: "براہ کرم پہلے نام اور فون نمبر درج کریں۔"
+        ar: "الرجاء إدخال الاسم ورقم الهاتف أولاً."
       },
       phone_exists_error: {
         te: "ఈ ఫోన్ నంబర్ ఇప్పటికే '{name}' పేరుతో ఉంది. దయచేసి వేరే నంబర్‌ను ఉపయోగించండి.",
         en: "This phone number already exists with the name '{name}'. Please use a different number.",
         hi: "यह फ़ोन नंबर पहले से ही '{name}' नाम से मौजूद है। कृपया एक अलग नंबर का उपयोग करें।",
-        ar: "رقم الهاتف هذا موجود بالفعل بالاسم '{name}'. الرجاء استخدام رقم مختلف.",
-        ur: "یہ فون نمبر پہلے سے ہی '{name}' کے نام سے موجود ہے۔ براہ کرم ایک مختلف نمبر استعمال کریں۔"
+        ar: "رقم الهاتف هذا موجود بالفعل بالاسم '{name}'. الرجاء استخدام رقم مختلف."
       },
       fill_time_rate_error: {
         te: "దయచేసి సమయం మరియు రేటు నింపండి.",
         en: "Please fill time and rate.",
         hi: "कृपया समय और दर भरें।",
-        ar: "الرجاء تعبئة الوقت والسعر.",
-        ur: "براہ کرم وقت اور شرح بھریں۔"
+        ar: "الرجاء تعبئة الوقت والسعر."
       },
       end_time_error: {
         te: "ముగింపు సమయం ప్రారంభ సమయం తర్వాత లేదా కనీసం 1 నిమిషం వ్యవధి ఉండాలి.",
         en: "End time must be after start time or have at least 1 minute duration.",
         hi: "समाप्ति का समय शुरू होने के समय के बाद या कम से कम 1 मिनट की अवधि का होना चाहिए।",
-        ar: "يجب أن يكون وقت الانتهاء بعد وقت البدء أو أن تكون المدة دقيقة واحدة على الأقل.",
-        ur: "اختتام کا وقت شروع ہونے کے وقت کے بعد یا کم از کم 1 منٹ کی مدت کا ہونا چاہیے۔"
+        ar: "يجب أن يكون وقت الانتهاء بعد وقت البدء أو أن تكون المدة دقيقة واحدة على الأقل."
       },
       hourly_calculation_success: {
         te: "గంటకు ఆదాయం విజయవంతంగా లెక్కించబడింది!",
         en: "Hourly earnings calculated successfully!",
         hi: "घंटे की कमाई सफलतापूर्वक गणना की गई!",
-        ar: "تم حساب الأرباح بالساعة بنجاح!",
-        ur: "گھنٹے کی کمائی کامیابی سے حساب کی گئی!"
+        ar: "تم حساب الأرباح بالساعة بنجاح!"
       },
       enter_valid_trips_cost_error: {
         te: "దయచేసి ట్రిప్పులు మరియు ట్రిప్ ధర కోసం సరైన సంఖ్యలను నమోదు చేయండి.",
         en: "Please enter valid numbers for trips and trip cost.",
         hi: "कृपया ट्रिप और ट्रिप लागत के लिए मान्य संख्याएँ दर्ज करें।",
-        ar: "الرجاء إدخال أرقام صالحة للرحلات وتكلفة الرحلة.",
-        ur: "براہ کرم ٹرپس اور ٹرپ لاگت کے لیے درست نمبر درج کریں۔"
+        ar: "الرجاء إدخال أرقام صالحة للرحلات وتكلفة الرحلة."
       },
       trip_calculation_success: {
         te: "ట్రిప్ ఆదాయం విజయవంతంగా లెక్కించబడింది!",
         en: "Trip earnings calculated successfully!",
         hi: "ट्रिप की कमाई सफलतापूर्वक गणना की गई!",
-        ar: "تم حساب أرباح الرحلة بنجاح!",
-        ur: "ٹرپ کی کمائی کامیابی سے حساب کی گئی!"
+        ar: "تم حساب أرباح الرحلة بنجاح!"
       },
       combined_calculation_success: {
         te: "మొత్తం ఆదాయం విజయవంతంగా లెక్కించబడింది!",
         en: "Combined earnings calculated successfully!",
         hi: "कुल कमाई सफलतापूर्वक गणना की गई!",
-        ar: "تم حساب الأرباح المجمعة بنجاح!",
-        ur: "کل کمائی کامیابی سے حساب کی گئی!"
+        ar: "تم حساب الأرباح المجمعة بنجاح!"
       },
       fill_all_details_calculate_save_error: {
         te: "దయచేసి అన్ని వివరాలను నింపి, సేవ్ చేయడానికి ముందు ఆదాయాన్ని లెక్కించండి.",
         en: "Please fill all details and calculate earnings before saving.",
         hi: "कृपया सभी विवरण भरें और सहेजने से पहले कमाई की गणना करें।",
-        ar: "الرجاء تعبئة جميع التفاصيل وحساب الأرباح قبل الحفظ.",
-        ur: "براہ کرم تمام تفصیلات بھریں اور محفوظ کرنے से पहले کمائی کا حساب لگائیں۔"
+        ar: "الرجاء تعبئة جميع التفاصيل وحساب الأرباح قبل الحفظ."
       },
       data_saved_success: {
         te: "డేటా విజయవంతంగా సేవ్ చేయబడింది!",
         en: "Data saved successfully!",
         hi: "डेटा सफलतापूर्वक सहेजा गया!",
-        ar: "تم حفظ البيانات بنجاح!",
-        ur: "ڈیٹا کامیابی سے محفوظ کیا گیا!"
+        ar: "تم حفظ البيانات بنجاح!"
       },
        // NEW: Talkback translations
       calculation_talkback: {
-        te: "మొత్తం మొత్తం {amount} రూపాయలు",
+        te: "మొత్తం {amount} రూపాయలు",
         en: "Total Amount {amount} rupees",
         hi: "कुल राशि {amount} रुपये",
-        ar: "المبلغ الإجمالي {amount} روبية",
-        ur: "کل رقم {amount} روپے"
+        ar: "المبلغ الإجمالي {amount} روبية"
       },
       saved_talkback: {
         te: "డేటా విజయవంతంగా సేవ్ చేయబడింది",
         en: "Data saved successfully",
         hi: "डेटा सफलतापूर्वक सहेजा गया",
-        ar: "تم حفظ البيانات بنجاح",
-        ur: "ڈیٹا کامیابی سے محفوظ ہو گیا"
+        ar: "تم حفظ البيانات بنجاح"
       },
       back_button: {
         te: "వెనుకకు",
         en: "Back",
         hi: "पीछे",
-        ar: "عودة",
-        ur: "پیچھے"
+        ar: "عودة"
       },
       cancel_button: {
         te: "రద్దు చేయి",
         en: "Cancel",
         hi: "रद्द करें",
-        ar: "إلغاء",
-        ur: "منسوخ کریں"
+        ar: "إلغاء"
       },
       confirm_button: {
         te: "నిర్ధారించు",
         en: "Confirm",
         hi: "पुष्टि करें",
-        ar: "تأكيد",
-        ur: "تصدیق کریں"
+        ar: "تأكيد"
       },
       note_details_missing: { 
         te: "దయచేసి నోట్ కంటెంట్ నింపండి.",
         en: "Please fill note content.",
         hi: "कृपया नोट सामग्री भरें।",
-        ar: "الرجاء تعبئة محتوى الملاحظة.",
-        ur: "براహ کرم نوٹ کا مواد بھریں۔"
+        ar: "الرجاء تعبئة محتوى الملاحظة."
       },
       search_logs_placeholder: {
         te: "పేరు లేదా ఫోన్ ద్వారా శోధించండి...",
         en: "Search by name or phone...",
         hi: "नाम या फ़ोन से खोजें...",
-        ar: "البحث بالاسم أو الهاتف...",
-        ur: "نام یا فون سے تلاش کریں..."
-      },
-      feedback_option_title: { 
-        te: "అభిప్రాయం",
-        en: "Feedback",
-        hi: "प्रतिक्रिया",
-        ar: "ملاحظات",
-        ur: "فیڈ بیک"
-      },
-      feedback_message: { 
-        te: "మీ అభిప్రాయాన్ని పంపడానికి దయచేసి మీ ఇమెయిల్ క్లయింట్‌ను తనిఖీ చేయండి. (manatractor77@gmail.com)",
-        en: "Please check your email client to send your feedback. (manatractor77@gmail.com)",
-        hi: "अपनी प्रतिक्रिया भेजने के लिए कृपया अपना ईमेल क्लाइंट जांचें। (manatractor77@gmail.com)",
-        ar: "الرجاء التحقق من عميل البريد الإلكتروني الخاص بك لإرسال ملاحظاتك. (manatractor77@gmail.com)",
-        ur: "اپنی رائے بھیجنے کے لیے براہ کرم اپنا ای میل کلائنٹ چیک کریں۔ (manatractor77@gmail.com)"
+        ar: "البحث بالاسم أو الهاتف..."
       },
       contact_picker_not_supported: {
         te: "ఈ బ్రౌజర్‌లో కాంటాక్ట్ పికర్ APIకి మద్దతు లేదు.",
         en: "Contact Picker API not supported on this browser.",
         hi: "इस ब्राउज़र पर संपर्क पिकर एपीआई समर्थित नहीं है।",
-        ar: "واجهة برمجة تطبيقات منتقي جهات الاتصال غير مدعومة في هذا المتصفح.",
-        ur: "اس براؤزر پر رابطہ چنندہ API کی حمایت نہیں ہے۔"
+        ar: "واجهة برمجة تطبيقات منتقي جهات الاتصال غير مدعومة في هذا المتصفح."
       },
       speech_not_supported: {
         te: "ఈ బ్రౌజర్‌లో స్పీచ్ రికగ్నిషన్‌కు మద్దతు లేదు.",
         en: "Speech recognition is not supported in this browser.",
         hi: "इस ब्राउज़र में वाक् पहचान समर्थित नहीं है।",
-        ar: "التعرف على الكلام غير مدعوم في هذا المتصفح.",
-        ur: "اس براؤزر میں اسپیچ ریکگنیشن کی سہولت نہیں ہے۔"
+        ar: "التعرف على الكلام غير مدعوم في هذا المتصفح."
       },
        speech_synthesis_not_supported: {
         te: "ఈ బ్రౌజర్‌లో టెక్స్ట్-టు-స్పీచ్‌కు మద్దతు లేదు.",
         en: "Text-to-speech is not supported in this browser.",
         hi: "इस ब्राउज़र में टेक्स्ट-टू-स्पीच समर्थित नहीं है।",
-        ar: "تحويل النص إلى كلام غير مدعوم في هذا المتصفح.",
-        ur: "اس براؤزر میں ٹیکسٹ ٹو اسپیچ کی سہولت نہیں ہے۔"
+        ar: "تحويل النص إلى كلام غير مدعوم في هذا المتصفح."
       },
       speech_error: {
         te: "స్పీచ్ ఎర్రర్: {error}",
         en: "Speech Error: {error}",
         hi: "वाक् त्रुटि: {error}",
-        ar: "خطأ في الكلام: {error}",
-        ur: "تقریر میں خرابی: {error}"
+        ar: "خطأ في الكلام: {error}"
       },
-      paid_status: { te: "చెల్లించారు", en: "Paid", hi: "भुगतान किया गया", ar: "مدفوع", ur: "ادا کیا گیا" },
-      due_status: { te: "చెల్లించవలసినది", en: "Due", hi: "देय", ar: "مستحق", ur: "واجب الادا" },
-      advance_status: { te: "అడ్వాన్స్", en: "Advance", hi: "अग्रिम", ar: "مقدم", ur: "پیشگی" },
-      sms_button: { te: "SMS పంపండి", en: "Send SMS", hi: "एसएमएस भेजें", ar: "إرسال رسالة نصية", ur: "ایس ایم ایس بھیجیں" },
-      call_button: { te: "కాల్ చేయండి", en: "Call", hi: "कॉल करें", ar: "اتصل", ur: "کال کریں" },
-      download_button: { te: "డౌన్‌లోడ్", en: "Download", hi: "डाउनलोड", ar: "تحميل", ur: "ڈاؤن لوڈ کریں" },
-       read_aloud_button: { te: "గట్టిగా చదువు", en: "Read Aloud", hi: "जोर से पढ़ें", ar: "اقرأ بصوت عالٍ", ur: "بلند آواز سے پڑھیں" },
-      download_error: { te: "లాగ్‌ను డౌన్‌లోడ్ చేయడంలో విఫలమైంది.", en: "Failed to download log.", hi: "लॉग डाउनलोड करने में विफल।", ar: "فشل تنزيل السجل.", ur: "لاگ ڈاؤن لوڈ کرنے میں ناکام۔" },
-      call_error: { te: "కాల్ చేయడానికి ఫోన్ నంబర్ లేదు.", en: "No phone number available to call.", hi: "कॉल करने के लिए कोई फ़ोन नंबर उपलब्ध नहीं है।", ar: "لا يوجد رقم هاتف متاح للاتصال به.", ur: "کال करने کے لیے کوئی فون نمبر دستیاب نہیں ہے۔" },
-      sms_send_error: { te: "SMS పంపడానికి ఫోన్ నంబర్ లేదు.", en: "No phone number available to send SMS.", hi: "SMS भेजने के लिए कोई फ़ोन नंबर उपलब्ध नहीं है।", ar: "لا يوجد رقم هاتف متاح لإرسال رسالة نصية.", ur: "ایس ایم ایس بھیجنے کے لیے کوئی فون نمبر دستیاب نہیں ہے۔" },
+      paid_status: { te: "చెల్లించారు", en: "Paid", hi: "भुगतान किया गया", ar: "مدفوع" },
+      due_status: { te: "చెల్లించవలసినది", en: "Due", hi: "देय", ar: "مستحق" },
+      advance_status: { te: "అడ్వాన్స్", en: "Advance", hi: "अग्रिम", ar: "مقدم" },
+      sms_button: { te: "SMS పంపండి", en: "Send SMS", hi: "एसएमएस भेजें", ar: "إرسال رسالة نصية" },
+      whatsapp_button: { te: "WhatsApp పంపండి", en: "Send WhatsApp", hi: "व्हाट्सएप भेजें", ar: "إرسال واتساب" },
+      phonepe_button: { te: "PhonePe ద్వారా పంపండి", en: "Send via PhonePe", hi: "फोनपे के माध्यम से भेजें", ar: "إرسال عبر PhonePe" },
+      call_button: { te: "కాల్ చేయండి", en: "Call", hi: "कॉल करें", ar: "اتصل" },
+      download_button: { te: "డౌన్‌లోడ్", en: "Download", hi: "डाउनलोड", ar: "تحميل" },
+       read_aloud_button: { te: "గట్టిగా చదువు", en: "Read Aloud", hi: "जोर से पढ़ें", ar: "اقرأ بصوت عالٍ" },
+      download_error: { te: "లాగ్‌ను డౌన్‌లోడ్ చేయడంలో విఫలమైంది.", en: "Failed to download log.", hi: "लॉग डाउनलोड करने में विफल।", ar: "فشل تنزيل السجل." },
+      call_error: { te: "కాల్ చేయడానికి ఫోన్ నంబర్ లేదు.", en: "No phone number available to call.", hi: "कॉल करने के लिए कोई फ़ोन नंबर उपलब्ध नहीं है।", ar: "لا يوجد رقم هاتف متاح للاتصال به." },
+      sms_send_error: { te: "SMS పంపడానికి ఫోన్ నంబర్ లేదు.", en: "No phone number available to send SMS.", hi: "SMS भेजने के लिए कोई फ़ोन नंबर उपलब्ध नहीं है।", ar: "لا يوجد رقم هاتف متاح لإرسال رسالة نصية." },
       sms_body_template: {
         te: "మీ ట్రాక్టర్ పని వివరాలు:\nతేదీ: {date}\nపేరు: {name}\nఫోన్: {phone}\n{hourlyDetails}\n{tripDetails}\nమొత్తం: {totalEarnings}\nనోట్: {noteContent}\nచెల్లింపు స్థితి: {paymentStatus}",
         en: "Your Tractor Work Details:\nDate: {date}\nName: {name}\nPhone: {phone}\n{hourlyDetails}\n{tripDetails}\nTotal Amount: {totalEarnings}\nNote: {noteContent}\nPayment Status: {paymentStatus}",
         hi: "आपके ट्रैक्टर के काम का विवरण:\nतारीख: {date}\nनाम: {name}\nफ़ोन: {phone}\n{hourlyDetails}\n{tripDetails}\nकुल राशि: {totalEarnings}\nनोट: {noteContent}\nभुगतान की स्थिति: {paymentStatus}",
-        ar: "تفاصيل عمل الجرار الخاص بك:\nالتاريخ: {date}\nالاسم: {name}\nالهاتف: {phone}\n{hourlyDetails}\n{tripDetails}\nالمبلغ الإجمالي: {totalEarnings}\nملاحظة: {noteContent}\nحالة الدفع: {paymentStatus}",
-        ur: "آپ کے ٹریکٹر کے کام کی تفصیلات:\nتاریخ: {date}\nنام: {name}\nفون: {phone}\n{hourlyDetails}\n{tripDetails}\nکل رقم: {totalEarnings}\nنوٹ: {noteContent}\nادائیگی کی حیثیت: {paymentStatus}"
+        ar: "تفاصيل عمل الجرار الخاص بك:\nالتاريخ: {date}\nالاسم: {name}\nالهاتف: {phone}\n{hourlyDetails}\n{tripDetails}\nالمبلغ الإجمالي: {totalEarnings}\nملاحظة: {noteContent}\nحالة الدفع: {paymentStatus}"
       },
       sms_hourly_template: {
         te: "పని సమయం: {startTime} - {endTime} ({duration})\nగంటకు రేటు: ₹{rate} / hr\nగంటల ఆదాయం: ₹{earnings}",
         en: "Work Time: {startTime} - {endTime} ({duration})\nRate per Hour: ₹{rate} / hr\nHourly Earnings: ₹{earnings}",
         hi: "कार्य समय: {startTime} - {endTime} ({duration})\nप्रति घंटा दर: ₹{rate} / hr\nघंटे की कमाई: ₹{earnings}",
-        ar: "وقت العمل: {startTime} - {endTime} ({duration})\nالسعر بالساعة: ₹{rate} / hr\nأرباح بالساعة: ₹{earnings}",
-        ur: "کام کا وقت: {startTime} - {endTime} ({duration})\nفی گھنٹہ کی شرح: ₹{rate} / hr\nگھنٹے کی کمائی: ₹{earnings}"
+        ar: "وقت العمل: {startTime} - {endTime} ({duration})\nالسعر بالساعة: ₹{rate} / hr\nأرباح بالساعة: ₹{earnings}"
       },
       sms_trip_template: {
         te: "ట్రిప్పులు: {trips} ({tripsDisplay})\nఒక ట్రిప్‌కు ధర: ₹{costPerTrip}\nట్రిప్ ఆదాయం: ₹{earnings}",
         en: "Trips: {trips} ({tripsDisplay})\nCost per Trip: ₹{costPerTrip}\nTrip Earnings: ₹{earnings}",
         hi: "ट्रिप: {trips} ({tripsDisplay})\nप्रति ट्रिप लागत: ₹{costPerTrip}\nट्रिप की कमाई: ₹{earnings}",
-        ar: "الرحلات: {trips} ({tripsDisplay})\nالتكلفة لكل رحلة: ₹{costPerTrip}\nأرباح الرحلة: ₹{earnings}",
-        ur: "ٹرپس: {trips} ({tripsDisplay})\nفی ٹرپ لاگت: ₹{costPerTrip}\nٹرپ کی کمائی: ₹{earnings}"
+        ar: "الرحلات: {trips} ({tripsDisplay})\nالتكلفة لكل رحلة: ₹{costPerTrip}\nأرباح الرحلة: ₹{earnings}"
       },
       footer_text: {
         te: "© {year} మన ట్రాక్టర్. అన్ని హక్కులు ప్రత్యేకించబడ్డాయి.",
         en: "© {year} ManaTractor. All rights reserved.",
         hi: "© {year} मन ट्रैक्टर। सर्वाधिकार सुरक्षित।",
-        ar: "© {year} مانا تراكتور. كل الحقوق محفوظة.",
-        ur: "© {year} مانا ٹریکٹر۔ جملہ حقوق محفوظ ہیں۔"
+        ar: "© {year} مانا تراكتور. كل الحقوق محفوظة."
       }
     };
 
@@ -1666,7 +1439,7 @@
         
         currentSpeechTargetId = targetId;
         
-        const langMap = { 'te': 'te-IN', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA', 'ur': 'ur-PK' };
+        const langMap = { 'te': 'te-IN', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA' };
         recognition.lang = langMap[currentLang] || 'en-US';
         
         recognition.start();
@@ -1799,17 +1572,15 @@
       document.getElementById('costPerTripLabel').textContent = T('cost_per_trip_label');
       document.getElementById('costPerTrip').placeholder = T('cost_per_trip_placeholder');
       
-      // Update button titles
+      // Update button titles and text
       document.getElementById('calculateBtn').title = T('calculate_button_title');
       document.getElementById('saveBtn').title = T('save_button_title');
+      document.getElementById('calculateBtnText').textContent = T('calculate_button_title');
+      document.getElementById('saveBtnText').textContent = T('save_button_title');
+      
       document.getElementById('viewLogsBtnMenu').title = T('view_logs_button_title');
       document.getElementById('leaderboardBtnMenu').title = T('leaderboard_button_title');
       document.getElementById('monthlyDashboardBtnMenu').title = T('monthly_dashboard_button_title');
-      document.getElementById('monthlyNetBtnMenu').title = T('monthly_net_button_title');
-      document.getElementById('dieselBtnMenu').title = T('diesel_button_title');
-      document.getElementById('feedbackLinkMenu').title = T('feedback_option_title');
-      document.getElementById('dieselCalculateBtn').title = T('calculate_button_title');
-      document.getElementById('dieselSaveBtn').title = T('save_button_title');
       
       document.getElementById('hourlyTimeLabel').textContent = T('hourly_time_label');
       document.getElementById('hourlyEarningsLabel').textContent = T('hourly_earnings_label');
@@ -1833,27 +1604,6 @@
       document.getElementById('totalHoursLabel').textContent = T('total_hours_label');
       document.getElementById('totalTripsLabel').textContent = T('total_trips_label');
 
-      document.getElementById('monthlyNetHeading').textContent = T('monthly_net_heading');
-      document.getElementById('monthlyNetTagline').textContent = T('monthly_net_tagline');
-      document.getElementById('monthlyNetMonthSelectorLabel').textContent = T('month_selector_label');
-      document.getElementById('netTotalEarningsLabel').textContent = T('net_total_earnings_label');
-      document.getElementById('netTotalDieselLabel').textContent = T('net_total_diesel_label');
-      document.getElementById('netFinalAmountLabel').textContent = T('net_final_amount_label');
-
-      document.getElementById('dieselHeadingText').textContent = T('diesel_heading');
-      document.getElementById('dieselDateLabel').textContent = T('diesel_date_label');
-      document.getElementById('dieselTimeLabel').textContent = T('diesel_time_label');
-      document.getElementById('dieselPriceLabel').textContent = T('diesel_price_label');
-      document.getElementById('dieselLitresLabel').textContent = T('diesel_litres_label');
-      document.getElementById('dieselTotalCostLabel').textContent = T('diesel_total_cost_label');
-      document.getElementById('dieselHistoryBtn').textContent = T('diesel_history_button');
-      document.getElementById('dieselDashboardBtn').textContent = T('diesel_dashboard_button');
-      document.getElementById('dieselHistoryHeading').textContent = T('diesel_history_heading');
-      document.getElementById('dieselDashboardHeading').textContent = T('diesel_dashboard_heading');
-      document.getElementById('dieselMonthSelectorLabel').textContent = T('diesel_month_selector_label');
-      document.getElementById('dieselTotalSpentLabel').textContent = T('diesel_total_spent_label');
-      document.getElementById('dieselTotalLitresLabel').textContent = T('diesel_total_litres_label');
-
       document.getElementById('confirmModalCancelBtn').textContent = T('cancel_button');
       document.getElementById('confirmModalConfirmBtn').textContent = T('confirm_button');
       
@@ -1864,9 +1614,6 @@
       if (!document.getElementById('logsSection').classList.contains('hidden')) loadLogs();
       if (!document.getElementById('leaderboardSection').classList.contains('hidden')) generateLeaderboard();
       if (!document.getElementById('monthlyDashboardSection').classList.contains('hidden')) { populateMonthSelector(); renderMonthlyDashboard(); }
-      if (!document.getElementById('monthlyNetSection').classList.contains('hidden')) { populateMonthlyNetMonthSelector(); renderMonthlyNetView(); }
-      if (!document.getElementById('dieselHistorySection').classList.contains('hidden')) loadDieselLogs();
-      if (!document.getElementById('dieselDashboardSection').classList.contains('hidden')) { populateDieselMonthSelector(); renderDieselDashboard(); }
       if (!document.getElementById('customerLogsSection').classList.contains('hidden')) {
         const heading = document.getElementById('customerLogsHeading');
         const customerName = heading.getAttribute('data-customer-name');
@@ -1920,7 +1667,7 @@
     // Function to show/hide sections
     function showSection(sectionId) {
         stopSpeech(); // Stop any speech when changing views
-        const sections = ['dashboardSection', 'logsSection', 'leaderboardSection', 'customerLogsSection', 'monthlyDashboardSection', 'monthlyNetSection', 'dieselSection', 'dieselHistorySection', 'dieselDashboardSection'];
+        const sections = ['dashboardSection', 'logsSection', 'leaderboardSection', 'customerLogsSection', 'monthlyDashboardSection'];
         sections.forEach(id => {
             const section = document.getElementById(id);
             if (section) {
@@ -1959,22 +1706,6 @@
     function showLeaderboardView() {
       showSection('leaderboardSection');
       generateLeaderboard();
-    }
-
-    function showDieselView() {
-        showSection('dieselSection');
-        setCurrentDieselDateTime();
-    }
-
-    function showDieselHistoryView() {
-        showSection('dieselHistorySection');
-        loadDieselLogs();
-    }
-
-    function showDieselDashboardView() {
-        showSection('dieselDashboardSection');
-        populateDieselMonthSelector();
-        renderDieselDashboard();
     }
 
     // --- MONTHLY DASHBOARD FUNCTIONS ---
@@ -2094,112 +1825,6 @@
         totalTripsEl.textContent = totalTrips;
     }
     // --- END MONTHLY DASHBOARD FUNCTIONS ---
-
-    // --- NEW MONTHLY NET FUNCTIONS ---
-    function showMonthlyNetView() {
-        showSection('monthlyNetSection');
-        populateMonthlyNetMonthSelector();
-        renderMonthlyNetView();
-    }
-
-    function populateMonthlyNetMonthSelector() {
-        const workRecords = JSON.parse(localStorage.getItem('tractorRecords') || '[]');
-        const dieselRecords = JSON.parse(localStorage.getItem('dieselRecords') || '[]');
-        const monthSelector = document.getElementById('monthlyNetMonthSelector');
-        
-        const uniqueMonths = new Set();
-        [...workRecords, ...dieselRecords].forEach(record => {
-            if (!record.date) return;
-            const recordDate = new Date(record.date);
-            if (isNaN(recordDate.getTime())) return;
-            uniqueMonths.add(`${recordDate.getFullYear()}-${recordDate.getMonth()}`);
-        });
-
-        const now = new Date();
-        uniqueMonths.add(`${now.getFullYear()}-${now.getMonth()}`);
-
-        const sortedMonths = Array.from(uniqueMonths).sort((a, b) => new Date(b.split('-')[0], b.split('-')[1]) - new Date(a.split('-')[0], a.split('-')[1]));
-        
-        const selectedValue = monthSelector.value;
-        monthSelector.innerHTML = '';
-        sortedMonths.forEach(monthStr => {
-            const [year, month] = monthStr.split('-').map(Number);
-            const option = document.createElement('option');
-            option.value = monthStr;
-            option.textContent = new Date(year, month).toLocaleString(currentLang, { month: 'long', year: 'numeric' });
-            monthSelector.appendChild(option);
-        });
-
-        if (sortedMonths.includes(selectedValue)) {
-            monthSelector.value = selectedValue;
-        }
-    }
-
-    function renderMonthlyNetView() {
-        const selectedMonthStr = document.getElementById('monthlyNetMonthSelector').value;
-        const totalEarningsEl = document.getElementById('netTotalEarningsValue');
-        const totalDieselEl = document.getElementById('netTotalDieselValue');
-        const finalAmountEl = document.getElementById('netFinalAmountValue');
-        const historyContainer = document.getElementById('monthlyNetHistoryContainer');
-
-        totalEarningsEl.textContent = '₹0';
-        totalDieselEl.textContent = '₹0';
-        finalAmountEl.textContent = '₹0';
-        historyContainer.innerHTML = '';
-
-        if (!selectedMonthStr) return;
-
-        const [selectedYear, selectedMonth] = selectedMonthStr.split('-').map(Number);
-        
-        // Calculate Total Earnings
-        const workRecords = JSON.parse(localStorage.getItem('tractorRecords') || '[]');
-        const filteredWork = workRecords.filter(r => {
-            const d = new Date(r.date);
-            return !isNaN(d.getTime()) && d.getFullYear() === selectedYear && d.getMonth() === selectedMonth;
-        });
-        const totalEarnings = filteredWork.reduce((sum, r) => sum + (r.combinedTotalEarnings || 0), 0);
-
-        // Calculate Total Diesel
-        const dieselRecords = JSON.parse(localStorage.getItem('dieselRecords') || '[]');
-        const filteredDiesel = dieselRecords.filter(r => {
-            const d = new Date(r.date);
-            return !isNaN(d.getTime()) && d.getFullYear() === selectedYear && d.getMonth() === selectedMonth;
-        });
-        const totalDiesel = filteredDiesel.reduce((sum, r) => sum + (r.totalCost || 0), 0);
-        
-        totalEarningsEl.textContent = `₹${formatNumberWithCommas(totalEarnings)}`;
-        totalDieselEl.textContent = `₹${formatNumberWithCommas(totalDiesel)}`;
-        finalAmountEl.textContent = `₹${formatNumberWithCommas(totalEarnings - totalDiesel)}`;
-
-        // Create and render combined history
-        const earningsHistory = filteredWork.map(r => ({ date: r.date, type: 'earning', desc: `Work for ${r.userName}`, amount: r.combinedTotalEarnings }));
-        const dieselHistory = filteredDiesel.map(r => ({ date: r.date, type: 'expense', desc: `${r.litres}L Diesel`, amount: r.totalCost }));
-        
-        const combinedHistory = [...earningsHistory, ...dieselHistory].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        if(combinedHistory.length === 0) {
-            historyContainer.innerHTML = `<p class="text-center text-gray-500">${T('no_transactions_found')}</p>`;
-            return;
-        }
-
-        combinedHistory.forEach(item => {
-            const isEarning = item.type === 'earning';
-            const card = document.createElement('div');
-            card.className = `flex items-center justify-between p-3 rounded-lg ${isEarning ? 'bg-green-50' : 'bg-red-50'}`;
-            card.innerHTML = `
-                <div>
-                    <p class="font-semibold ${isEarning ? 'text-green-800' : 'text-red-800'}">${item.desc}</p>
-                    <p class="text-xs text-gray-500">${item.date}</p>
-                </div>
-                <p class="text-lg font-bold ${isEarning ? 'text-green-600' : 'text-red-600'}">
-                    ${isEarning ? '+' : '-'}₹${formatNumberWithCommas(item.amount)}
-                </p>
-            `;
-            historyContainer.appendChild(card);
-        });
-    }
-
-    // --- END MONTHLY NET FUNCTIONS ---
 
     // Function to set current date and start time
     function setCurrentDateAndStartTime() {
@@ -2353,13 +1978,16 @@
 
       showMessage(T('data_saved_success'), 'success');
       speakText(T('saved_talkback'));
+      
+      // UPDATE: Clear note content after saving
+      document.getElementById('noteContent').value = '';
+      localStorage.removeItem('manatractorLastNoteContent');
 
       document.getElementById('startTime').value = '';
       document.getElementById('endTime').value = '';
       document.getElementById('ratePerHour').value = '2000';
       document.getElementById('numberOfTrips').value = '0';
       document.getElementById('costPerTrip').value = '500';
-      document.getElementById('noteContent').value = '';
       showDashboardView(); 
     }
 
@@ -2388,7 +2016,7 @@
 
       recordsToDisplay.forEach(record => {
         const logCard = document.createElement('div');
-        logCard.className = 'bg-white border border-gray-200 rounded-xl p-4 shadow-sm';
+        logCard.className = 'bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden'; // Added relative and overflow
         const ts = record.timestamp; // for unique IDs
 
         let hourlyDetailsHtml = '';
@@ -2431,8 +2059,14 @@
         if (record.paymentStatus === 'paid') paymentColorClass = 'text-green-600';
         else if (record.paymentStatus === 'due') paymentColorClass = 'text-red-600';
         else if (record.paymentStatus === 'advance') paymentColorClass = 'text-pink-600';
+        
+        const paidOverlayClass = record.paymentStatus === 'paid' ? 'visible' : '';
 
         logCard.innerHTML = `
+          <div id="paid-overlay-${ts}" class="paid-overlay ${paidOverlayClass}">
+            <div class="cross-line cross-line-1"></div>
+            <div class="cross-line cross-line-2"></div>
+          </div>
           <div class="flex items-center justify-between mb-2">
             <h3 id="date_${ts}" class="font-semibold text-lg text-green-800">${record.date}</h3>
             <span id="saved_on_${ts}" class="text-sm text-gray-500">${T('saved_on')}: ${new Date(record.timestamp).toLocaleString(currentLang)}</span>
@@ -2452,6 +2086,17 @@
             </button>
             <button onclick="sendLogViaSms('${ts}')" class="p-2 text-sm font-semibold rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200" title="${T('sms_button')}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2h-8zM9 4a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zM9 8a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zM9 12a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" /><path d="M2 6a2 2 0 012-2h3v12H4a2 2 0 01-2-2V6z" /></svg>
+            </button>
+            <button onclick="sendLogViaWhatsApp('${ts}')" class="p-1 rounded-full hover:opacity-80 transition-opacity" title="${T('whatsapp_button')}">
+                 <svg viewBox="0 0 24 24" class="h-6 w-6">
+                    <path fill="#25D366" d="M19.7,4.3c-1.9-1.9-4.4-2.9-7.1-2.9c-5.5,0-10,4.5-10,10c0,1.8,0.5,3.5,1.3,5l-1.5,5.5l5.6-1.5 c1.4,0.8,3,1.3,4.7,1.3h0c5.5,0,10-4.5,10-10C22.6,8.7,21.6,6.2,19.7,4.3z"/>
+                    <path fill="#FFFFFF" d="M16.5,13.3c-0.2-0.1-1.2-0.6-1.4-0.7c-0.2-0.1-0.3-0.1-0.5,0.1c-0.1,0.2-0.5,0.7-0.7,0.8 c-0.1,0.1-0.3,0.2-0.5,0.1c-0.2-0.1-0.9-0.3-1.7-1c-0.6-0.6-1-1.3-1.2-1.5c-0.1-0.2,0-0.3,0.1-0.4c0.1-0.1,0.2-0.3,0.4-0.4 c0.1-0.1,0.1-0.2,0.2-0.3c0.1-0.1,0-0.3-0.1-0.4c-0.1-0.1-0.5-1.2-0.7-1.6c-0.2-0.4-0.3-0.4-0.5-0.4C9.6,7.6,9.5,7.6,9.3,7.6 c-0.2,0-0.4,0.1-0.6,0.3c-0.2,0.2-0.8,0.8-0.8,1.9c0,1.1,0.8,2.2,0.9,2.4c0.1,0.2,1.6,2.5,3.9,3.4c0.5,0.2,1,0.4,1.3,0.5 c0.5,0.2,1.1,0.1,1.5,0.1c0.4-0.1,1.3-0.5,1.5-1.1c0.2-0.5,0.2-1,0.1-1.1C16.8,13.5,16.7,13.4,16.5,13.3z"/>
+                </svg>
+            </button>
+             <button onclick="openPhonePePayment('${ts}')" class="p-1 rounded-full hover:opacity-80 transition-opacity" title="${T('phonepe_button')}">
+                <svg viewBox="0 0 24 24" class="h-7 w-7">
+                    <path fill="#5f259f" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.64 12.01l-1.09.33c-.42.13-.66.52-.53.94.13.42.52.66.94.53l1.09-.33c1.21-.37 1.94-1.63 1.57-2.84-.37-1.21-1.63-1.94-2.84-1.57-.05.01-.09.03-.14.05l-4.04 1.22c-.42.13-.66.52-.53.94.13.42.52.66.94.53l2.6-.79c.42-.13.87.1.99.52.13.42-.1.87-.52.99l-2.6.79c-.42.13-.66.52-.53.94.13.42.52.66.94.53l4.04-1.22c1.21-.37 1.94-1.63 1.57-2.84-.37-1.21-1.63-1.94-2.84-1.57zm-6.8-2.05L7.8 9.64c.37-1.21 1.63-1.94 2.84-1.57l1.09.33c.42.13.66.52.53.94-.13.42-.52.66-.94.53l-1.09-.33c-.42-.13-.87.1-.99.52-.13.42.1.87.52.99l3.47 1.05c1.21.37 1.94 1.63 1.57 2.84-.37 1.21-1.63 1.94-2.84 1.57l-3.47-1.05c-1.21-.37-1.94-1.63-1.57-2.84z"/>
+                </svg>
             </button>
             <button onclick="downloadLog('${ts}')" class="p-2 text-sm font-semibold rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200" title="${T('download_button')}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
@@ -2530,25 +2175,68 @@
 
     // Function to render customer-specific logs
     function renderCustomerLogs(recordsToDisplay) {
-        const container = document.getElementById('customerLogsContainer');
-        container.innerHTML = (recordsToDisplay.length === 0) ? `<p class="text-center text-gray-500">${T('no_logs_saved')}</p>` : '';
-        if (recordsToDisplay.length === 0) return;
+        const logsContainer = document.getElementById('customerLogsContainer');
+        logsContainer.innerHTML = '';
 
+        if (recordsToDisplay.length === 0) {
+            logsContainer.innerHTML = `<p class="text-center text-gray-500">${T('no_logs_saved')}</p>`;
+            return;
+        }
+      
         recordsToDisplay.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
         recordsToDisplay.forEach(record => {
             const logCard = document.createElement('div');
-            logCard.className = 'bg-white border border-gray-200 rounded-xl p-4 shadow-sm';
-            let hourlyDetailsHtml = record.hourly ? `<h4 class="font-semibold text-gray-700 mt-2 mb-1">${T('hourly_time_label')}</h4><p>${T('work_time')}: ${formatTime12Hour(record.hourly.start)} - ${formatTime12Hour(record.hourly.end)}</p><p>${T('duration')}: ${record.hourly.time}</p><p>${T('earnings')}: ₹${formatNumberWithCommas(record.hourly.earnings)}</p>` : '';
-            let tripDetailsHtml = record.trip ? `<h4 class="font-semibold text-gray-700 mt-2 mb-1">${T('trip_earnings_label')}</h4><p>${T('trips_count_log')}: ${record.trip.numberOfTrips}</p><p>${T('earnings')}: ₹${formatNumberWithCommas(record.trip.earnings)}</p>` : '';
-            let noteDetailsHtml = record.noteContent ? `<div class="mt-3 pt-3 border-t"><h4 class="font-semibold">${T('note_content_label')}:</h4><p class="whitespace-pre-wrap">${sanitizeHTML(record.noteContent)}</p></div>` : '';
-            let paymentColorClass = {'paid': 'text-green-600', 'due': 'text-red-600', 'advance': 'text-pink-600'}[record.paymentStatus] || 'text-blue-700';
+            logCard.className = 'bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden';
+            const ts = record.timestamp;
+
+            let hourlyDetailsHtml = '';
+            if (record.hourly) {
+                hourlyDetailsHtml = `<div id="hourly_details_${ts}"><h4 id="hourly_details_heading_${ts}" class="font-semibold text-gray-700 mt-2 mb-1">${T('hourly_time_label')}</h4><p id="hourly_details_work_time_${ts}" class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('work_time')}:</span> ${formatTime12Hour(record.hourly.start)} - ${formatTime12Hour(record.hourly.end)}</p><p id="hourly_details_rate_${ts}" class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('rate')}:</span> ₹${formatNumberWithCommas(record.hourly.rate)} / hr</p><p id="hourly_details_duration_${ts}" class="text-base text-gray-800"><span class="font-bold">${T('duration')}:</span> ${record.hourly.time}</p><p id="hourly_details_earnings_${ts}" class="text-base text-gray-800"><span class="font-bold">${T('earnings')}:</span> ₹${formatNumberWithCommas(record.hourly.earnings)}</p></div>`;
+            }
+
+            let tripDetailsHtml = '';
+            if (record.trip) {
+                tripDetailsHtml = `<div id="trip_details_${ts}"><h4 id="trip_details_heading_${ts}" class="font-semibold text-gray-700 mt-2 mb-1">${T('trip_earnings_label')}</h4><p id="trip_details_count_${ts}" class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('trips_count_log')}:</span> ${record.trip.numberOfTrips}</p><p id="trip_details_cost_${ts}" class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('cost_per_trip_log')}:</span> ₹${formatNumberWithCommas(record.trip.costPerTrip)}</p><p id="trip_details_total_display_${ts}" class="text-base text-gray-800"><span class="font-bold">${T('total_trips_display_log')}:</span> ${record.trip.tripsDisplay}</p><p id="trip_details_earnings_${ts}" class="text-base text-gray-800"><span class="font-bold">${T('earnings')}:</span> ₹${formatNumberWithCommas(record.trip.earnings)}</p></div>`;
+            }
+            
+            let noteDetailsHtml = '';
+            if (record.noteContent) {
+                noteDetailsHtml = `<div id="note_content_${ts}" class="mt-3 pt-3 border-t border-gray-100"><h4 id="note_content_heading_${ts}" class="font-semibold text-gray-700 mb-1"><span class="font-bold">${T('note_content_label')}:</span></h4><p id="note_content_text_${ts}" class="text-sm text-gray-700 whitespace-pre-wrap">${sanitizeHTML(record.noteContent)}</p></div>`;
+            }
+
+            let paymentColorClass = 'text-blue-700';
+            if (record.paymentStatus === 'paid') paymentColorClass = 'text-green-600';
+            else if (record.paymentStatus === 'due') paymentColorClass = 'text-red-600';
+            else if (record.paymentStatus === 'advance') paymentColorClass = 'text-pink-600';
+            
+            const paidOverlayClass = record.paymentStatus === 'paid' ? 'visible' : '';
 
             logCard.innerHTML = `
-                <div class="flex justify-between"><h3 class="font-semibold text-lg">${record.date}</h3><span class="text-sm text-gray-500">${new Date(record.timestamp).toLocaleString(currentLang)}</span></div>
+                <div id="paid-overlay-${ts}" class="paid-overlay ${paidOverlayClass}"><div class="cross-line cross-line-1"></div><div class="cross-line cross-line-2"></div></div>
+                <div class="flex items-center justify-between mb-2"><h3 id="date_${ts}" class="font-semibold text-lg text-green-800">${record.date}</h3><span id="saved_on_${ts}" class="text-sm text-gray-500">${T('saved_on')}: ${new Date(record.timestamp).toLocaleString(currentLang)}</span></div>
+                <p id="name_${ts}" class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('name')}:</span> ${sanitizeHTML(record.userName)}</p>
+                <p id="phone_${ts}" class="text-sm text-gray-700 mb-1"><span class="font-bold">${T('phone')}:</span> ${sanitizeHTML(record.userPhoneNumber)}</p>
                 ${hourlyDetailsHtml}${tripDetailsHtml}
-                <p class="text-xl font-bold ${paymentColorClass} mt-2 pt-2 border-t">${T('combined_earnings_label')}: ₹${formatNumberWithCommas(record.combinedTotalEarnings)}</p>
-                ${noteDetailsHtml}`;
-            container.appendChild(logCard);
+                <p class="text-xl font-bold ${paymentColorClass} mt-2 border-t pt-2 border-gray-200" id="combinedEarnings_${ts}">${T('combined_earnings_label')}: ₹${formatNumberWithCommas(record.combinedTotalEarnings)}</p>
+                ${noteDetailsHtml}
+                <div class="flex justify-end items-center gap-2 mt-3" style="flex-wrap: wrap;">
+                    <button onclick="updatePaymentStatus('${ts}', 'paid')" class="px-3 py-1 text-sm font-semibold rounded-md bg-green-100 text-green-700 hover:bg-green-200">${T('paid_status')}</button>
+                    <button onclick="updatePaymentStatus('${ts}', 'due')" class="px-3 py-1 text-sm font-semibold rounded-md bg-red-100 text-red-700 hover:bg-red-200">${T('due_status')}</button>
+                    <button onclick="updatePaymentStatus('${ts}', 'advance')" class="px-3 py-1 text-sm font-semibold rounded-md bg-pink-100 text-pink-700 hover:bg-pink-200">${T('advance_status')}</button>
+                    <button onclick="callLoggedNumber('${record.userPhoneNumber}')" class="p-2 text-sm font-semibold rounded-full bg-purple-100 text-purple-700 hover:bg-purple-200" title="${T('call_button')}"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.103 6.103l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg></button>
+                    <button onclick="sendLogViaSms('${ts}')" class="p-2 text-sm font-semibold rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200" title="${T('sms_button')}"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2h-8zM9 4a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zM9 8a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zM9 12a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" /><path d="M2 6a2 2 0 012-2h3v12H4a2 2 0 01-2-2V6z" /></svg></button>
+                    <button onclick="sendLogViaWhatsApp('${ts}')" class="p-1 rounded-full hover:opacity-80 transition-opacity" title="${T('whatsapp_button')}"><svg viewBox="0 0 24 24" class="h-6 w-6"><path fill="#25D366" d="M19.7,4.3c-1.9-1.9-4.4-2.9-7.1-2.9c-5.5,0-10,4.5-10,10c0,1.8,0.5,3.5,1.3,5l-1.5,5.5l5.6-1.5 c1.4,0.8,3,1.3,4.7,1.3h0c5.5,0,10-4.5,10-10C22.6,8.7,21.6,6.2,19.7,4.3z"/><path fill="#FFFFFF" d="M16.5,13.3c-0.2-0.1-1.2-0.6-1.4-0.7c-0.2-0.1-0.3-0.1-0.5,0.1c-0.1,0.2-0.5,0.7-0.7,0.8 c-0.1,0.1-0.3,0.2-0.5,0.1c-0.2-0.1-0.9-0.3-1.7-1c-0.6-0.6-1-1.3-1.2-1.5c-0.1-0.2,0-0.3,0.1-0.4c0.1-0.1,0.2-0.3,0.4-0.4 c0.1-0.1,0.1-0.2,0.2-0.3c0.1-0.1,0-0.3-0.1-0.4c-0.1-0.1-0.5-1.2-0.7-1.6c-0.2-0.4-0.3-0.4-0.5-0.4C9.6,7.6,9.5,7.6,9.3,7.6 c-0.2,0-0.4,0.1-0.6,0.3c-0.2,0.2-0.8,0.8-0.8,1.9c0,1.1,0.8,2.2,0.9,2.4c0.1,0.2,1.6,2.5,3.9,3.4c0.5,0.2,1,0.4,1.3,0.5 c0.5,0.2,1.1,0.1,1.5,0.1c0.4-0.1,1.3-0.5,1.5-1.1c0.2-0.5,0.2-1,0.1-1.1C16.8,13.5,16.7,13.4,16.5,13.3z"/></svg></button>
+                    <button onclick="openPhonePePayment('${ts}')" class="p-1 rounded-full hover:opacity-80 transition-opacity" title="${T('phonepe_button')}">
+                        <svg viewBox="0 0 24 24" class="h-7 w-7">
+                            <path fill="#5f259f" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.64 12.01l-1.09.33c-.42.13-.66.52-.53.94.13.42.52.66.94.53l1.09-.33c1.21-.37 1.94-1.63 1.57-2.84-.37-1.21-1.63-1.94-2.84-1.57-.05.01-.09.03-.14.05l-4.04 1.22c-.42.13-.66.52-.53.94.13.42.52.66.94.53l2.6-.79c.42-.13.87.1.99.52.13.42-.1.87-.52.99l-2.6.79c-.42.13-.66.52-.53.94.13.42.52.66.94.53l4.04-1.22c1.21-.37 1.94-1.63 1.57-2.84-.37-1.21-1.63-1.94-2.84-1.57zm-6.8-2.05L7.8 9.64c.37-1.21 1.63-1.94 2.84-1.57l1.09.33c.42.13.66.52.53.94-.13.42-.52.66-.94.53l-1.09-.33c-.42-.13-.87.1-.99.52-.13.42.1.87-.52.99l3.47 1.05c1.21.37 1.94 1.63 1.57 2.84-.37 1.21-1.63-1.94-2.84 1.57l-3.47-1.05c-1.21-.37-1.94-1.63-1.57-2.84z"/>
+                        </svg>
+                    </button>
+                    <button onclick="downloadLog('${ts}')" class="p-2 text-sm font-semibold rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200" title="${T('download_button')}"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg></button>
+                    <button id="speakBtn_${ts}" onclick="speakLogEntry('${ts}')" class="p-2 text-sm font-semibold rounded-full bg-yellow-100 text-yellow-700 hover:bg-yellow-200" title="${T('read_aloud_button')}"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd" /></svg></button>
+                </div>
+            `;
+            logsContainer.appendChild(logCard);
         });
     }
 
@@ -2558,13 +2246,6 @@
         document.getElementById('hamburgerOverlay').classList.toggle('show');
     }
 
-    // Feedback link click
-    function handleFeedbackClick(emailAddress) {
-        toggleHamburgerMenu();
-        showMessage(T('feedback_message'), 'success');
-        window.location.href = `mailto:${emailAddress}`;
-    }
-
     // Update payment status
     function updatePaymentStatus(timestamp, newStatus) {
         const allRecords = JSON.parse(localStorage.getItem('tractorRecords') || '[]');
@@ -2572,10 +2253,20 @@
         if (recordIndex > -1) {
             allRecords[recordIndex].paymentStatus = newStatus;
             localStorage.setItem('tractorRecords', JSON.stringify(allRecords));
-            const earningsElement = document.getElementById(`combinedEarnings_${timestamp}`);
-            if (earningsElement) {
-                earningsElement.className = `text-xl font-bold mt-2 border-t pt-2 border-gray-200 ${{'paid': 'text-green-600', 'due': 'text-red-600', 'advance': 'text-pink-600'}[newStatus] || 'text-blue-700'}`;
+            
+            // Re-render the correct view if it's open
+            if (!document.getElementById('logsSection').classList.contains('hidden')) {
+                filterLogs(); // Re-filters and re-renders the main log view
             }
+            if (!document.getElementById('customerLogsSection').classList.contains('hidden')) {
+                const heading = document.getElementById('customerLogsHeading');
+                const customerName = heading.getAttribute('data-customer-name');
+                const customerPhone = heading.getAttribute('data-customer-phone');
+                if (customerName && customerPhone) {
+                    showCustomerLogs(customerName, customerPhone); // Re-renders the customer log view
+                }
+            }
+
             showMessage(`${T(newStatus + '_status')} status updated!`, 'success');
         } else {
             showMessage('Error: Log record not found.', 'error');
@@ -2622,6 +2313,42 @@
         window.location.href = `sms:${record.userPhoneNumber}?body=${encodeURIComponent(getLogTextContent(record))}`;
     }
 
+    // Send WhatsApp
+    function sendLogViaWhatsApp(timestamp) {
+        const record = JSON.parse(localStorage.getItem('tractorRecords') || '[]').find(rec => rec.timestamp === timestamp);
+        if (!record) return showMessage('Error: Log not found.', 'error');
+        if (!record.userPhoneNumber) return showMessage(T('sms_send_error'), 'error'); // Using same error message for now
+        const message = getLogTextContent(record);
+        const phoneNumber = record.userPhoneNumber.replace(/[^0-9]/g, ''); // Clean phone number
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    }
+
+    // NEW: Open PhonePe Payment
+    function openPhonePePayment(timestamp) {
+        const record = JSON.parse(localStorage.getItem('tractorRecords') || '[]').find(rec => rec.timestamp === timestamp);
+        if (!record) {
+            return showMessage('Error: Log not found.', 'error');
+        }
+        if (!record.userPhoneNumber || record.userPhoneNumber.replace(/\D/g, '').length < 10) {
+            return showMessage('Error: Invalid or missing phone number for this log.', 'error');
+        }
+        if (!record.combinedTotalEarnings || record.combinedTotalEarnings <= 0) {
+            return showMessage('Error: No amount due for this log to make a payment.', 'error');
+        }
+
+        const phoneNumber = record.userPhoneNumber.replace(/\D/g, '');
+        const amount = record.combinedTotalEarnings;
+        const userName = record.userName;
+        const note = `Payment for tractor work on ${record.date}`;
+
+        // Standard UPI intent string. @ybl is a common VPA handle for PhonePe users.
+        const upiUrl = `upi://pay?pa=${phoneNumber}@ybl&pn=${encodeURIComponent(userName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`;
+        
+        // Attempt to open the UPI link
+        window.open(upiUrl, '_blank');
+    }
+
     // Download log
     function downloadLog(timestamp) {
         const record = JSON.parse(localStorage.getItem('tractorRecords') || '[]').find(rec => rec.timestamp === timestamp);
@@ -2632,79 +2359,6 @@
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-    }
-    // --- DIESEL FUNCTIONS ---
-    function setCurrentDieselDateTime() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const date = `${year}-${month}-${day}`;
-        const time = now.toTimeString().split(' ')[0].substring(0, 5);
-        document.getElementById('dieselDate').value = date;
-        document.getElementById('dieselTime').value = time;
-    }
-    function calculateDieselCost() {
-        const price = parseFloat(document.getElementById('dieselPrice').value) || 0;
-        const litres = parseFloat(document.getElementById('dieselLitres').value) || 0;
-        document.getElementById('dieselTotalCost').textContent = `₹${formatNumberWithCommas((price * litres).toFixed(2))}`;
-    }
-    function saveDieselData() {
-        const price = parseFloat(document.getElementById('dieselPrice').value);
-        const litres = parseFloat(document.getElementById('dieselLitres').value);
-        if (!price || !litres || price <= 0 || litres <= 0) return showMessage(T('fill_diesel_details_error'), 'error');
-        const record = { date: document.getElementById('dieselDate').value, time: document.getElementById('dieselTime').value, price, litres, totalCost: price * litres, timestamp: new Date().toISOString() };
-        const existing = JSON.parse(localStorage.getItem('dieselRecords') || '[]');
-        existing.push(record);
-        localStorage.setItem('dieselRecords', JSON.stringify(existing));
-        showMessage(T('diesel_data_saved_success'), 'success');
-        document.getElementById('dieselPrice').value = '';
-        document.getElementById('dieselLitres').value = '';
-        document.getElementById('dieselTotalCost').textContent = '₹0';
-    }
-    function loadDieselLogs() {
-        const container = document.getElementById('dieselHistoryContainer');
-        const allRecords = JSON.parse(localStorage.getItem('dieselRecords') || '[]');
-        container.innerHTML = (allRecords.length === 0) ? `<p class="text-center text-gray-500">${T('no_diesel_logs_saved')}</p>` : '';
-        if (allRecords.length === 0) return;
-        allRecords.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        allRecords.forEach(record => {
-            const logCard = document.createElement('div');
-            logCard.className = 'bg-white border border-gray-200 rounded-xl p-4 shadow-sm';
-            logCard.innerHTML = `<div class="flex justify-between mb-2"><h3 class="font-semibold text-lg text-orange-800">${record.date} at ${formatTime12Hour(record.time)}</h3><span class="text-sm text-gray-500">${new Date(record.timestamp).toLocaleDateString(currentLang)}</span></div><p>${T('diesel_price_label')}: ₹${record.price.toFixed(2)}</p><p>${T('diesel_litres_label')}: ${record.litres} L</p><p class="text-xl font-bold text-orange-700 mt-2 border-t pt-2">${T('diesel_total_cost_label')}: ₹${formatNumberWithCommas(record.totalCost.toFixed(2))}</p>`;
-            container.appendChild(logCard);
-        });
-    }
-    function populateDieselMonthSelector() {
-        const monthSelector = document.getElementById('dieselMonthSelector');
-        const uniqueMonths = new Set(JSON.parse(localStorage.getItem('dieselRecords') || '[]').map(r => `${new Date(r.date).getFullYear()}-${new Date(r.date).getMonth()}`));
-        const now = new Date();
-        uniqueMonths.add(`${now.getFullYear()}-${now.getMonth()}`);
-        const sortedMonths = Array.from(uniqueMonths).sort((a, b) => new Date(b.split('-')[0], b.split('-')[1]) - new Date(a.split('-')[0], a.split('-')[1]));
-        const selectedValue = monthSelector.value;
-        monthSelector.innerHTML = '';
-        sortedMonths.forEach(monthStr => {
-            const [year, month] = monthStr.split('-').map(Number);
-            const option = document.createElement('option');
-            option.value = monthStr;
-            option.textContent = new Date(year, month).toLocaleString(currentLang, { month: 'long', year: 'numeric' });
-            monthSelector.appendChild(option);
-        });
-        if (sortedMonths.includes(selectedValue)) monthSelector.value = selectedValue;
-    }
-    function renderDieselDashboard() {
-        const selectedMonthStr = document.getElementById('dieselMonthSelector').value;
-        const totalSpentEl = document.getElementById('dieselDashboardTotalSpent');
-        const totalLitresEl = document.getElementById('dieselDashboardTotalLitres');
-        totalSpentEl.textContent = '₹0';
-        totalLitresEl.textContent = '0 L';
-        if (!selectedMonthStr) return;
-        const [selectedYear, selectedMonth] = selectedMonthStr.split('-').map(Number);
-        const filteredRecords = JSON.parse(localStorage.getItem('dieselRecords') || '[]').filter(r => new Date(r.date).getFullYear() === selectedYear && new Date(r.date).getMonth() === selectedMonth);
-        const totalSpent = filteredRecords.reduce((sum, r) => sum + r.totalCost, 0);
-        const totalLitres = filteredRecords.reduce((sum, r) => sum + r.litres, 0);
-        totalSpentEl.textContent = `₹${formatNumberWithCommas(totalSpent.toFixed(2))}`;
-        totalLitresEl.textContent = `${totalLitres.toFixed(2)} L`;
     }
 
     // --- SPEECH SYNTHESIS (TALK-BACK) ---
@@ -2730,7 +2384,7 @@
         stopSpeech(); 
 
         const utterance = new SpeechSynthesisUtterance(text);
-        const langMap = { 'te': 'te-IN', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA', 'ur': 'ur-PK' };
+        const langMap = { 'te': 'te-IN', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA' };
         utterance.lang = langMap[currentLang] || 'en-US';
 
         let elementToHighlight = null;
@@ -2759,6 +2413,21 @@
 
         speechSynthesis.speak(utterance);
     }
+    
+    // NEW: Helper function for formatting time for Telugu speech
+    function formatTimeForTeluguSpeech(timeString) {
+        if (!timeString) return '';
+        const [hours, minutes] = timeString.split(':').map(Number);
+        
+        const period = hours >= 12 ? 'మధ్యాహ్నం' : 'ఉదయం'; // "madhyahnam" for PM, "udhayam" for AM
+        let formattedHours = hours % 12 || 12;
+
+        let timeText = `${period} ${formattedHours} గంటల`;
+        if (minutes > 0) {
+            timeText += ` ${minutes} నిమిషాలు`;
+        }
+        return timeText;
+    }
 
     function speakLogEntry(timestamp) {
         if (!('speechSynthesis' in window)) {
@@ -2786,11 +2455,24 @@
         const ts = record.timestamp;
 
         partsToSpeak.push({ text: `${T('name')}: ${record.userName}`, elementId: `name_${ts}` });
-        partsToSpeak.push({ text: `${T('phone')}: ${record.userPhoneNumber}`, elementId: `phone_${ts}` });
+        const phoneNumberAsDigits = record.userPhoneNumber.split('').join(' ');
+        partsToSpeak.push({ text: `${T('phone')}: ${phoneNumberAsDigits}`, elementId: `phone_${ts}` });
 
         if (record.hourly) {
+            let workTimeText;
+            if (currentLang === 'te') {
+                const teluguStartTime = formatTimeForTeluguSpeech(record.hourly.start);
+                const teluguEndTime = formatTimeForTeluguSpeech(record.hourly.end);
+                // Using "nundi" for "from" and "varaku" for "to"
+                workTimeText = `${T('work_time')}: ${teluguStartTime} నుండి ${teluguEndTime} వరకు`;
+            } else {
+                const startTimeForSpeech = formatTime12Hour(record.hourly.start).replace(':', ' ');
+                const endTimeForSpeech = formatTime12Hour(record.hourly.end).replace(':', ' ');
+                workTimeText = `${T('work_time')}: from ${startTimeForSpeech} to ${endTimeForSpeech}`;
+            }
+
             partsToSpeak.push({ text: T('hourly_time_label'), elementId: `hourly_details_heading_${ts}` });
-            partsToSpeak.push({ text: `${T('work_time')}: ${formatTime12Hour(record.hourly.start)} to ${formatTime12Hour(record.hourly.end)}`, elementId: `hourly_details_work_time_${ts}` });
+            partsToSpeak.push({ text: workTimeText, elementId: `hourly_details_work_time_${ts}` });
             partsToSpeak.push({ text: `${T('rate')}: ${formatNumberWithCommas(record.hourly.rate)} rupees per hour`, elementId: `hourly_details_rate_${ts}` });
             partsToSpeak.push({ text: `${T('duration')}: ${record.hourly.time}`, elementId: `hourly_details_duration_${ts}` });
             partsToSpeak.push({ text: `${T('earnings')}: ${formatNumberWithCommas(record.hourly.earnings)} rupees`, elementId: `hourly_details_earnings_${ts}` });
@@ -2832,7 +2514,7 @@
             }
 
             const utterance = new SpeechSynthesisUtterance(part.text);
-            const langMap = { 'te': 'te-IN', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA', 'ur': 'ur-PK' };
+            const langMap = { 'te': 'te-IN', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA' };
             utterance.lang = langMap[currentLang] || 'en-US';
             
             utterance.onend = () => {
@@ -2869,22 +2551,15 @@
     window.saveCombinedData = saveCombinedData;
     window.filterLogs = filterLogs;
     window.toggleHamburgerMenu = toggleHamburgerMenu;
-    window.handleFeedbackClick = handleFeedbackClick;
     window.updatePaymentStatus = updatePaymentStatus;
     window.callPhoneNumber = callPhoneNumber;
     window.callLoggedNumber = callLoggedNumber;
     window.getContact = getContact;
     window.sendLogViaSms = sendLogViaSms;
+    window.sendLogViaWhatsApp = sendLogViaWhatsApp;
+    window.openPhonePePayment = openPhonePePayment;
     window.downloadLog = downloadLog;
-    window.showDieselView = showDieselView;
-    window.calculateDieselCost = calculateDieselCost;
-    window.saveDieselData = saveDieselData;
-    window.showDieselHistoryView = showDieselHistoryView;
-    window.showDieselDashboardView = showDieselDashboardView;
-    window.renderDieselDashboard = renderDieselDashboard;
     window.startSpeechRecognition = startSpeechRecognition;
-    window.showMonthlyNetView = showMonthlyNetView;
-    window.renderMonthlyNetView = renderMonthlyNetView;
     window.speakLogEntry = speakLogEntry;
     window.speakText = speakText;
 
@@ -2901,6 +2576,115 @@
       
       // Stop speech synthesis when navigating away
       window.addEventListener('beforeunload', stopSpeech);
+
+      // --- PWA SETUP ---
+      const manifest = {
+        "name": "ManaTractor Dashboard",
+        "short_name": "ManaTractor",
+        "start_url": ".",
+        "display": "standalone",
+        "background_color": "#f0fdf4",
+        "theme_color": "#16a34a",
+        "description": "Track your tractor work, time & earnings with ease.",
+        "icons": [
+          { "src": "https://img.icons8.com/color/192/tractor.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+          { "src": "https://img.icons8.com/color/512/tractor.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+        ]
+      };
+
+      const manifestString = JSON.stringify(manifest);
+      const manifestLink = document.createElement('link');
+      manifestLink.rel = 'manifest';
+      manifestLink.href = 'data:application/json;base64,' + btoa(unescape(encodeURIComponent(manifestString)));
+      document.head.appendChild(manifestLink);
+
+      if ('serviceWorker' in navigator) {
+        const serviceWorkerScript = `
+          const CACHE_NAME = 'manatractor-cache-v2';
+          const urlsToCache = [
+              '/',
+              'https://cdn.tailwindcss.com',
+              'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js',
+              'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js',
+              'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js',
+              'https://img.icons8.com/color/192/tractor.png',
+              'https://img.icons8.com/color/512/tractor.png',
+              'icons/diskette.png',
+              'icons/podium.png',
+              'icons/wages.png',
+              'icons/music.png'
+          ];
+
+          self.addEventListener('install', event => {
+              event.waitUntil(
+                  caches.open(CACHE_NAME)
+                      .then(cache => {
+                          console.log('Opened cache');
+                          return Promise.all(urlsToCache.map(url => {
+                              return fetch(new Request(url, {cache: 'reload'}))
+                                  .then(response => cache.put(url, response))
+                                  .catch(err => console.warn('Failed to cache:', url, err));
+                          }));
+                      })
+              );
+          });
+
+          self.addEventListener('fetch', event => {
+              event.respondWith(
+                  caches.match(event.request)
+                      .then(response => {
+                          if (response) {
+                              return response;
+                          }
+                          return fetch(event.request).then(
+                              response => {
+                                  if (!response || response.status !== 200) {
+                                      return response;
+                                  }
+                                  // Don't cache firebase auth requests
+                                  if (event.request.url.includes('firebase')) {
+                                      return response;
+                                  }
+                                  const responseToCache = response.clone();
+                                  caches.open(CACHE_NAME)
+                                      .then(cache => {
+                                          cache.put(event.request, responseToCache);
+                                      });
+                                  return response;
+                              }
+                          ).catch(error => {
+                            console.log('Fetch failed; returning offline page instead.', error);
+                            // You can return a custom offline page/resource here if you have one cached.
+                            // For a single-page app, returning the cached '/' is often sufficient.
+                            return caches.match('/');
+                          });
+                      })
+              );
+          });
+
+          self.addEventListener('activate', event => {
+              const cacheWhitelist = [CACHE_NAME];
+              event.waitUntil(
+                  caches.keys().then(cacheNames => {
+                      return Promise.all(
+                          cacheNames.map(cacheName => {
+                              if (cacheWhitelist.indexOf(cacheName) === -1) {
+                                  return caches.delete(cacheName);
+                              }
+                          })
+                      );
+                  })
+              );
+          });
+        `;
+
+        const blob = new Blob([serviceWorkerScript], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(blob);
+
+        navigator.serviceWorker.register(swUrl)
+            .then(registration => console.log('ServiceWorker registration successful with scope: ', registration.scope))
+            .catch(err => console.log('ServiceWorker registration failed: ', err));
+      }
     });
 
   </script>
