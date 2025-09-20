@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#16a34a" />
+ 
+  <title>ManaTractor Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+  
+  <script type="module">
+     
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+  
+ 
+    const firebaseConfig = {
+          apiKey: "AIzaSyCD1cPb51rhl5bqdPQMgGHcc8a3rStkMFg",
+  authDomain: "new-test-8d510.firebaseapp.com",
+  projectId: "new-test-8d510",
+  storageBucket: "new-test-8d510.firebasestorage.app",
+  messagingSenderId: "680859585204",
+  appId: "1:680859585204:web:d8a467f06b5411663025e1"
+    };
+  
+   
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    window.auth = auth;
+    window.GoogleAuthProvider = GoogleAuthProvider;
+    window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+    window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+    window.signInWithPopup = signInWithPopup;
+    window.onAuthStateChanged = onAuthStateChanged;
+
+  </script>
+  <style>
+    
+  </style>
+</head>
+<body class="bg-green-50 min-h-screen flex items-center justify-center p-4">
+
+  
+  <div id="loginSection" class="bg-white w-full max-w-md rounded-2xl shadow-xl p-6">
+    <h1 class="text-2xl font-bold text-green-700 mb-4 text-center">Login to ManaTractor</h1>
+    
+     
+    <div class="mb-4">
+      <label for="loginEmail" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+      <input id="loginEmail" type="email" class="w-full border border-gray-300 rounded-lg p-2" placeholder="you@example.com" />
+    </div>
+    <div class="mb-4">
+      <label for="loginPassword" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+      <input id="loginPassword" type="password" class="w-full border border-gray-300 rounded-lg p-2" placeholder="••••••••" />
+    </div>
+    <button onclick="signInWithEmail()" class="w-full bg-green-600 text-white rounded-lg p-3 font-semibold hover:bg-green-700">Login</button>
+
+    <div class="relative flex py-5 items-center">
+        <div class="flex-grow border-t border-gray-300"></div>
+        <span class="flex-shrink mx-4 text-gray-400">OR</span>
+        <div class="flex-grow border-t border-gray-300"></div>
+    </div>
+    
+
+
+
+
+
+     
+    <button id="googleSignInBtn" onclick="signInWithGoogle()" class="w-full bg-blue-500 text-white rounded-lg p-3 font-semibold hover:bg-blue-600 flex items-center justify-center gap-2 mb-4">
+      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571l6.19 5.238C42.021 35.637 44 30.138 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
+      Sign in with Google
+    </button>
+    
+             <p class="text-center text-sm text-gray-600 mt-4">
+                            Don't have an account? <a href="#" onclick="toggleAuthView()" class="font-medium text-green-600 hover:underline">Sign up</a>
+                     </p>
+                    </div>
+
+
+
+   
+  <div id="signUpSection" class="hidden bg-white w-full max-w-md rounded-2xl shadow-xl p-6">
+    <h1 class="text-2xl font-bold text-green-700 mb-4 text-center">Create an Account</h1>
+     
+    <div class="mb-4">
+      <label for="signUpEmail" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+      <input id="signUpEmail" type="email" class="w-full border border-gray-300 rounded-lg p-2" placeholder="you@example.com" />
+    </div>
+    <div class="mb-4">
+      <label for="signUpPassword" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+      <input id="signUpPassword" type="password" class="w-full border border-gray-300 rounded-lg p-2" placeholder="Minimum 6 characters" />
+    </div>
+    <button onclick="signUpWithEmail()" class="w-full bg-green-600 text-white rounded-lg p-3 font-semibold hover:bg-green-700">Create Account</button>
+    
+     <p class="text-center text-sm text-gray-600 mt-4">
+      Already have an account? <a href="#" onclick="toggleAuthView()" class="font-medium text-green-600 hover:underline">Log in</a>
+    </p>
+  </div>
+
+ 
+
+<div id="setupProfileSection" class="hidden bg-white w-full max-w-md rounded-2xl shadow-xl p-6 mx-auto">
+  <h1 class="text-2xl font-bold text-green-700 mb-4 text-center">Setup Your Profile</h1>
+
+  <div class="flex flex-col items-center mb-4">
+    <img id="setupProfilePreview" src="https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png" class="w-20 h-20 rounded-full border-2 border-green-600 object-cover mb-2" />
+    <input type="file" id="setupProfileImage" accept="image/*" class="hidden" onchange="previewSetupImage(event)">
+    <button onclick="document.getElementById('setupProfileImage').click()" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 text-sm">
+      Choose Image (Optional)
+    </button>
+  </div>
+
+
+
+
+  <div class="mb-4">
+    <label class="block text-sm font-medium text-gray-700 mb-1">Your Name <span class="text-red-500">*</span></label>
+    <input id="setupProfileName" type="text" placeholder="Enter your name" class="w-full border border-gray-300 rounded-lg p-2" />
+  </div>
+
+  <button onclick="saveUserProfile()" class="w-full bg-green-600 text-white rounded-lg p-3 font-semibold hover:bg-green-700">
+    Save & Continue
+  </button>
+</div>
+
+ 
+  <div id="mainApp" class="hidden w-full">
+     
+      <div id="hamburgerIcon" class="hamburger-icon" onclick="toggleHamburgerMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      
+
+
+      <div id="hamburgerOverlay" class="hamburger-menu-overlay" onclick="toggleHamburgerMenu()"></div>
+
+      
+      <div id="hamburgerSidebar" class="hamburger-sidebar">
+         
+        <div class="flex items-center gap-3 pb-4 border-b border-gray-200">
+          <img id="userProfilePicSidebar" src="https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png" alt="Profile" class="w-12 h-12 rounded-full border-2 border-green-600 object-cover">
+          <div class="flex-1 min-w-0">
+            <div id="userProfileNameDisplay" class="text-sm font-medium text-gray-800 truncate">User</div>
+            <div id="userProfileEmailSidebar" class="text-xs text-gray-500 truncate"></div>
+          </div>
+        </div>
+
+         
+        <div class="w-full">
+            <label for="languageSelectorMenu" class="block text-sm font-medium text-gray-700 mb-1">Language:</label>
+            <select id="languageSelectorMenu" onchange="setLanguage(this.value); toggleHamburgerMenu();" class="bg-white border border-gray-300 rounded-lg p-2 text-sm text-gray-700 shadow-sm focus:ring-green-500 focus:border-green-500 w-full">
+                <option value="te">తెలుగు</option>
+                <option value="en">English</option>
+                <option value="hi">हिन्दी</option>
+                <option value="ar">العربية</option>
+            </select>
+        </div>
+
+            
+            <button id="viewLogsBtnMenu" onclick="showLogsView(); toggleHamburgerMenu();" title="View Saved Logs" class="menu-icon-btn bg-gradient-to-r from-blue-400 to-blue-600 text-white">
+             <img src="icons/diskette.png"  style="width: 30px; height: 30px;"  alt="View Logs">
+             <span id="viewLogsBtnMenuText" class="font-semibold"></span>
+        </button>
+
+        <button id="leaderboardBtnMenu" onclick="showLeaderboardView(); toggleHamburgerMenu();" title="Leaderboard" class="menu-icon-btn bg-gradient-to-r from-yellow-400 to-yellow-600 text-white">
+             <img src="icons/podium.png"  style="width: 30px; height: 30px;"  alt="Leaderboard">
+             <span id="leaderboardBtnMenuText" class="font-semibold"></span>
+        </button>
+
+        <button id="monthlyDashboardBtnMenu" onclick="showMonthlyDashboardView(); toggleHamburgerMenu();" title="Monthly Dashboard" class="menu-icon-btn bg-gradient-to-r from-green-400 to-green-600 text-white">
+          <img src="icons/wages.png"  style="width: 30px; height: 30px;"  alt="Monthly Data">
+          <span id="monthlyDashboardBtnMenuText" class="font-semibold"></span>
+        </button>
+
+        <button id="logoutBtn" onclick="logout()" title="Logout" class="menu-icon-btn bg-gradient-to-r from-red-500 to-red-700 text-white mt-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+            <span id="logoutBtnText" class="font-semibold"></span>
+        </button>
+      </div>
+
+ 
+      <div id="dashboardSection" class="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 mx-auto relative">
+        <h1 id="welcomeHeading" class="text-2xl font-bold text-green-700 mb-1"></h1>
+        <p id="tagline" class="text-gray-500 mb-4"></p>
+
+        
+           <div id="dashboardContent">
+             
+            <div class="mb-4">
+              <label id="nameLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+              <div class="relative">
+                <input id="userName" type="text" class="w-full border border-gray-300 rounded-lg p-2 pr-20" autocomplete="off"/>
+                <div id="autocomplete-list" class="absolute z-10 w-full bg-white border border-gray-200 rounded-b-lg shadow-lg mt-1 max-h-60 overflow-y-auto hidden">
+                     
+                </div>
+                <div class="absolute inset-y-0 right-0 pr-2 flex items-center space-x-1">
+                   
+                    <button id="micUserName" onclick="startSpeechRecognition('userName')" title="Speak Name" class="text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z" />
+                                <path fill-rule="evenodd" d="M5.5 8a.5.5 0 00.5.5 2.5 2.5 0 105 0 .5.5 0 00.5-.5V4a.5.5 0 00-.5-.5 3.5 3.5 0 10-7 0v4a.5.5 0 00.5.5z" clip-rule="evenodd" />
+                            </svg>
+                    </button>
+                     
+                    <button onclick="getContact()" title="Pick from Contacts" class="text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6zm4 2a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM6 13a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-4">
+                <label id="phoneLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                <div class="relative">
+                    <input id="userPhoneNumber" type="tel" class="w-full border border-gray-300 rounded-lg p-2 pr-20" />
+                    <div class="absolute inset-y-0 right-0 pr-2 flex items-center space-x-1">
+                        <button id="micUserPhoneNumber" onclick="startSpeechRecognition('userPhoneNumber')" title="Speak Phone Number" class="text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z" />
+                                <path fill-rule="evenodd" d="M5.5 8a.5.5 0 00.5.5 2.5 2.5 0 105 0 .5.5 0 00.5-.5V4a.5.5 0 00-.5-.5 3.5 3.5 0 10-7 0v4a.5.5 0 00.5.5z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <button onclick="callPhoneNumber()" title="Call Number" class="text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.103 6.103l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+           
+            <div id="hourlyWorkForm">
+                <div class="mb-4">
+                  <label id="dateLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                  <input id="workDate" type="date" class="w-full border border-gray-300 rounded-lg p-2" />
+                </div>
+
+               
+                <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                  <div class="flex-1">
+                    <label id="startTimeLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                    <input id="startTime" type="time" class="w-full border border-gray-300 rounded-lg p-2" />
+                  </div>
+
+                  <div class="flex-1">
+                    <label id="endTimeLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                    <input id="endTime" type="time" class="w-full border border-gray-300 rounded-lg p-2" />
+                  </div>
+                </div>
+
+
+
+
+
+
+                <div class="mb-4">
+                    <label id="ratePerHourLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                    <div class="relative">
+                        <input id="ratePerHour" type="number" value="2000" class="w-full border border-gray-300 rounded-lg p-2 pr-10" />
+                        <button id="micRatePerHour" onclick="startSpeechRecognition('ratePerHour')" title="Speak Rate" class="absolute inset-y-0 right-0 pr-2 flex items-center text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z" />
+                                <path fill-rule="evenodd" d="M5.5 8a.5.5 0 00.5.5 2.5 2.5 0 105 0 .5.5 0 00.5-.5V4a.5.5 0 00-.5-.5 3.5 3.5 0 10-7 0v4a.5.5 0 00.5.5z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+        
+                <div class="mb-4">
+                    <label id="numberOfTripsLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                    <div class="relative">
+                        <input id="numberOfTrips" type="number" value="0" min="0" class="w-full border border-gray-300 rounded-lg p-2 pr-20" />
+                        <div class="absolute inset-y-0 right-0 pr-2 flex items-center space-x-1">
+                            <button id="micNumberOfTrips" onclick="startSpeechRecognition('numberOfTrips')" title="Speak Number of Trips" class="text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z" />
+                                <path fill-rule="evenodd" d="M5.5 8a.5.5 0 00.5.5 2.5 2.5 0 105 0 .5.5 0 00.5-.5V4a.5.5 0 00-.5-.5 3.5 3.5 0 10-7 0v4a.5.5 0 00.5.5z" clip-rule="evenodd" />
+                            </svg>
+                            </button>
+                            <div class="pointer-events-none text-gray-400 p-2">
+                                 <img src="icons/tractor.png"  style="width: 25px; height: 25px;"  alt="tractor icon">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="mb-4">
+                    <label id="costPerTripLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                     <div class="relative">
+                        <input id="costPerTrip" type="number" value="500" min="0" class="w-full border border-gray-300 rounded-lg p-2 pr-20" />
+                        <div class="absolute inset-y-0 right-0 pr-2 flex items-center space-x-1">
+                           <button id="micCostPerTrip" onclick="startSpeechRecognition('costPerTrip')" title="Speak Cost per Trip" class="text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z" />
+                                <path fill-rule="evenodd" d="M5.5 8a.5.5 0 00.5.5 2.5 2.5 0 105 0 .5.5 0 00.5-.5V4a.5.5 0 00-.5-.5 3.5 3.5 0 10-7 0v4a.5.5 0 00.5.5z" clip-rule="evenodd" />
+                            </svg>
+                            </button>
+                            <div class="pointer-events-none text-gray-400 p-2">
+                                <img src="icons/tractor.png"  style="width: 25px; height: 25px;"  alt="tractor icon">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 
+ 
+
+
+
+
+
+                <div class="mb-4">
+                    <label id="noteContentLabel" class="flex items-center text-sm font-medium text-gray-700 mb-1">
+                        <span id="noteContentLabelText"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
+                            <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path>
+                        </svg>
+                    </label>
+                    <div class="relative">
+                        <textarea id="noteContent" class="w-full border border-gray-300 rounded-lg p-2 pr-10 h-32 resize-none" rows="5" placeholder="Please enter the work info details"></textarea>
+                        <button id="micNoteContent" onclick="startSpeechRecognition('noteContent')" title="Speak Note" class="absolute top-2 right-2 text-gray-500 hover:text-green-600 focus:outline-none p-2 rounded-full hover:bg-gray-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z" />
+                                <path fill-rule="evenodd" d="M5.5 8a.5.5 0 00.5.5 2.5 2.5 0 105 0 .5.5 0 00.5-.5V4a.5.5 0 00-.5-.5 3.5 3.5 0 10-7 0v4a.5.5 0 00.5.5z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+            </div>
+
+          
+
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div class="bg-green-100 p-3 rounded-xl text-center">
+                <p class="text-sm text-gray-600" id="hourlyTimeLabel"></p>
+                <h2 id="hourlyTotalTime" class="text-xl font-bold">0 hrs</h2>
+              </div>
+              <div class="bg-green-100 p-3 rounded-xl text-center">
+                <p id="hourlyEarningsLabel" class="text-sm text-gray-600"></p>
+                <h2 id="hourlyTotalEarnings" class="text-xl font-bold">₹0</h2>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div class="bg-green-100 p-3 rounded-xl text-center">
+                <p class="text-sm text-gray-600" id="tripCountLabel"></p>
+                <h2 id="tripTotalTrips" class="text-xl font-bold">0 trips</h2>
+              </div>
+              <div class="bg-green-100 p-3 rounded-xl text-center">
+                <p id="tripEarningsLabel" class="text-sm text-gray-600"></p>
+                <h2 id="tripTotalEarnings" class="text-xl font-bold">₹0</h2>
+              </div>
+            </div>
+
+
+
+
+            
+            <div class="bg-green-100 p-4 rounded-xl text-center mt-4">
+              <p id="combinedEarningsLabel" class="text-lg text-green-800 font-semibold"></p>
+              <h2 id="combinedTotalEarnings" class="text-3xl font-extrabold text-green-700">₹0</h2>
+            </div>
+ 
+            <div class="flex gap-4 mt-6">
+              <button id="calculateBtn" onclick="calculateAllEarnings()" title="Calculate" class="main-calc-btn bg-green-600 text-white hover:bg-green-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 9h14M5 15h14"></path></svg>
+                <span id="calculateBtnText" class="text-xs mt-1 font-semibold"></span>
+              </button>
+              <button id="saveBtn" onclick="saveCombinedData()" title="Save" class="main-calc-btn bg-blue-600 text-white hover:bg-blue-700">
+                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+                 <span id="saveBtnText" class="text-xs mt-1 font-semibold"></span>
+              </button>
+            </div>
+        </div>  
+ 
+        <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
+            <p id="footerText"></p>
+        </footer>
+
+      </div>
+
+
+
+      
+      <div id="logsSection" class="bg-white w-full max-w-xl rounded-2xl shadow-xl p-6 relative hidden mx-auto">
+         
+        <button onclick="showDashboardView()" class="absolute top-4 right-4 bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+        </button>
+
+        <h1 id="logsHeading" class="text-2xl font-bold text-green-700 mb-4 text-center mt-4"></h1>
+        <p id="logsTagline" class="text-gray-500 mb-6 text-center"></p>
+
+        
+        <div class="relative mb-4">
+          <input type="text" id="logSearchInput" onkeyup="filterLogs()" class="w-full border border-gray-300 rounded-lg p-2 pl-10" />
+           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                </svg>
+            </div>
+        </div>
+ 
+        <div id="logsContainer" class="log-container space-y-4 max-h-[65vh] overflow-y-auto pr-2">
+           
+        </div>
+        
+
+
+        <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
+            <p id="footerTextLogs"></p>
+        </footer>
+      </div>
+ 
+      <div id="leaderboardSection" class="bg-white w-full max-w-xl rounded-2xl shadow-xl p-6 relative hidden mx-auto">
+         
+        <button onclick="showDashboardView()" class="absolute top-4 right-4 bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+        </button>
+
+        <h1 id="leaderboardHeading" class="text-2xl font-bold text-green-700 mb-4 text-center mt-4"></h1>
+        <p id="leaderboardTagline" class="text-gray-500 mb-6 text-center"></p>
+
+        
+
+        <div id="leaderboardContainer" class="space-y-3 max-h-[65vh] overflow-y-auto pr-2">
+            
+        </div>
+
+        <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
+            <p id="footerTextLeaderboard"></p>
+        </footer>
+      </div>
+      
+       
+      <div id="customerLogsSection" class="bg-white w-full max-w-xl rounded-2xl shadow-xl p-6 relative hidden mx-auto">
+  
+        <button onclick="showLeaderboardView()" class="absolute top-4 right-4 bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+        </button>
+
+        <h1 id="customerLogsHeading" class="text-2xl font-bold text-green-700 mb-4 text-center mt-4"></h1>
+        
+        
+        <div id="customerLogsContainer" class="space-y-4 max-h-[65vh] overflow-y-auto pr-2">
+             
+        </div>
+
+        <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
+            <p id="footerTextCustomerLogs"></p>
+        </footer>
+      </div>
+ 
+      <div id="monthlyDashboardSection" class="bg-gray-50 w-full max-w-2xl rounded-2xl shadow-xl p-6 relative hidden mx-auto">
+        
+        <button onclick="showDashboardView()" class="absolute top-4 right-4 bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+        </button>
+
+        <h1 id="monthlyDashboardHeading" class="text-2xl font-bold text-gray-800 mb-2 text-center">Monthly Summary</h1>
+        <p id="monthlyDashboardTagline" class="text-gray-500 mb-6 text-center">Track your monthly performance</p>
+
+        
+
+         
+        <div class="mb-6 max-w-xs mx-auto">
+            <label for="monthSelector" id="monthSelectorLabel" class="block text-sm font-medium text-gray-700 mb-1 text-center">Select Month:</label>
+            <select id="monthSelector" onchange="renderMonthlyDashboard()" class="w-full bg-white border border-gray-300 rounded-lg p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                
+            </select>
+        </div>
+
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+             
+            <div class="bg-gradient-to-br from-green-400 to-blue-500 text-white p-6 rounded-xl shadow-lg flex flex-col justify-between">
+                <div>
+                    <p id="totalAmountLabel" class="text-lg font-semibold opacity-80">Total Earnings</p>
+                    <h2 id="totalAmountValue" class="text-4xl font-bold tracking-tight">₹0</h2>
+                </div>
+                <div class="text-right mt-4 opacity-60">
+                    <svg class="w-10 h-10 inline-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v1a1 1 0 102 0V5zM8 9a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1zm4 0a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1zm-2 4a1 1 0 100 2h.01a1 1 0 100-2H10z" clip-rule="evenodd"></path></svg>
+                </div>
+            </div>
+ 
+            <div class="bg-gradient-to-br from-yellow-400 to-orange-500 text-white p-6 rounded-xl shadow-lg flex flex-col justify-between">
+                <div>
+                    <p id="totalHoursLabel" class="text-lg font-semibold opacity-80">Total Hours</p>
+                    <h2 id="totalHoursValue" class="text-4xl font-bold tracking-tight">0 hrs</h2>
+                </div>
+                 <div class="text-right mt-4 opacity-60">
+                    <svg class="w-10 h-10 inline-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.414L11 10.586V6z" clip-rule="evenodd"></path></svg>
+                </div>
+            </div>
+
+            
+            <div class="bg-gradient-to-br from-purple-400 to-pink-500 text-white p-6 rounded-xl shadow-lg flex flex-col justify-between">
+                <div>
+                    <p id="totalTripsLabel" class="text-lg font-semibold opacity-80">Total Trips</p>
+                    <h2 id="totalTripsValue" class="text-4xl font-bold tracking-tight">0</h2>
+                </div>
+                 <div class="text-right mt-4 opacity-60">
+                    <svg class="w-10 h-10 inline-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v5a1 1 0 001 1h2.05a2.5 2.5 0 014.9 0H21a1 1 0 001-1v-5a1 1 0 00-1-1h-7z"></path></svg>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="text-center text-xs text-gray-400 mt-6 pt-4 border-t border-gray-100">
+            <p id="footerTextMonthlyDashboard"></p>
+        </footer>
+      </div>
+
+  </div>
+
+ 
+  <div id="messageBox" class="message-box"></div>
+
+   
+  <div id="customConfirmModal" class="confirm-modal-overlay hidden">
+    <div class="confirm-modal-content">
+      <p id="confirmModalMessage" class="mb-6 text-gray-700 font-medium text-lg"></p>
+      <div class="flex justify-center">
+        <button id="confirmModalCancelBtn" class="bg-gray-300 text-gray-800 hover:bg-gray-400"></button>
+        <button id="confirmModalConfirmBtn" class="bg-red-500 text-white hover:bg-red-600"></button>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
