@@ -1,0 +1,371 @@
+/* Styling for the message box to provide visual feedback */
+    .message-box {
+      position: fixed;
+      top: 5rem; /* Positioned lower from the top */
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600; 
+      z-index: 1002; /* Ensure it's above overlays */
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .message-box.show {
+      opacity: 1;
+    }
+    .message-box.success {
+      background-color: #d1fae5; /* green-100 */
+      color: #065f46; /* green-800 */
+    }
+    .message-box.error {
+      background-color: #fee2e2; /* red-100 */
+      color: #991b1b; /* red-800 */
+    }
+    /* Custom scrollbar for log area */
+    .log-container::-webkit-scrollbar {
+      width: 8px;
+    }
+    .log-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    .log-container::-webkit-scrollbar-thumb {
+      background: #a7f3d0; /* green-200 */
+      border-radius: 10px;
+    }
+    .log-container::-webkit-scrollbar-thumb:hover {
+      background: #6ee7b7; /* green-300 */
+    }
+    .hidden {
+      display: none;
+    }
+
+    /* Custom confirm modal styling */
+    .confirm-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1001; /* Above message box */
+    }
+    .confirm-modal-content {
+        background-color: white;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        max-width: 380px;
+        width: 90%;
+        text-align: center;
+    }
+    .confirm-modal-content button {
+        margin: 0 8px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    /* Hamburger Menu Specific Styles */
+    .hamburger-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .hamburger-menu-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .hamburger-sidebar {
+        position: fixed;
+        top: 0;
+        left: -300px; /* Hidden by default */
+        width: 250px;
+        height: 100%;
+        background-color: #fff;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        z-index: 999;
+        transition: left 0.3s ease;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem; /* Replaced gap-20px with rem */
+    }
+    .hamburger-sidebar.show {
+        left: 0; /* Show the sidebar */
+    }
+    .hamburger-icon {
+        position: fixed;
+        /* Adjust for safe area on notched devices */
+        top: calc(env(safe-area-inset-top, 0px) + 20px); 
+        left: 20px;
+        z-index: 1000;
+        cursor: pointer;
+        background-color: rgba(255,255,255,0.8);
+        padding: 8px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .hamburger-icon span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: #333;
+        margin: 5px 0;
+        transition: all 0.3s ease-in-out;
+    }
+    /* Style for editable name */
+    [contenteditable="true"] {
+        outline: none;
+        border-bottom: 2px dashed #4ade80; /* green-400 */
+        padding-bottom: 2px;
+    }
+    [contenteditable="true"]:focus {
+        border-bottom: 2px solid #16a34a; /* green-600 */
+    }
+    /* Style for input error */
+    .input-error {
+        border-color: #ef4444 !important; /* red-500 */
+        box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+    }
+
+    /* Typing animation for placeholder */
+    .typing-cursor::placeholder {
+      color: transparent;
+    }
+    .typing-placeholder::placeholder {
+        animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        white-space: nowrap;
+        overflow: hidden;
+        border-right: .15em solid orange; /* The cursor */
+    }
+    /* The typing effect */
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    /* The cursor effect */
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: orange; }
+    }
+
+    /* Hamburger Menu Icon Button Styles */
+    .menu-icon-btn {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* Changed */
+        width: 100%;
+        height: 50px;
+        border-radius: 12px;
+        padding-left: 1rem; /* Added */
+        padding-right: 1rem; /* Added */
+        gap: 1rem; /* Added */
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    }
+    .menu-icon-btn:hover {
+        transform: scale(1.1) rotate(4deg);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+    .menu-icon-btn:active {
+        transform: scale(1.05) rotate(2deg);
+    }
+    .menu-icon-btn svg, .menu-icon-btn img {
+        width: 28px;
+        height: 28px;
+        transition: filter 0.2s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .menu-icon-btn:hover svg, .menu-icon-btn:hover img {
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+        transform: rotate(-10deg) scale(1.1);
+    }
+    .main-calc-btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column; /* Added */
+        border-radius: 0.5rem;
+        padding: 0.5rem; /* Adjusted */
+        font-weight: 600;
+        transition: transform 0.2s, background-color 0.2s;
+    }
+    .main-calc-btn:hover {
+        transform: translateY(-2px);
+    }
+    .main-calc-btn svg {
+        width: 24px;
+        height: 24px;
+    }
+     /* Microphone listening animation */
+    .mic-listening svg {
+        color: #ef4444; /* red-500 */
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+      }
+    }
+    /* Style for talk-back highlight */
+    .speaking-highlight {
+        background-color: #fef08a; /* Tailwind yellow-200 */
+        border-radius: 4px;
+        padding: 2px 4px;
+        margin: -2px -4px;
+        transition: background-color 0.2s ease-in-out;
+        box-shadow: 0 0 10px rgba(254, 240, 138, 0.7);
+    }
+    /* Styles for the "Paid" cross-out lines */
+    .paid-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        pointer-events: none; /* So it doesn't block clicks */
+        display: none;
+    }
+    .paid-overlay.visible {
+        display: block;
+    }
+    .paid-overlay .cross-line {
+        position: absolute;
+        background-color: rgba(239, 68, 68, 0.6); /* red-500 with opacity */
+        height: 4px;
+        width: 140%; /* extend past edges */
+        top: 50%;
+        left: -20%;
+        border-radius: 2px;
+    }
+    .paid-overlay .cross-line-1 { transform: rotate(20deg); }
+    .paid-overlay .cross-line-2 { transform: rotate(-20deg); }
+    
+    /* GPS Tracker Modal Styles */
+    .gps-tracker-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+        z-index: 1010;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #map {
+        height: 100%;
+        width: 100%;
+        border: none;
+    }
+    .leaflet-control-attribution, .leaflet-control-zoom {
+        filter: drop-shadow(0 2px 2px rgba(0,0,0,0.4));
+    }
+    #distance-display {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: rgba(255,255,255,0.8);
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #166534; /* green-800 */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        z-index: 1000; /* Above the map */
+    }
+
+    /* Bottom Navigation Bar Styles */
+    .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        border-top: 1px solid #e5e7eb; /* gray-200 */
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-btn {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 4px; /* vertical padding, horizontal padding */
+        color: #4b5563; /* gray-600 */
+        transition: color 0.2s, transform 0.2s;
+        -webkit-tap-highlight-color: transparent; /* remove tap highlight on mobile */
+    }
+    .nav-btn.active {
+        color: #16a34a; /* green-600 */
+    }
+    .nav-btn.active span {
+        font-weight: 600;
+    }
+    .nav-btn:active {
+        transform: scale(0.95);
+    }
+    .nav-btn svg, .nav-btn img {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 2px;
+    }
+    .nav-btn span {
+        font-size: 0.7rem; /* 11.2px, good for fitting longer text */
+        line-height: 1;
+        text-align: center;
+    }
+     
+    /* Redesigned Styles for Native App Feel */
+    html, body {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden; /* Critical for disabling scroll */
+        margin: 0;
+        padding: 0;
+        position: fixed; /* Prevents scroll bounce and pull-to-refresh */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overscroll-behavior-y: contain;
+    }
+    .app-screen {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 50;
+    }
+    .content-scroll {
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        overflow-y: auto;
+        height: 100%;
+        width: 100%;
+    }
+    .content-scroll::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for a native feel */
+    }
+    .app-main-content {
+        /* pt-20 is 5rem, pb-20 is 5rem */
+        padding-top: calc(env(safe-area-inset-top, 0px) + 5rem);
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5rem);
+        padding-left: env(safe-area-inset-left, 0px);
+        padding-right: env(safe-area-inset-right, 0px);
+    }
