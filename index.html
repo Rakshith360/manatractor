@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -283,11 +283,11 @@
         <h1 id="welcomeHeading" class="text-2xl font-bold text-green-700 mb-1 mt-12"></h1>
         <p id="tagline" class="text-gray-500 mb-4"></p>
     
-        <!-- Name and Phone Number fields -->
+        <!-- Customer Name and Phone Number fields -->
         <div class="mb-4">
-          <label id="nameLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+          <label id="customerNameLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
           <div class="relative">
-            <input id="userName" type="text" class="w-full border border-gray-300 rounded-lg p-2 pr-10" />
+            <input id="customerName" type="text" class="w-full border border-gray-300 rounded-lg p-2 pr-10" />
             <button onclick="getContact()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-green-600 focus:outline-none">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6zm4 2a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM6 13a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" clip-rule="evenodd" />
@@ -297,9 +297,9 @@
         </div>
     
         <div class="mb-4">
-          <label id="phoneLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+          <label id="customerPhoneLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
           <div class="relative">
-            <input id="userPhoneNumber" type="tel" class="w-full border border-gray-300 rounded-lg p-2 pr-10" />
+            <input id="customerPhoneNumber" type="tel" class="w-full border border-gray-300 rounded-lg p-2 pr-10" />
             <button onclick="callPhoneNumber()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-green-600 focus:outline-none">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.103 6.103l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
@@ -504,10 +504,8 @@
 
   <script>
     // Global variables
-    let currentUserName = '';
-    let currentUserPhoneNumber = '';
     let currentLang = 'te'; // Default language
-    let displayName = ''; // Holds the name for the welcome message
+    let mainUserDisplayName = ''; // Holds the MAIN USER's name for the welcome message
     let isStartTimeLocked = false;
     let isEndTimeLocked = false;
     let pauseStartTime = null; // Tracks when a pause starts
@@ -572,15 +570,15 @@
         te: "మీ ట్రాక్టర్ పని, సమయం & ఆదాయాన్ని సులభంగా ట్రాక్ చేయండి.",
         en: "Easily track your tractor work, time & income."
       },
-      name_label: { te: "పేరు నమోదు చేయండి", en: "Enter Name" },
-      name_placeholder: { te: "మీ పూర్తి పేరును నమోదు చేయండి", en: "Enter your full name" },
-      phone_label: { te: "ఫోన్ నంబర్", en: "Phone Number" },
-      phone_placeholder: { te: "+91 XXXXXXXXXX", en: "+91 XXXXXXXXXX" },
+      customer_name_label: { te: "వినియోగదారుడి పేరు", en: "Customer Name" },
+      customer_name_placeholder: { te: "వినియోగదారుడి పూర్తి పేరును నమోదు చేయండి", en: "Enter customer's full name" },
+      customer_phone_label: { te: "వినియోగదారుడి ఫోన్ నంబర్", en: "Customer Phone Number" },
+      customer_phone_placeholder: { te: "+91 XXXXXXXXXX", en: "+91 XXXXXXXXXX" },
       date_label: { te: "తేదీ", en: "Date" },
       start_time_label: { te: "ప్రారంభ సమయం", en: "Start Time" },
       end_time_label: { te: "ముగింపు సమయం", en: "End Time" },
       rate_per_hour_label: { te: "గంటకు రేటు (₹)", en: "Rate Per Hour (₹)" },
-      calculate_button: { te: "లెక్కించు", en: "Calculate" },
+      calculate_button: { te: "లెక్కించు & సేవ్ చేయి", en: "Calculate & Save" },
       save_button: { te: "సేవ్ చేయి", en: "Save" },
       hourly_time_label: { te: "గంటల పని", en: "Hourly Work" },
       hourly_earnings_label: { te: "గంటల ఆదాయం", en: "Hourly Earnings" },
@@ -606,8 +604,7 @@
       note_content_label: { te: "నోట్ కంటెంట్", en: "Note Content" },
       note_content_placeholder: { te: "దయచేసి పని సమాచార వివరాలను నమోదు చేయండి", en: "Please enter the work info details" },
       // Message Box Messages
-      name_updated_success: { te: "ప్రొఫైల్ విజయవంతంగా నవీకరించబడింది!", en: "Profile updated successfully!" },
-      name_phone_missing_error: { te: "దయచేసి మొదట పేరు మరియు ఫోన్ నంబర్‌ను నమోదు చేయండి.", en: "Please enter a name and phone number first." },
+      customer_name_phone_missing_error: { te: "దయచేసి మొదట వినియోగదారుడి పేరు మరియు ఫోన్ నంబర్‌ను నమోదు చేయండి.", en: "Please enter a customer name and phone number first." },
       fill_time_rate_error: { te: "దయచేసి సమయం మరియు రేటు నింపండి.", en: "Please fill in time and rate." },
       end_time_error: { te: "ముగింపు సమయం ప్రారంభ సమయం తర్వాత లేదా కనీసం 1 నిమిషం వ్యవధి ఉండాలి.", en: "End time must be after start time with at least 1 minute duration." },
       hourly_calculation_success: { te: "గంటకు ఆదాయం విజయవంతంగా లెక్కించబడింది!", en: "Hourly earnings calculated successfully!" },
@@ -615,7 +612,8 @@
       trip_calculation_success: { te: "ట్రిప్ ఆదాయం విజయవంతంగా లెక్కించబడింది!", en: "Trip earnings calculated successfully!" },
       combined_calculation_success: { te: "మొత్తం ఆదాయం విజయవంతంగా లెక్కించబడింది!", en: "Total earnings calculated successfully!" },
       fill_all_details_calculate_save_error: { te: "దయచేసి వివరాలను నింపి, సేవ్ చేయడానికి ముందు ఆదాయాన్ని లెక్కించండి.", en: "Please fill details and calculate earnings before saving." },
-      data_saved_success: { te: "డేటా విజయవంతంగా ఫైర్‌స్టోర్‌లో సేవ్ చేయబడింది!", en: "Data saved to Firestore successfully!" },
+      data_saved_success: { te: "వివరాలు విజయవంతంగా సేవ్ చేయబడ్డాయి!", en: "Data saved successfully!" },
+      form_cleared_message: { te: "తదుపరి ఎంట్రీ కోసం ఫారం క్లియర్ చేయబడింది.", en: "Form cleared for the next entry." },
       back_button: { te: "వెనుకకు", en: "Back" },
       cancel_button: { te: "రద్దు చేయి", en: "Cancel" },
       confirm_button: { te: "నిర్ధారించు", en: "Confirm" },
@@ -671,13 +669,13 @@
       return { hours, minutes, seconds };
     }
 
-    function showMessage(message, type = 'success') {
+    function showMessage(message, type = 'success', duration = 3000) {
       const messageBox = document.getElementById('messageBox');
       messageBox.textContent = message;
       messageBox.className = `message-box show ${type}`; 
       setTimeout(() => {
         messageBox.classList.remove('show');
-      }, 3000); 
+      }, duration); 
     }
 
     function formatTime12Hour(timeString) {
@@ -690,40 +688,18 @@
     }
 
     // --- Core UI Logic Functions ---
-    async function saveUserProfileData() {
-        if (!window.currentUserId) return;
-        const userName = document.getElementById('userName').value.trim();
-        const userPhoneNumber = document.getElementById('userPhoneNumber').value.trim();
-        const lang = document.getElementById('languageSelectorMenu').value;
-        
-        displayName = userName; // Update global displayName when user saves profile
-
-        const userProfileRef = window.doc(window.db, 'users', window.currentUserId);
-        try {
-            await window.setDoc(userProfileRef, { 
-                userName: userName, 
-                userPhoneNumber: userPhoneNumber,
-                preferredLanguage: lang
-            }, { merge: true });
-            showMessage(T('name_updated_success'), 'success');
-        } catch (error) {
-            console.error("Error saving user profile: ", error);
-            showMessage('Failed to save profile.', 'error');
-        }
-    }
-
     function setLanguage(langCode) {
       currentLang = langCode;
       
       document.getElementById('languageSelectorMenu').value = langCode;
       
-      document.getElementById('welcomeHeading').innerHTML = T('welcome_heading').replace('{userName}', displayName || 'User');
+      document.getElementById('welcomeHeading').innerHTML = T('welcome_heading').replace('{userName}', mainUserDisplayName || 'User');
 
       document.getElementById('tagline').textContent = T('tagline');
-      document.getElementById('nameLabel').textContent = T('name_label');
-      document.getElementById('userName').placeholder = T('name_placeholder');
-      document.getElementById('phoneLabel').textContent = T('phone_label');
-      document.getElementById('userPhoneNumber').placeholder = T('phone_placeholder');
+      document.getElementById('customerNameLabel').textContent = T('customer_name_label');
+      document.getElementById('customerName').placeholder = T('customer_name_placeholder');
+      document.getElementById('customerPhoneLabel').textContent = T('customer_phone_label');
+      document.getElementById('customerPhoneNumber').placeholder = T('customer_phone_placeholder');
       document.getElementById('dateLabel').textContent = T('date_label');
       document.getElementById('startTimeLabel').textContent = T('start_time_label');
       document.getElementById('endTimeLabel').textContent = T('end_time_label');
@@ -796,13 +772,6 @@
       updateNavUI('dashboard');
       setCurrentDate();
       document.getElementById('logSearchInput').value = '';
-
-      // Reset calculations
-      document.getElementById('hourlyTotalTime').textContent = '0 hrs';
-      document.getElementById('hourlyTotalEarnings').textContent = '₹0';
-      document.getElementById('tripTotalTrips').textContent = '0 trips';
-      document.getElementById('tripTotalEarnings').textContent = '₹0';
-      document.getElementById('combinedTotalEarnings').textContent = '₹0';
     }
 
     function showLogsView() {
@@ -1069,20 +1038,46 @@
         }
       }
     }
+    
+    // --- NEW: Function to clear customer form ---
+    function resetCustomerForm() {
+        document.getElementById('customerName').value = '';
+        document.getElementById('customerPhoneNumber').value = '';
+        document.getElementById('noteContent').value = '';
+        document.getElementById('ratePerHour').value = '2000';
+        document.getElementById('numberOfTrips').value = '0';
+        document.getElementById('costPerTrip').value = '500';
 
+        // Reset time locks and timers
+        totalPausedTime = 0;
+        if (isStartTimeLocked) toggleLock('start');
+        if (isEndTimeLocked) toggleLock('end');
+        updateLiveTime(); // Reset times to current time
+        setCurrentDate(); // Reset date to today
+
+        // Reset calculation displays
+        document.getElementById('hourlyTotalTime').textContent = '0 hrs';
+        document.getElementById('hourlyTotalEarnings').textContent = '₹0';
+        document.getElementById('tripTotalTrips').textContent = '0 trips';
+        document.getElementById('tripTotalEarnings').textContent = '₹0';
+        document.getElementById('combinedTotalEarnings').textContent = '₹0';
+
+        showMessage(T('form_cleared_message'), 'success');
+    }
+
+
+    // --- MODIFIED: Function to save customer data ---
     async function saveCombinedData() {
         if (!window.currentUserId) {
             showMessage('You must be logged in to save data.', 'error');
             return;
         }
-        
-        await saveUserProfileData(); // Save name/phone to user profile
 
-        currentUserName = document.getElementById('userName').value.trim();
-        currentUserPhoneNumber = document.getElementById('userPhoneNumber').value.trim();
+        const customerName = document.getElementById('customerName').value.trim();
+        const customerPhoneNumber = document.getElementById('customerPhoneNumber').value.trim();
 
-        if (!currentUserName || !currentUserPhoneNumber) {
-            showMessage(T('name_phone_missing_error'), 'error');
+        if (!customerName || !customerPhoneNumber) {
+            showMessage(T('customer_name_phone_missing_error'), 'error');
             return;
         }
 
@@ -1115,10 +1110,11 @@
         }
         const deductedDuration = formatMillisecondsToHMS(totalPausedTime);
 
+        // This is a CUSTOMER record
         const record = {
             userId: window.currentUserId,
-            userName: currentUserName,
-            userPhoneNumber: currentUserPhoneNumber,
+            customerName: customerName, // Changed from userName
+            customerPhoneNumber: customerPhoneNumber, // Changed from userPhoneNumber
             date,
             noteContent: noteContent,
             timestamp: window.serverTimestamp(),
@@ -1139,18 +1135,9 @@
             await window.addDoc(recordsCollectionRef, record);
             showMessage(T('data_saved_success'), 'success');
 
-            // Reset form
-            totalPausedTime = 0;
-            isStartTimeLocked = false;
-            isEndTimeLocked = false;
-            updateLockUI('start');
-            updateLockUI('end');
-            document.getElementById('ratePerHour').value = '2000';
-            document.getElementById('numberOfTrips').value = '0';
-            document.getElementById('costPerTrip').value = '500';
-            document.getElementById('noteContent').value = '';
-
-            showDashboardView();
+            // --- NEW: Reset form after successful save ---
+            resetCustomerForm();
+            
         } catch (error) {
             console.error("Error adding document: ", error);
             showMessage("Failed to save data to the cloud.", "error");
@@ -1164,8 +1151,8 @@
             return;
         }
         const filteredRecords = allUserLogs.filter(record => 
-            (record.userName && record.userName.toLowerCase().includes(searchTerm)) || 
-            (record.userPhoneNumber && record.userPhoneNumber.includes(searchTerm))
+            (record.customerName && record.customerName.toLowerCase().includes(searchTerm)) || 
+            (record.customerPhoneNumber && record.customerPhoneNumber.includes(searchTerm))
         );
         renderLogs(filteredRecords);
     }
@@ -1250,8 +1237,8 @@
             <h3 class="font-semibold text-lg text-green-800">${record.date}</h3>
             <span class="text-xs text-gray-500">${T('saved_on')}: ${savedDate.toLocaleDateString(currentLang)} ${savedDate.toLocaleTimeString(currentLang)}</span>
           </div>
-          <p id="log-name-${record.id}" class="text-sm text-gray-700 mb-1"><span class="font-medium">${T('name')}:</span> ${record.userName}</p>
-          <p id="log-phone-${record.id}" class="text-sm text-gray-700 mb-1"><span class="font-medium">${T('phone')}:</span> ${record.userPhoneNumber}</p>
+          <p id="log-name-${record.id}" class="text-sm text-gray-700 mb-1"><span class="font-medium">${T('name')}:</span> ${record.customerName}</p>
+          <p id="log-phone-${record.id}" class="text-sm text-gray-700 mb-1"><span class="font-medium">${T('phone')}:</span> ${record.customerPhoneNumber}</p>
           ${hourlyDetailsHtml}
           ${tripDetailsHtml}
           <p class="text-xl font-bold ${paymentColorClass} mt-2 border-t pt-2 border-gray-200" id="combinedEarnings_${record.id}">${T('combined_earnings_label')}: ${record.combinedTotalEarnings}</p>
@@ -1329,7 +1316,7 @@
     }
 
     function callPhoneNumber() {
-      const phoneNumber = document.getElementById('userPhoneNumber').value.trim();
+      const phoneNumber = document.getElementById('customerPhoneNumber').value.trim();
       if (phoneNumber) {
         window.location.href = `tel:${phoneNumber}`;
       } else {
@@ -1344,10 +1331,10 @@
           if (contacts.length > 0) {
             const contact = contacts[0];
             if (contact.name && contact.name.length > 0) {
-              document.getElementById('userName').value = contact.name[0];
+              document.getElementById('customerName').value = contact.name[0];
             }
             if (contact.tel && contact.tel.length > 0) {
-              document.getElementById('userPhoneNumber').value = contact.tel[0];
+              document.getElementById('customerPhoneNumber').value = contact.tel[0];
             }
           }
         } catch (error) {
@@ -1366,7 +1353,7 @@
             return;
         }
 
-        const phoneNumber = record.userPhoneNumber;
+        const phoneNumber = record.customerPhoneNumber;
         if (!phoneNumber) {
             showMessage(T('sms_send_error'), 'error');
             return;
@@ -1396,8 +1383,8 @@
 
         let smsBody = T('sms_body_template')
             .replace('{date}', record.date)
-            .replace('{name}', record.userName)
-            .replace('{phone}', record.userPhoneNumber)
+            .replace('{name}', record.customerName)
+            .replace('{phone}', record.customerPhoneNumber)
             .replace('{hourlyDetails}\n{tripDetails}', combinedDetails)
             .replace('{totalEarnings}', record.combinedTotalEarnings)
             .replace('{noteContent}', record.noteContent || 'N/A')
@@ -1548,14 +1535,21 @@
         }, 300); // Match animation duration
     }
 
+    // --- MODIFIED: Saves main user's identity ---
     async function acceptTerms() {
-        if (!window.currentUserId) return;
+        if (!window.currentUserId || !window.currentUser) {
+             showMessage("Error: User not found. Please log in again.", "error");
+             return;
+        }
         const userProfileRef = window.doc(window.db, 'users', window.currentUserId);
 
         try {
+            // This is the MAIN USER record.
             await window.setDoc(userProfileRef, {
                 termsAccepted: true,
-                acceptedAt: window.serverTimestamp()
+                acceptedAt: window.serverTimestamp(),
+                email: window.currentUser.email,
+                displayName: window.currentUser.displayName
             }, { merge: true });
 
             hideTermsModal();
@@ -1567,10 +1561,7 @@
             } else {
                 // Existing user who just accepted terms, continue with their saved language
                 const data = docSnap.data();
-                const firestoreUserName = data.userName || displayName;
-                document.getElementById('userName').value = firestoreUserName;
-                document.getElementById('userPhoneNumber').value = data.userPhoneNumber || '';
-                displayName = firestoreUserName;
+                mainUserDisplayName = data.displayName || mainUserDisplayName;
                 finishAppInitialization(data.preferredLanguage);
             }
 
@@ -1586,14 +1577,10 @@
         if (window.currentUserId) {
             const userProfileRef = window.doc(window.db, 'users', window.currentUserId);
             try {
-                // Profile was created at terms acceptance. Now, add language and default name.
+                // Profile was created at terms acceptance. Now, just add the preferred language.
                 await window.setDoc(userProfileRef, { 
-                    userName: displayName,
-                    userPhoneNumber: '',
                     preferredLanguage: langCode
                 }, { merge: true });
-                
-                document.getElementById('userName').value = displayName;
             } catch (error) {
                 console.error("Error saving initial language: ", error);
             }
@@ -1624,27 +1611,28 @@
         setupLogListener(window.currentUserId);
     }
 
-    async function initializeAppLogic(userId, extractedName) {
-        const userProfileRef = window.doc(window.db, 'users', userId);
+    // --- MODIFIED: Handles app logic after login ---
+    async function initializeAppLogic(user) {
+        const userProfileRef = window.doc(window.db, 'users', user.uid);
         const docSnap = await window.getDoc(userProfileRef);
 
-        displayName = extractedName; // Set default name from email
+        // Set the main user's display name from Google as default
+        mainUserDisplayName = user.displayName || extractNameFromEmail(user.email);
 
         if (docSnap.exists()) {
             const data = docSnap.data();
 
             if (data.termsAccepted) {
-                const firestoreUserName = data.userName || displayName;
-                document.getElementById('userName').value = firestoreUserName;
-                document.getElementById('userPhoneNumber').value = data.userPhoneNumber || '';
+                // If a name is saved in Firestore, use it, otherwise stick with the Google name.
+                mainUserDisplayName = data.displayName || mainUserDisplayName;
+                
                 const userLang = data.preferredLanguage || 'te';
-                displayName = firestoreUserName;
                 finishAppInitialization(userLang);
             } else {
-                showTermsModal('en'); // Existing user from old version
+                showTermsModal('en'); // Existing user from old version, needs to accept terms
             }
         } else {
-            // New user: show terms first.
+            // This is a completely new user.
             showTermsModal('en'); 
         }
     }
@@ -1675,6 +1663,9 @@
         });
 
         termsConfirmBtn.addEventListener('click', acceptTerms);
+        
+        // Update the main save button text
+        document.getElementById('saveBtn').textContent = T('calculate_button');
     });
 
   </script>
@@ -1687,7 +1678,7 @@
     
     // IMPORTANT: Replace with your actual Firebase config object
     const firebaseConfig = {
-    apiKey: "AIzaSyA-7w4YspeNiyHgnMx8R5NZSCPaGYmMNak",
+        apiKey: "AIzaSyA-7w4YspeNiyHgnMx8R5NZSCPaGYmMNak",
   authDomain: "test-test-39764.firebaseapp.com",
   projectId: "test-test-39764",
   storageBucket: "test-test-39764.firebasestorage.app",
@@ -1714,6 +1705,7 @@
     window.getDoc = getDoc;
     window.serverTimestamp = serverTimestamp;
     window.currentUserId = null;
+    window.currentUser = null; // To hold the full user object
 
     const loginSection = document.getElementById('loginSection');
     const appContainer = document.getElementById('appContainer');
@@ -1748,10 +1740,12 @@
         });
     });
 
+    // --- MODIFIED: Handles Authentication state changes ---
     onAuthStateChanged(auth, (user) => {
         if (user) {
             // User is signed in
             window.currentUserId = user.uid;
+            window.currentUser = user; // Store the whole user object
             loginSection.classList.add('hidden');
             appContainer.classList.remove('hidden');
 
@@ -1759,14 +1753,13 @@
             userProfilePic.src = user.photoURL || 'https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png';
             userProfileEmail.textContent = user.email;
             
-            const extractedName = extractNameFromEmail(user.email);
-
-            // Initialize the main application logic
-            initializeAppLogic(user.uid, extractedName);
+            // Initialize the main application logic, passing the user object
+            initializeAppLogic(user);
 
         } else {
             // User is signed out
             window.currentUserId = null;
+            window.currentUser = null;
             if (unsubscribeLogs) {
               unsubscribeLogs(); // Detach Firestore listener
               unsubscribeLogs = null;
