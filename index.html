@@ -581,9 +581,9 @@
         en: "Easily track your tractor work, time & income."
       },
       customer_name_label: { te: "వినియోగదారుడి పేరు", en: "Customer Name" },
-      customer_name_placeholder: { te: "వినియోగదారుడి పూర్తి పేరును నమోదు చేయండి", en: "Enter customer's full name" },
+      customer_name_placeholder: { te: "వినియోగదారుడి పేరు", en: "Customer Name" },
       customer_phone_label: { te: "వినియోగదారుడి ఫోన్ నంబర్", en: "Customer Phone Number" },
-      customer_phone_placeholder: { te: "+91 XXXXXXXXXX", en: "+91 XXXXXXXXXX" },
+      customer_phone_placeholder: { te: "వినియోగదారుడి ఫోన్ నంబర్", en: "Customer phone number" },
       date_label: { te: "తేదీ", en: "Date" },
       start_time_label: { te: "ప్రారంభ సమయం", en: "Start Time" },
       end_time_label: { te: "ముగింపు సమయం", en: "End Time" },
@@ -638,7 +638,10 @@
       delete_confirmation_message: { te: "మీరు ఈ లాగ్‌ను తొలగించాలనుకుంటున్నారని ఖచ్చితంగా అనుకుంటున్నారా? ఈ చర్యను రద్దు చేయడం సాధ్యపడదు.", en: "Are you sure you want to delete this log? This action cannot be undone." },
       log_deleted_success: { te: "లాగ్ విజయవంతంగా తొలగించబడింది!", en: "Log deleted successfully!" },
       sms_send_error: { te: "SMS పంపడానికి ఫోన్ నంబర్ లేదు.", en: "No phone number available to send SMS." },
-      sms_body_template: { te: "మీ ట్రాక్టర్ పని వివరాలు:\nతేదీ: {date}\nపేరు: {name}\nఫోన్: {phone}\n{hourlyDetails}\n{tripDetails}\nమొత్తం ఆదాయం: {totalEarnings}\nనోట్: {noteContent}\nచెల్లింపు స్థితి: {paymentStatus}", en: "Your tractor work details:\nDate: {date}\nName: {name}\nPhone: {phone}\n{hourlyDetails}\n{tripDetails}\nTotal Earnings: {totalEarnings}\nNote: {noteContent}\nPayment Status: {paymentStatus}" },
+      sms_body_template: { 
+          te: "మీ ట్రాక్టర్ పని వివరాలు:\nతేదీ: {date}\nపేరు: {name}\n{hourlyDetails}\n{tripDetails}\nమొత్తం ఆదాయం: {totalEarnings}\nనోట్: {noteContent}\nచెల్లింపు స్థితి: {paymentStatus}\n\nధన్యవాదాలు", 
+          en: "Your tractor work details:\nDate: {date}\nName: {name}\n{hourlyDetails}\n{tripDetails}\nTotal Earnings: {totalEarnings}\nNote: {noteContent}\nPayment Status: {paymentStatus}\n\nThank you" 
+      },
       sms_hourly_template: { te: "పని సమయం: {startTime} - {endTime} ({duration})\nగంటకు రేటు: ₹{rate} / hr\nగంటల ఆదాయం: {earnings}", en: "Work Time: {startTime} - {endTime} ({duration})\nRate per hour: ₹{rate} / hr\nHourly Earnings: {earnings}" },
       sms_trip_template: { te: "ట్రిప్పులు: {trips} ({tripsDisplay})\nఒక ట్రిప్‌కు ధర: ₹{costPerTrip}\nట్రిప్ ఆదాయం: {earnings}", en: "Trips: {trips} ({tripsDisplay})\nCost per trip: ₹{costPerTrip}\nTrip Earnings: {earnings}" },
        // TTS Translations
@@ -1403,7 +1406,6 @@
         let smsBody = T('sms_body_template')
             .replace('{date}', record.date)
             .replace('{name}', record.customerName)
-            .replace('{phone}', record.customerPhoneNumber)
             .replace('{hourlyDetails}\n{tripDetails}', combinedDetails)
             .replace('{totalEarnings}', record.combinedTotalEarnings)
             .replace('{noteContent}', record.noteContent || 'N/A')
@@ -1694,7 +1696,7 @@
     
     // IMPORTANT: Replace with your actual Firebase config object
     const firebaseConfig = {
-        apiKey: "AIzaSyA-7w4YspeNiyHgnMx8R5NZSCPaGYmMNak",
+    apiKey: "AIzaSyA-7w4YspeNiyHgnMx8R5NZSCPaGYmMNak",
   authDomain: "test-test-39764.firebaseapp.com",
   projectId: "test-test-39764",
   storageBucket: "test-test-39764.firebasestorage.app",
