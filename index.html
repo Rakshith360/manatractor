@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -385,14 +385,20 @@
                     <select id="startTimeMinute" class="w-full border border-gray-300 rounded-lg p-2 bg-white appearance-none text-center"></select>
                     <select id="startTimeAmPm" class="w-full border border-gray-300 rounded-lg p-2 bg-white appearance-none"></select>
                   </div>
-                  <button id="startTimeLockBtn" onclick="toggleLock('start')" class="lock-button absolute inset-y-0 right-0 pr-3 flex items-center focus:outline-none text-green-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 open-lock" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v2H7V7a3 3 0 013-3z"/>
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 closed-lock hidden" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M10 2a3 3 0 00-3 3v1H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V8a2 2 0 00-2-2h-1V5a3 3 0 00-3-3zm-1 4V5a1 1 0 112 0v1H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z" clip-rule="evenodd" />
-                    </svg>
-                  </button>
+                  
+                  <!-- MODIFIED: Wrapper for lock button and status text -->
+                  <div class="absolute inset-y-0 right-0 pr-3 flex flex-col items-center justify-center">
+                    <button id="startTimeLockBtn" onclick="toggleLock('start')" class="lock-button focus:outline-none text-green-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 open-lock" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v2H7V7a3 3 0 013-3z"/>
+                      </svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 closed-lock hidden" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 2a3 3 0 00-3 3v1H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V8a2 2 0 00-2-2h-1V5a3 3 0 00-3-3zm-1 4V5a1 1 0 112 0v1H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                    <!-- NEW: Status Text -->
+                    <span id="startTimeLockStatus" class="text-xs font-medium text-green-500">OFF</span>
+                  </div>
                 </div>
               </div>
 
@@ -652,8 +658,7 @@
 <p>మీరు అభ్యర్థించిన సేవను మీకు అందించడానికి అవసరమైనంత కాలం మాత్రమే మేము సేకరించిన సమాచారాన్ని నిలుపుకుంటాము. మేము ఏ డేటాను నిల్వ చేస్తాము, నష్టం మరియు దొంగతనం, అలాగే అనధికార ప్రాప్యత, బహిర్గతం, కాపీ చేయడం, ఉపయోగించడం లేదా సవరించడం వంటి వాటిని నిరోధించడానికి వాణిజ్యపరంగా ఆమోదయోగ్యమైన మార్గాల్లో మేము రక్షిస్తాము.</p>`
         }
     };
-
-      // --- Translation Data (Completed) ---
+ // --- Translation Data (Completed) ---
   const translations = {
     // Dashboard Section
     welcome_heading: { 
@@ -1287,15 +1292,18 @@
       ur: "مثال کے طور پر، 923XXXXXXX",
       pa: "ਉਦਾਹਰਨ, 923XXXXXXX"
     },
-     break_button: { te: "విరామం", en: "Break", hi: "विराम", ar: "استراحة", ur: "وقفہ" },
+      // --- NEW: Break/Pause Translations ---
+      break_button: { te: "విరామం", en: "Break", hi: "विराम", ar: "استراحة", ur: "وقفہ" },
       resume_button: { te: "పునఃప్రారంభించు", en: "Resume", hi: "फिर से शुरू करें", ar: "استئناف", ur: "دوبارہ شروع کریں" },
       break_label: { te: "విరామం తీసుకోండి", en: "Take a Break", hi: "ब्रेक लें", ar: "خذ استراحة", ur: "وقفہ لیں" },
       paused_duration_log: { te: "విరామ సమయం", en: "Paused Duration", hi: "विराम की अवधि", ar: "مدة الإيقاف", ur: "وقفے کا دورانیہ" },
       paused_deduction_log: { te: "విరామం తగ్గింపు", en: "Paused Deduction", hi: "विराम कटौती", ar: "خصم الإيقاف", ur: "وقفے کی کٹوتی" },
       paused_at: { te: "ఆపబడింది", en: "Stopped", hi: "रुका हुआ", ar: "متوقف", ur: "رک گیا" },
-      resumed_at: { te: "ప్రారంభించబడింది", en: "Started", hi: "शुरू हुआ", ar: "بدأ", ur: "شروع ہوا" }
-  };
-    
+      resumed_at: { te: "ప్రారంభించబడింది", en: "Started", hi: "शुरू हुआ", ar: "بدأ", ur: "شروع ہوا" },
+      // --- NEW: Lock Status Translations ---
+      lock_status_on: { te: "ON", en: "ON", hi: "ON", ar: "ON", ur: "ON" },
+      lock_status_off: { te: "OFF", en: "OFF", hi: "OFF", ar: "OFF", ur: "OFF" }
+    };
 
     // --- Helper Functions ---
     function T(key) {
@@ -1379,6 +1387,12 @@
       // Update new nav labels
       document.getElementById('navHomeLabel').textContent = T('nav_home_label');
       document.getElementById('navLogsLabel').textContent = T('nav_logs_label');
+
+      // NEW: Update lock status text
+      const startLockStatus = document.getElementById('startTimeLockStatus');
+      if (startLockStatus) {
+          startLockStatus.textContent = isStartTimeLocked ? T('lock_status_on') : T('lock_status_off');
+      }
 
       // If logs are visible, re-render them with new language
       if (document.getElementById('logsSection').classList.contains('hidden') === false) {
@@ -1529,16 +1543,33 @@
       const closedIcon = button.querySelector('.closed-lock');
       const isLocked = (type === 'start') ? isStartTimeLocked : isEndTimeLocked;
 
+      // NEW: Get status text element (only for start button)
+      const statusText = (type === 'start') ? document.getElementById('startTimeLockStatus') : null;
+
       if (isLocked) {
         button.classList.remove('text-green-500');
         button.classList.add('text-red-500');
         openIcon.classList.add('hidden');
         closedIcon.classList.remove('hidden');
+        
+        // NEW: Update status text for 'start'
+        if (statusText) {
+            statusText.textContent = T('lock_status_on');
+            statusText.classList.remove('text-green-500');
+            statusText.classList.add('text-red-500');
+        }
       } else {
         button.classList.remove('text-red-500');
         button.classList.add('text-green-500');
         openIcon.classList.remove('hidden');
         closedIcon.classList.add('hidden');
+
+        // NEW: Update status text for 'start'
+        if (statusText) {
+            statusText.textContent = T('lock_status_off');
+            statusText.classList.remove('text-red-500');
+            statusText.classList.add('text-green-500');
+        }
       }
     }
 
@@ -2960,7 +2991,7 @@
     
     // IMPORTANT: Replace with your actual Firebase config object
     const firebaseConfig = {
-                   apiKey: "AIzaSyA-7w4YspeNiyHgnMx8R5NZSCPaGYmMNak",
+                     apiKey: "AIzaSyA-7w4YspeNiyHgnMx8R5NZSCPaGYmMNak",
   authDomain: "test-test-39764.firebaseapp.com",
   projectId: "test-test-39764",
   storageBucket: "test-test-39764.firebasestorage.app",
@@ -3082,3 +3113,4 @@
   </script>
 </body>
 </html>
+
