@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -316,35 +316,6 @@
                 <option value="ur">اردو</option>
             </select>
         </div>
-
-        <!-- NEW: Quick Work Calculator -->
-        <div id="quickCalculator" class="border-t border-gray-200 pt-4 mt-4 space-y-3">
-          <h4 id="quickCalculatorTitle" class="text-lg font-semibold text-gray-800 mb-2"></h4>
-          
-          <div class="space-y-1">
-            <label id="quickStartTimeLabel" for="quickStartTime" class="block text-sm font-medium text-gray-700"></label>
-            <input type="time" id="quickStartTime" class="w-full border border-gray-300 rounded-lg p-2 text-sm">
-          </div>
-          
-          <div class="space-y-1">
-            <label id="quickEndTimeLabel" for="quickEndTime" class="block text-sm font-medium text-gray-700"></label>
-            <input type="time" id="quickEndTime" class="w-full border border-gray-300 rounded-lg p-2 text-sm">
-          </div>
-
-          <div class="space-y-1">
-            <label id="quickRateLabel" for="quickRate" class="block text-sm font-medium text-gray-700"></label>
-            <input type="number" id="quickRate" value="2000" class="w-full border border-gray-300 rounded-lg p-2 text-sm">
-          </div>
-          
-          <button id="quickCalculateBtn" onclick="calculateQuickWork()" class="w-full bg-green-600 text-white rounded-lg p-2 font-semibold hover:bg-green-700 transition-colors">
-          </button>
-          
-          <div id="quickResults" class="bg-gray-100 rounded-lg p-3 text-center space-y-1 hidden">
-            <p id="quickTotalHours" class="text-gray-800 font-semibold"></p>
-            <p id="quickTotalAmount" class="text-green-700 font-bold text-lg"></p>
-          </div>
-        </div>
-
         <!-- Logout Button -->
         <button id="logoutButton" class="w-full mt-auto bg-red-500 text-white rounded-lg p-2 font-semibold hover:bg-red-600 flex items-center justify-center gap-2 transition-colors">
             Logout
@@ -584,7 +555,7 @@
               <button onclick="selectInitialLanguage('te')" class="w-full bg-green-500 text-white rounded-lg p-3 font-semibold hover:bg-green-600 transition-colors">తెలుగు</button>
               <button onclick="selectInitialLanguage('en')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">English</button>
               <button onclick="selectInitialLanguage('hi')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">हिन्दी</button>
-               <button onclick="selectInitialLanguage('hi')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">پنجابی</button>
+              <button onclick="selectInitialLanguage('hi')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">پنجابی</button>
               <button onclick="selectInitialLanguage('ar')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">العربية</button>
               <button onclick="selectInitialLanguage('ur')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">اردو</button>
           </div>
@@ -687,8 +658,7 @@
 <p>మీరు అభ్యర్థించిన సేవను మీకు అందించడానికి అవసరమైనంత కాలం మాత్రమే మేము సేకరించిన సమాచారాన్ని నిలుపుకుంటాము. మేము ఏ డేటాను నిల్వ చేస్తాము, నష్టం మరియు దొంగతనం, అలాగే అనధికార ప్రాప్యత, బహిర్గతం, కాపీ చేయడం, ఉపయోగించడం లేదా సవరించడం వంటి వాటిని నిరోధించడానికి వాణిజ్యపరంగా ఆమోదయోగ్యమైన మార్గాల్లో మేము రక్షిస్తాము.</p>`
         }
     };
-
-     // --- Translation Data (Completed) ---
+ // --- Translation Data (Completed) ---
   const translations = {
     // Dashboard Section
     welcome_heading: { 
@@ -1334,6 +1304,7 @@
       lock_status_on: { te: "ON", en: "ON", hi: "ON", ar: "ON", ur: "ON" },
       lock_status_off: { te: "OFF", en: "OFF", hi: "OFF", ar: "OFF", ur: "OFF" }
     };
+
     // --- Helper Functions ---
     function T(key) {
       return translations[key]?.[currentLang] || key;
@@ -1420,21 +1391,8 @@
       // NEW: Update lock status text
       const startLockStatus = document.getElementById('startTimeLockStatus');
       if (startLockStatus) {
-// ... existing code ... -->
           startLockStatus.textContent = isStartTimeLocked ? T('lock_status_on') : T('lock_status_off');
       }
-
-      // NEW: Update Quick Calculator text
-      document.getElementById('quickCalculatorTitle').textContent = T('quick_calculator_title');
-      document.getElementById('quickStartTimeLabel').textContent = T('quick_start_time_label');
-      document.getElementById('quickEndTimeLabel').textContent = T('quick_end_time_label');
-      document.getElementById('quickRateLabel').textContent = T('quick_rate_label');
-      document.getElementById('quickCalculateBtn').textContent = T('quick_calculate_button');
-      // Clear results on language change
-      document.getElementById('quickResults').classList.add('hidden');
-      document.getElementById('quickTotalHours').textContent = '';
-      document.getElementById('quickTotalAmount').textContent = '';
-
 
       // If logs are visible, re-render them with new language
       if (document.getElementById('logsSection').classList.contains('hidden') === false) {
@@ -1470,61 +1428,61 @@
         }
     }
 
-    // --- NEW: Quick Calculator Function ---
-    function calculateQuickWork() {
-        const start = document.getElementById('quickStartTime').value;
-        const end = document.getElementById('quickEndTime').value;
-        const rate = parseFloat(document.getElementById('quickRate').value);
-        
-        const resultsContainer = document.getElementById('quickResults');
-        const totalHoursEl = document.getElementById('quickTotalHours');
-        const totalAmountEl = document.getElementById('quickTotalAmount');
-
-        if (!start || !end || isNaN(rate) || rate < 0) {
-            totalHoursEl.textContent = '';
-            totalAmountEl.textContent = T('quick_fill_all_error');
-            totalAmountEl.classList.add('text-red-600');
-            totalAmountEl.classList.remove('text-green-700');
-            resultsContainer.classList.remove('hidden');
-            return;
-        }
-
-        const [startH, startM] = start.split(':').map(Number);
-        const [endH, endM] = end.split(':').map(Number);
-
-        let startMinutes = startH * 60 + startM;
-        let endMinutes = endH * 60 + endM;
-
-        if (endMinutes < startMinutes) {
-            endMinutes += 24 * 60; // Handle overnight work
-        }
-
-        const durationMinutes = endMinutes - startMinutes;
-
-        if (durationMinutes < 1) {
-            totalHoursEl.textContent = '';
-            totalAmountEl.textContent = T('end_time_error'); // Re-use existing translation
-            totalAmountEl.classList.add('text-red-600');
-            totalAmountEl.classList.remove('text-green-700');
-            resultsContainer.classList.remove('hidden');
-            return;
-        }
-
-        const formattedDuration = formatDurationFromMinutes(durationMinutes);
-        const ratePerMinute = rate / 60;
-        const totalEarnings = Math.round(durationMinutes * ratePerMinute);
-
-        // Display results
-        totalHoursEl.textContent = T('quick_total_hours').replace('{hours}', formattedDuration);
-        totalAmountEl.textContent = T('quick_total_amount').replace('{amount}', `₹${totalEarnings}`);
-        totalAmountEl.classList.remove('text-red-600');
-        totalAmountEl.classList.add('text-green-700');
-        resultsContainer.classList.remove('hidden');
+    function showSection(sectionId) {
+        const sections = ['dashboardSection', 'logsSection'];
+        sections.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                 element.classList.toggle('hidden', id !== sectionId);
+            }
+        });
     }
 
+    function showDashboardView() {
+      showSection('dashboardSection');
+      updateNavUI('dashboard');
+      setCurrentDate();
+      document.getElementById('logSearchInput').value = '';
+    }
 
-    // --- Core UI Logic Functions ---
-    function setLanguage(langCode) {
+    function showLogsView() {
+      showSection('logsSection');
+      updateNavUI('logs');
+      // Logs are now loaded via the onSnapshot listener, so no need to call loadLogs() here
+      if (document.getElementById('hamburgerSidebar').classList.contains('show')) {
+          toggleHamburgerMenu();
+      }
+    }
+
+    function setCurrentDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        document.getElementById('workDate').value = `${year}-${month}-${day}`;
+    }
+
+    // --- Time Dropdown Functions ---
+    function populateTimeDropdowns() {
+        const startHour = document.getElementById('startTimeHour');
+        const endHour = document.getElementById('endTimeHour');
+        const startMinute = document.getElementById('startTimeMinute');
+        const endMinute = document.getElementById('endTimeMinute');
+        const startAmPm = document.getElementById('startTimeAmPm');
+        const endAmPm = document.getElementById('endTimeAmPm');
+
+        // Clear existing options to prevent duplication on re-renders
+        startHour.innerHTML = '';
+        endHour.innerHTML = '';
+        startMinute.innerHTML = '';
+        endMinute.innerHTML = '';
+
+        // Populate hours
+        for (let i = 1; i <= 12; i++) {
+            const option = `<option value="${i}">${i}</option>`;
+            startHour.innerHTML += option;
+            endHour.innerHTML += option;
+        }
 
         // Populate minutes
         for (let i = 0; i < 60; i++) {
@@ -3155,5 +3113,4 @@
   </script>
 </body>
 </html>
-
 
