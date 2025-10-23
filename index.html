@@ -1,0 +1,2584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>ManaTractor Dashboard</title>
+  
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#16a34a">
+  <link rel="apple-touch-icon" href="https://res.cloudinary.com/drt6xl4x3/image/upload/v1760299740/manatractor_logo_n0noj8.jpg">
+  <!-- Manifest will be linked dynamically via JavaScript -->
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* --- NATIVE APP STYLING --- */
+    html, body {
+        height: 100%;
+        width: 100%;
+        overflow: hidden; /* Prevent body scroll, sections will scroll */
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    
+    /* Styling for the message box to provide visual feedback */
+    .message-box {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .message-box.show {
+      opacity: 1;
+    }
+    .message-box.success {
+      background-color: #d1fae5; /* green-100 */
+      color: #065f46; /* green-800 */
+    }
+    .message-box.error {
+      background-color: #fee2e2; /* red-100 */
+      color: #991b1b; /* red-800 */
+    }
+    
+    .hidden {
+      display: none;
+    }
+
+    /* Custom confirm modal styling */
+    .confirm-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1001; /* Above message box */
+        transition: opacity 0.3s ease;
+    }
+    .confirm-modal-content {
+        background-color: white;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        max-width: 380px;
+        width: 90%;
+        text-align: center;
+    }
+    .confirm-modal-content button {
+        margin: 0 8px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    /* Hamburger Menu Specific Styles */
+    .hamburger-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .hamburger-menu-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .hamburger-sidebar {
+        position: fixed;
+        top: 0;
+        left: -300px; /* Hidden by default */
+        width: 250px;
+        height: 100%;
+        background-color: #fff;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        z-index: 999;
+        transition: left 0.3s ease;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .hamburger-sidebar.show {
+        left: 0; /* Show the sidebar */
+    }
+    .hamburger-icon {
+        position: fixed;
+        top: 15px; /* Adjusted position */
+        left: 15px;
+        z-index: 1000;
+        cursor: pointer;
+        background-color: rgba(255,255,255,0.8);
+        padding: 8px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .hamburger-icon span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: #333;
+        margin: 5px 0;
+        transition: all 0.3s ease-in-out;
+    }
+    /* Style for editable name */
+    [contenteditable="true"] {
+        outline: none;
+        border-bottom: 2px dashed #4ade80; /* green-400 */
+        padding-bottom: 2px;
+    }
+    [contenteditable="true"]:focus {
+        border-bottom: 2px solid #16a34a; /* green-600 */
+    }
+    
+    /* Lock Button Animation */
+    .lock-button svg {
+      transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55), color 0.3s ease;
+    }
+    .lock-button svg.hidden {
+      transform: scale(0);
+      position: absolute; /* Prevent layout shift during animation */
+    }
+    
+    /* Paid Log Styling */
+    .paid-log {
+        position: relative;
+        opacity: 0.75;
+    }
+    .paid-log::before,
+    .paid-log::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 2px; /* Line thickness */
+        background-color: #ef4444; /* red-500 */
+        top: 50%;
+        transform-origin: center;
+        z-index: 10;
+    }
+    .paid-log::before {
+        transform: translateY(-50%) rotate(5deg);
+    }
+    .paid-log::after {
+        transform: translateY(-50%) rotate(-5deg);
+    }
+    
+    /* TTS Word Highlighting Style */
+    .tts-highlight {
+      background-color: #fef9c3; /* yellow-100 */
+      border-radius: 4px;
+      box-shadow: 0 0 0 2px #fde047; /* yellow-300 */
+      transition: background-color 0.2s, box-shadow 0.2s;
+    }
+    
+    /* --- NEW STYLES FOR REDESIGN --- */
+    .nav-button.active {
+      color: #16a34a; /* green-600 */
+    }
+
+    /* Animation for smooth view transition */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .view-fade-in {
+        animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    /* Terms Modal Animation */
+    #termsModal.show #termsModalContent {
+      opacity: 1;
+      transform: scale(1);
+    }
+    #termsBody::-webkit-scrollbar {
+        width: 8px;
+    }
+    #termsBody::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    #termsBody::-webkit-scrollbar-thumb {
+        background: #a8a8a8;
+        border-radius: 10px;
+    }
+    #termsBody::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    /* Loading Screen Progress Bar Animation */
+    @keyframes progress-animation {
+        from { width: 0%; }
+        to { width: 100%; }
+    }
+    .progress-bar-animate {
+        animation: progress-animation 1.5s ease-out forwards;
+    }
+
+    /* Microphone Recording Animation */
+    @keyframes pulse-mic {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+    #micButton.recording svg {
+      color: #ef4444; /* red-500 */
+      animation: pulse-mic 1.5s infinite;
+    }
+    
+    /* --- NEW: Suggestions Dropdown --- */
+    #suggestionsContainer {
+        transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+        opacity: 0;
+        transform: translateY(-10px);
+        visibility: hidden;
+        pointer-events: none;
+    }
+    #suggestionsContainer.show {
+        opacity: 1;
+        transform: translateY(0);
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Loading Screen Section -->
+  <div id="loadingSection" class="hidden bg-white w-full h-screen flex flex-col items-center justify-center p-4 text-center">
+    <img src="https://res.cloudinary.com/drt6xl4x3/image/upload/v1760299740/manatractor_logo_n0noj8.jpg" alt="ManaTractor Logo" class="w-24 h-24 mx-auto mb-4 animate-pulse">
+    <p id="loadingText" class="text-gray-600 mb-8 text-lg font-medium">Opening ManaTractor App…</p>
+    <div class="w-full max-w-xs bg-gray-200 rounded-full h-2.5">
+        <div id="progressBar" class="bg-green-600 h-2.5 rounded-full" style="width: 0%"></div>
+    </div>
+  </div>
+
+  <!-- Login Section -->
+  <div id="loginSection" class="hidden bg-white w-full h-screen flex flex-col items-center justify-center p-4 text-center">
+    <img src="https://res.cloudinary.com/drt6xl4x3/image/upload/v1760299740/manatractor_logo_n0noj8.jpg" alt="ManaTractor Logo" class="w-24 h-24 mx-auto mb-4">
+    <h1 class="text-3xl font-bold text-green-700 mb-2">ManaTractor</h1>
+    <p class="text-gray-500 mb-8">Your Tractor Business Companion</p>
+    <button id="loginButton" class="w-full max-w-xs bg-blue-600 text-white rounded-lg p-3 font-semibold hover:bg-blue-700 flex items-center justify-center gap-2 transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+      </svg>
+      Sign in with Google
+    </button>
+  </div>
+
+  <div id="appContainer" class="hidden w-full h-full flex flex-col">
+      <!-- Hamburger Icon -->
+      <div id="hamburgerIcon" class="hamburger-icon" onclick="toggleHamburgerMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    
+      <!-- Hamburger Menu Overlay -->
+      <div id="hamburgerOverlay" class="hamburger-menu-overlay" onclick="toggleHamburgerMenu()"></div>
+    
+      <!-- Hamburger Sidebar Menu -->
+      <div id="hamburgerSidebar" class="hamburger-sidebar">
+        <!-- User Profile Info moved here -->
+        <div class="flex items-center gap-2 pb-4 border-b border-gray-200">
+            <img id="userProfilePic" src="https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png" alt="Profile" class="w-10 h-10 rounded-full border-2 border-green-600">
+            <span id="userProfileEmail" class="text-sm text-gray-700 font-medium">Not signed in</span>
+        </div>
+    
+        <!-- Language Selector moved here -->
+        <div class="w-full">
+            <label for="languageSelectorMenu" class="block text-sm font-medium text-gray-700 mb-1">Select Language:</label>
+            <select id="languageSelectorMenu" onchange="setLanguage(this.value); toggleHamburgerMenu();" class="bg-white border border-gray-300 rounded-lg p-2 text-sm text-gray-700 shadow-sm focus:ring-green-500 focus:border-green-500 w-full">
+                <option value="te">తెలుగు</option>
+                <option value="en">English</option>
+                <option value="hi">हिन्दी</option>
+                <option value="ar">العربية</option>
+                <option value="ur">اردو</option>
+            </select>
+        </div>
+        <!-- Logout Button -->
+        <button id="logoutButton" class="w-full mt-auto bg-red-500 text-white rounded-lg p-2 font-semibold hover:bg-red-600 flex items-center justify-center gap-2 transition-colors">
+            Logout
+        </button>
+      </div>
+    
+    
+      <!-- Dashboard Section -->
+      <div id="dashboardSection" class="flex-grow overflow-y-auto p-4 pb-24">
+        <h1 id="welcomeHeading" class="text-2xl font-bold text-green-700 mb-1 mt-12"></h1>
+        <p id="tagline" class="text-gray-500 mb-4"></p>
+    
+        <!-- Customer Name and Phone Number fields -->
+        <div class="mb-4 relative">
+          <label id="customerNameLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+          <div class="relative">
+            <input id="customerName" type="text" autocomplete="off" class="w-full border border-gray-300 rounded-lg p-2 pr-20" />
+            <!-- Mic Button -->
+            <button id="micButton" onclick="startSpeechRecognition()" class="absolute inset-y-0 right-10 pr-3 flex items-center text-gray-500 hover:text-green-600 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4z" />
+                    <path fill-rule="evenodd" d="M3 8a1 1 0 011 1v2a5 5 0 0010 0V9a1 1 0 112 0v2a7 7 0 11-14 0V9a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            <!-- Contacts Button -->
+            <button onclick="getContact()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-green-600 focus:outline-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6zm4 2a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM6 13a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+          <!-- Suggestions Dropdown -->
+          <div id="suggestionsContainer" class="absolute z-20 w-full bg-white border border-gray-200 rounded-b-lg shadow-lg max-h-48 overflow-y-auto">
+             <!-- Suggestions populated by JS -->
+          </div>
+        </div>
+    
+        <div class="mb-4">
+          <label id="customerPhoneLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+          <div class="relative">
+            <input id="customerPhoneNumber" type="tel" class="w-full border border-gray-300 rounded-lg p-2 pr-10" />
+            <button onclick="callPhoneNumber()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-green-600 focus:outline-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.103 6.103l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+    
+        <!-- Hourly Work Form -->
+        <div id="hourlyWorkForm">
+            <div class="mb-4">
+              <label id="dateLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+              <input id="workDate" type="date" class="w-full border border-gray-300 rounded-lg p-2" />
+            </div>
+    
+            <!-- Start Time, Break, & End Time -->
+            <!-- MODIFIED: Changed from flex to grid to insert break button -->
+            <div class="flex flex-col sm:grid sm:grid-cols-3 gap-4 mb-4">
+              <!-- Start Time -->
+              <div class="flex-1 sm:col-span-1">
+                <label id="startTimeLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                <div class="relative">
+                  <div class="flex items-center gap-1 pr-10">
+                    <select id="startTimeHour" class="w-full border border-gray-300 rounded-lg p-2 bg-white appearance-none text-center"></select>
+                    <span class="font-bold text-gray-500">:</span>
+                    <select id="startTimeMinute" class="w-full border border-gray-300 rounded-lg p-2 bg-white appearance-none text-center"></select>
+                    <select id="startTimeAmPm" class="w-full border border-gray-300 rounded-lg p-2 bg-white appearance-none"></select>
+                  </div>
+                  <button id="startTimeLockBtn" onclick="toggleLock('start')" class="lock-button absolute inset-y-0 right-0 pr-3 flex items-center focus:outline-none text-green-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 open-lock" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v2H7V7a3 3 0 013-3z"/>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 closed-lock hidden" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10 2a3 3 0 00-3 3v1H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V8a2 2 0 00-2-2h-1V5a3 3 0 00-3-3zm-1 4V5a1 1 0 112 0v1H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- NEW: Break Button -->
+              <div class="sm:col-span-1 flex flex-col">
+                <label id="breakLabel" class="block text-sm font-medium text-gray-700 mb-1">&nbsp;</label>
+                <button id="breakButton" onclick="toggleBreak()" class="flex items-center justify-center gap-2 w-full bg-yellow-500 text-white rounded-lg p-3 font-semibold hover:bg-yellow-600 transition-colors">
+                  <!-- Pause icon -->
+                  <svg id="breakIconPause" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1zm4 0a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                  </svg>
+                  <!-- Resume/Play icon -->
+                  <svg id="breakIconResume" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                  </svg>
+                  <span id="breakButtonText">Break</span>
+                </button>
+              </div>
+    
+              <!-- End Time -->
+              <div class="flex-1 sm:col-span-1">
+                <label id="endTimeLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                 <div class="relative">
+                  <div class="flex items-center gap-1 pr-10">
+                    <select id="endTimeHour" class="w-full border border-gray-300 rounded-lg p-2 bg-white appearance-none text-center"></select>
+                    <span class="font-bold text-gray-500">:</span>
+                    <select id="endTimeMinute" class="w-full border border-gray-300 rounded-lg p-2 bg-white appearance-none text-center"></select>
+                    <select id="endTimeAmPm" class="w-full border border-gray-300 rounded-lg p-2 bg-white appearance-none"></select>
+                  </div>
+                  <button id="endTimeLockBtn" onclick="toggleLock('end')" class="lock-button absolute inset-y-0 right-0 pr-3 flex items-center focus:outline-none text-green-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 open-lock" viewBox="0 0 20 20" fill="currentColor">
+                       <path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v2H7V7a3 3 0 013-3z"/>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 closed-lock hidden" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10 2a3 3 0 00-3 3v1H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V8a2 2 0 00-2-2h-1V5a3 3 0 00-3-3zm-1 4V5a1 1 0 112 0v1H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+    
+            <div class="mb-4">
+              <label id="ratePerHourLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+              <input id="ratePerHour" type="number" value="2000" class="w-full border border-gray-300 rounded-lg p-2" />
+            </div>
+    
+            <div class="mb-4">
+                <label id="numberOfTripsLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                <input id="numberOfTrips" type="number" value="0" placeholder="0" min="0" step="0.5" class="w-full border border-gray-300 rounded-lg p-2" />
+            </div>
+            <div class="mb-4">
+                <label id="costPerTripLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                <input id="costPerTrip" type="number" value="500" min="0" class="w-full border border-gray-300 rounded-lg p-2" />
+            </div>
+    
+            <div class="mb-4">
+              <label id="noteContentLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
+              <textarea id="noteContent" class="w-full border border-gray-300 rounded-lg p-2 h-32 resize-none" rows="5" placeholder="Please enter the work info details"></textarea>
+            </div>
+        </div>
+    
+        <!-- Display area for calculated results -->
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div class="bg-green-100 p-3 rounded-xl text-center">
+            <p class="text-sm text-gray-600" id="hourlyTimeLabel"></p>
+            <h2 id="hourlyTotalTime" class="text-xl font-bold">0:00 hrs</h2>
+            <!-- NEW: Paused Time Display -->
+            <p id="hourlyPausedTime" class="text-sm text-red-500 font-medium"></p>
+          </div>
+          <div class="bg-yellow-100 p-3 rounded-xl text-center">
+            <p id="hourlyEarningsLabel" class="text-sm text-gray-600"></p>
+            <h2 id="hourlyTotalEarnings" class="text-xl font-bold">₹0</h2>
+          </div>
+        </div>
+    
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div class="bg-green-100 p-3 rounded-xl text-center">
+            <p class="text-sm text-gray-600" id="tripCountLabel"></p>
+            <h2 id="tripTotalTrips" class="text-xl font-bold">0 trips</h2>
+          </div>
+          <div class="bg-yellow-100 p-3 rounded-xl text-center">
+            <p id="tripEarningsLabel" class="text-sm text-gray-600"></p>
+            <h2 id="tripTotalEarnings" class="text-xl font-bold">₹0</h2>
+          </div>
+        </div>
+    
+        <!-- Combined Total Earnings Display -->
+        <div class="bg-blue-100 p-4 rounded-xl text-center mt-4">
+          <p id="combinedEarningsLabel" class="text-lg text-blue-800 font-semibold"></p>
+          <h2 id="combinedTotalEarnings" class="text-3xl font-extrabold text-blue-700">₹0</h2>
+        </div>
+    
+        <!-- Buttons -->
+        <div class="flex gap-4 mt-6">
+          <button id="calculateBtn" onclick="calculateAllEarnings()" class="flex-1 bg-green-600 text-white rounded-lg p-3 font-semibold hover:bg-green-700 flex items-center justify-center gap-2">
+             <img src="equal.png"  style="width: 30px; height: 30px;"  alt="View Logs">
+            <span id="calculateBtnText"></span>
+          </button>
+          <button id="saveBtn" onclick="saveCombinedData()" class="flex-1 bg-blue-600 text-white rounded-lg p-3 font-semibold hover:bg-blue-700 flex items-center justify-center gap-2">
+            <img src="icons/save_in.png"  style="width: 30px; height: 30px;"  alt="View Logs">
+            <span id="saveBtnText"></span>
+          </button>
+        </div>
+      </div>
+    
+      <!-- Logs Section -->
+      <div id="logsSection" class="flex-grow overflow-y-auto p-2 pb-24 relative hidden">
+        <h1 id="logsHeading" class="text-2xl font-bold text-green-700 mb-2 text-center mt-12"></h1>
+        <p id="logsTagline" class="text-gray-500 mb-4 text-center"></p>
+    
+        <!-- Search Bar for Logs -->
+        <div class="mb-4 px-2">
+          <input type="text" id="logSearchInput" onkeyup="filterLogs()" class="w-full border border-gray-300 rounded-lg p-2" />
+        </div>
+    
+        <!-- Logs Container -->
+        <div id="logsContainer" class="space-y-3 px-1">
+          <!-- Logs will be dynamically loaded from Firestore here -->
+        </div>
+      </div>
+    
+      <!-- Message Box Container -->
+      <div id="messageBox" class="message-box"></div>
+    
+      <!-- Custom Confirm Modal Overlay -->
+      <div id="customConfirmModal" class="confirm-modal-overlay hidden">
+        <div class="confirm-modal-content">
+          <p id="confirmModalMessage" class="mb-6 text-gray-700 font-medium text-lg"></p>
+          <div class="flex justify-center">
+            <button id="confirmModalCancelBtn" class="bg-gray-300 text-gray-800 hover:bg-gray-400"></button>
+            <button id="confirmModalConfirmBtn" class="bg-red-500 text-white hover:bg-red-600"></button>
+          </div>
+        </div>
+      </div>
+    
+      <!-- PWA Install Prompt Modal -->
+      <div id="installPwaModal" class="confirm-modal-overlay hidden">
+        <div class="confirm-modal-content">
+          <img src="https://res.cloudinary.com/drt6xl4x3/image/upload/v1760299740/manatractor_logo_n0noj8.jpg" alt="App Icon" class="w-16 h-16 mx-auto mb-4">
+          <p id="installPwaMessage" class="mb-6 text-gray-700 font-medium text-lg"></p>
+          <div class="flex justify-center gap-4">
+            <button id="installPwaCancelBtn" class="bg-gray-300 text-gray-800 hover:bg-gray-400"></button>
+            <button id="installPwaConfirmBtn" class="bg-green-600 text-white hover:bg-green-700"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Language Selection Modal (for first-time users) -->
+      <div id="languageModal" class="confirm-modal-overlay hidden">
+        <div class="confirm-modal-content">
+          <h2 class="text-xl font-bold mb-4">Choose Your Language</h2>
+          <p class="text-gray-600 mb-6">Please select your preferred language to continue.</p>
+          <div class="flex flex-col gap-3">
+              <button onclick="selectInitialLanguage('te')" class="w-full bg-green-500 text-white rounded-lg p-3 font-semibold hover:bg-green-600 transition-colors">తెలుగు</button>
+              <button onclick="selectInitialLanguage('en')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">English</button>
+              <button onclick="selectInitialLanguage('hi')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">हिन्दी</button>
+              <button onclick="selectInitialLanguage('ar')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">العربية</button>
+              <button onclick="selectInitialLanguage('ur')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">اردو</button>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Terms & Conditions Modal -->
+      <div id="termsModal" class="confirm-modal-overlay hidden">
+        <div id="termsModalContent" class="confirm-modal-content flex flex-col h-[90vh] max-h-[600px] w-full max-w-lg text-left opacity-0 scale-95" style="transition: transform 0.3s ease, opacity 0.3s ease;">
+          <h2 id="termsTitle" class="text-2xl font-bold text-gray-800 mb-4 flex-shrink-0">Terms & Conditions</h2>
+          <div id="termsBody" class="flex-grow overflow-y-auto text-sm text-gray-600 pr-2">
+            <!-- Content will be loaded here by JavaScript -->
+          </div>
+          <div class="mt-6 flex-shrink-0">
+            <label class="flex items-center">
+              <input type="checkbox" id="termsCheckbox" class="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+              <span id="termsCheckboxLabel" class="ml-2 text-gray-700">I accept the Terms & Conditions and Privacy Policy.</span>
+            </label>
+            <button id="termsConfirmBtn" disabled class="w-full mt-4 bg-green-600 text-white rounded-lg p-3 font-semibold transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEW Bottom Navigation Bar -->
+      <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around">
+        <button onclick="showDashboardView()" id="nav-dashboard" class="nav-button flex flex-col items-center justify-center text-gray-500 w-full py-2 transition-colors duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+          <span id="navHomeLabel" class="text-xs font-medium">Home</span>
+        </button>
+        <button onclick="showLogsView()" id="nav-logs" class="nav-button flex flex-col items-center justify-center text-gray-500 w-full py-2 transition-colors duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+             <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+             <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+          </svg>
+          <span id="navLogsLabel" class="text-xs font-medium">Logs</span>
+        </button>
+      </nav>
+  </div>
+
+  <script>
+    // Global variables
+    let currentLang = 'te'; // Default language
+    let mainUserDisplayName = ''; // Holds the MAIN USER's name for the welcome message
+    let isStartTimeLocked = false;
+    let isEndTimeLocked = false;
+    let liveClockInterval; // To hold the setInterval ID
+    let allUserLogs = []; // Holds all logs from Firestore for filtering
+    let unsubscribeLogs = null; // To detach Firestore listener on logout
+    let undoState = {}; // Holds pre-adjustment state for undo functionality
+    let placeholderTimeouts = {}; // Holds timeouts for placeholder typing effect
+
+    // --- NEW: Break/Pause State Variables ---
+    let isPaused = false;
+    let pauseStartTime = null;
+    let totalPausedMilliseconds = 0;
+
+
+    // --- Legal Content ---
+    const legalContent = {
+        "en": {
+            "title": "Terms & Conditions",
+            "checkboxLabel": "I accept the Terms & Conditions and Privacy Policy.",
+            "continueButton": "Continue",
+            "content": `<h3><strong>Terms and Conditions</strong></h3>
+<p>Welcome to ManaTractor! These terms and conditions outline the rules and regulations for the use of ManaTractor's Application.</p>
+<p>By accessing this app we assume you accept these terms and conditions. Do not continue to use ManaTractor if you do not agree to take all of the terms and conditions stated on this page.</p>
+<br>
+<h4><strong>License</strong></h4>
+<p>Unless otherwise stated, ManaTractor and/or its licensors own the intellectual property rights for all material on ManaTractor. All intellectual property rights are reserved. You may access this from ManaTractor for your own personal use subjected to restrictions set in these terms and conditions.</p>
+<br>
+<h4><strong>User Data</strong></h4>
+<p>We are not responsible for the accuracy of the financial data you enter. You are solely responsible for backing up your data. We do not guarantee that your data will be available at all times.</p>
+<br>
+<h3><strong>Privacy Policy</strong></h3>
+<p>Your privacy is important to us. It is ManaTractor's policy to respect your privacy regarding any information we may collect from you through our app, ManaTractor.</p>
+<p>We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we’re collecting it and how it will be used.</p>
+<p>We only retain collected information for as long as necessary to provide you with your requested service. What data we store, we’ll protect within commercially acceptable means to prevent loss and theft, as well as unauthorized access, disclosure, copying, use or modification.</p>`
+        },
+        "te": {
+            "title": "నిబంధనలు & షరతులు",
+            "checkboxLabel": "నేను నిబంధనలు & షరతులు మరియు గోప్యతా విధానాన్ని అంగీకరిస్తున్నాను.",
+            "continueButton": "కొనసాగించు",
+            "content": `<h3><strong>నిబంధనలు మరియు షరతులు</strong></h3>
+<p>మా ట్రాక్టర్‌కు స్వాగతం! ఈ నిబంధనలు మరియు షరతులు మా ట్రాక్టర్ అప్లికేషన్ ఉపయోగం కోసం నియమాలు మరియు నిబంధనలను వివరిస్తాయి.</p>
+<p>ఈ యాప్‌ను యాక్సెస్ చేయడం ద్వారా మీరు ఈ నిబంధనలు మరియు షరతులను అంగీకరిస్తారని మేము భావిస్తున్నాము. ఈ పేజీలో పేర్కొన్న అన్ని నిబంధనలు మరియు షరతులను అంగీకరించకపోతే మా ట్రాక్టర్‌ను ఉపయోగించడం కొనసాగించవద్దు.</p>
+<br>
+<h4><strong>లైసెన్స్</strong></h4>
+<p>పేర్కొనకపోతే, మా ట్రాక్టర్ మరియు/లేదా దాని లైసెన్సర్లు మా ట్రాక్టర్‌లోని అన్ని మెటీరియల్‌లకు మేధో సంపత్తి హక్కులను కలిగి ఉంటారు. అన్ని మేధో సంపత్తి హక్కులు ప్రత్యేకించబడ్డాయి. ఈ నిబంధనలు మరియు షరతులలో సెట్ చేసిన పరిమితులకు లోబడి మీ స్వంత వ్యక్తిగత ఉపయోగం కోసం మీరు దీన్ని మా ట్రాక్టర్ నుండి యాక్సెస్ చేయవచ్చు.</p>
+<br>
+<h4><strong>వినియోగదారు డేటా</strong></h4>
+<p>మీరు నమోదు చేసిన ఆర్థిక డేటా యొక్క ఖచ్చితత్వానికి మేము బాధ్యత వహించము. మీ డేటాను బ్యాకప్ చేయడానికి మీరు మాత్రమే బాధ్యత వహిస్తారు. మీ డేటా అన్ని సమయాల్లో అందుబాటులో ఉంటుందని మేము హామీ ఇవ్వము.</p>
+<br>
+<h3><strong>గోప్యతా విధానం</strong></h3>
+<p>మీ గోప్యత మాకు ముఖ్యం. మా యాప్, మా ట్రాక్టర్ ద్వారా మేము మీ నుండి సేకరించగల ఏదైనా సమాచారానికి సంబంధించి మీ గోప్యతను గౌరవించడం మా ట్రాక్టర్ యొక్క విధానం.</p>
+<p>మీకు సేవను అందించడానికి మాకు నిజంగా అవసరమైనప్పుడు మాత్రమే మేము వ్యక్తిగత సమాచారాన్ని అడుగుతాము. మేము దానిని మీ జ్ఞానం మరియు సమ్మతితో, సరసమైన మరియు చట్టబద్ధమైన మార్గాల ద్వారా సేకరిస్తాము. మేము దానిని ఎందుకు సేకరిస్తున్నాము మరియు అది ఎలా ఉపయోగించబడుతుందో కూడా మీకు తెలియజేస్తాము.</p>
+<p>మీరు అభ్యర్థించిన సేవను మీకు అందించడానికి అవసరమైనంత కాలం మాత్రమే మేము సేకరించిన సమాచారాన్ని నిలుపుకుంటాము. మేము ఏ డేటాను నిల్వ చేస్తాము, నష్టం మరియు దొంగతనం, అలాగే అనధికార ప్రాప్యత, బహిర్గతం, కాపీ చేయడం, ఉపయోగించడం లేదా సవరించడం వంటి వాటిని నిరోధించడానికి వాణిజ్యపరంగా ఆమోదయోగ్యమైన మార్గాల్లో మేము రక్షిస్తాము.</p>`
+        }
+    };
+
+    // --- Translation Data ---
+    const translations = {
+      // Dashboard Section
+      welcome_heading: { 
+        te: "స్వాగతం, {userName} అన్న 🚜",
+        en: "Welcome, {userName} 🚜",
+        hi: "नमस्ते, {userName} 🚜",
+        ar: "أهلاً بك، {userName} 🚜",
+        ur: "خوش آمدید، {userName} 🚜"
+      },
+      tagline: { 
+        te: "మీ ట్రాక్టర్ పని, సమయం & ఆదాయాన్ని సులభంగా ట్రాక్ చేయండి.",
+        en: "Easily track your tractor work, time & income."
+      },
+      customer_name_label: { 
+        te: "రైతు పేరు", 
+        en: "Farmer Name",
+        hi: "किसान का नाम",
+        ar: "اسم المزارع",
+        ur: "کسان کا نام"
+      },
+      customer_phone_label: { 
+        te: "రైతు మొబైల్ నంబర్ (ఐచ్ఛికం)", 
+        en: "Farmer Mobile Number (Optional)",
+        hi: "किसान का मोबाइल नंबर (वैकल्पिक)",
+        ar: "رقم هاتف المزارع (اختياري)",
+        ur: "کسان کا موبائل نمبر (اختیاری)"
+      },
+      date_label: { te: "తేదీ", en: "Date" },
+      start_time_label: { te: "ప్రారంభ సమయం", en: "Start Time" },
+      end_time_label: { te: "ముగింపు సమయం", en: "End Time" },
+      rate_per_hour_label: { te: "గంటకు రేటు (₹)", en: "Rate Per Hour (₹)" },
+      calculate_button: { te: "లెక్కించు", en: "Calculate" },
+      save_button: { te: "సేవ్ చేయి", en: "Save" },
+      hourly_time_label: { te: "గంటల పని", en: "Hourly Work" },
+      hourly_earnings_label: { te: "గంటల ఆదాయం", en: "Hourly Earnings" },
+      total_trips_label: { te: "ట్రిప్పుల సంఖ్య", en: "Number of Trips" },
+      cost_per_trip_label: { te: "ఒక ట్రిప్‌కు ధర (₹)", en: "Cost Per Trip (₹)" },
+      trip_count_display_label: { te: "మొత్తం ట్రిప్పులు", en: "Total Trips" },
+      trip_earnings_label: { te: "ట్రిప్ పని", en: "Trip Work" },
+      combined_earnings_label: { te: "మొత్తం ఆదాయం", en: "Total Earnings" },
+      // Logs Section
+      logs_heading: { te: "ట్రాక్టర్ పని వివరాలు సేవ్ చేయబడ్డాయి", en: "Tractor Work Details Saved" },
+      logs_tagline: { te: "ఇక్కడ మీ సేవ్ చేసిన పని యొక్క రికార్డు ఉంది.", en: "Here is the record of your saved work." },
+      no_logs_saved: { te: "ఇంకా లాగ్‌లు సేవ్ చేయబడలేదు.", en: "No logs saved yet." },
+      work_time: { te: "పని సమయం", en: "Work Time" },
+      rate: { te: "రేటు", en: "Rate" },
+      duration: { te: "వ్యవధి", en: "Duration" },
+      trips_count_log: { te: "ట్రిప్పులు", en: "Trips" },
+      cost_per_trip_log: { te: "ఒక ట్రిప్‌కు ధర", en: "Cost Per Trip" },
+      total_trips_display_log: { te: "మొత్తం ట్రిప్పులు", en: "Total Trips" },
+      earnings: { te: "ఆదాయం", en: "Earnings" },
+      saved_on: { te: "సేవ్ చేయబడింది", en: "Saved On" },
+      name: { te: "పేరు", en: "Name" },
+      phone: { te: "ఫోన్", en: "Phone" },
+      note_content_label: { te: "నోట్ కంటెంట్", en: "Note Content" },
+      note_content_placeholder: { te: "దయచేసి పని సమాచార వివరాలను నమోదు చేయండి", en: "Please enter the work info details" },
+      // Message Box Messages
+      customer_name_missing_error: { te: "దయచేసి వినియోగదారుడి పేరును నమోదు చేయండి.", en: "Please enter the customer's name." },
+      fill_time_rate_error: { te: "దయచేసి సమయం మరియు రేటు నింపండి.", en: "Please fill in time and rate." },
+      end_time_error: { te: "ముగింపు సమయం ప్రారంభ సమయం తర్వాత లేదా కనీసం 1 నిమిషం వ్యవధి ఉండాలి.", en: "End time must be after start time with at least 1 minute duration." },
+      hourly_calculation_success: { te: "గంటకు ఆదాయం విజయవంతంగా లెక్కించబడింది!", en: "Hourly earnings calculated successfully!" },
+      enter_valid_trips_cost_error: { te: "దయచేసి ట్రిప్పులు మరియు ట్రిప్ ధర కోసం సరైన సంఖ్యలను నమోదు చేయండి.", en: "Please enter valid numbers for trips and cost per trip." },
+      trip_calculation_success: { te: "ట్రిప్ ఆదాయం విజయవంతంగా లెక్కించబడింది!", en: "Trip earnings calculated successfully!" },
+      combined_calculation_success: { te: "మొత్తం ఆదాయం విజయవంతంగా లెక్కించబడింది!", en: "Total earnings calculated successfully!" },
+      fill_all_details_calculate_save_error: { te: "దయచేసి వివరాలను నింపి, సేవ్ చేయడానికి ముందు ఆదాయాన్ని లెక్కించండి.", en: "Please fill details and calculate earnings before saving." },
+      data_saved_success: { te: "వివరాలు విజయవంతంగా సేవ్ చేయబడ్డాయి!", en: "Data saved successfully!" },
+      form_cleared_message: { te: "తదుపరి ఎంట్రీ కోసం ఫారం క్లియర్ చేయబడింది.", en: "Form cleared for the next entry." },
+      back_button: { te: "వెనుకకు", en: "Back" },
+      cancel_button: { te: "రద్దు చేయి", en: "Cancel" },
+      confirm_button: { te: "నిర్ధారించు", en: "Confirm" },
+      note_details_missing: { te: "దయచేసి నోట్ కంటెంట్ నింపండి.", en: "Please fill in the note content." },
+      search_logs_placeholder: { te: "పేరు లేదా ఫోన్ ద్వారా శోధించండి...", en: "Search by name or phone..." },
+      contact_picker_not_supported: { te: "ఈ బ్రౌజర్‌లో కాంటాక్ట్ పికర్ APIకి మద్దతు లేదు.", en: "Contact Picker API is not supported in this browser." },
+      paid_status: { te: "చెల్లించారు", en: "Paid" },
+      due_status: { te: "చెల్లించవలసినది", en: "Due" },
+      advance_status: { te: "అడ్వాన్స్", en: "Advance" },
+      sms_button: { te: "SMS పంపండి", en: "Send SMS" },
+      delete_button: { te: "తొలగించు", en: "Delete" },
+      delete_confirmation_message: { te: "మీరు ఈ లాగ్‌ను తొలగించాలనుకుంటున్నారని ఖచ్చితంగా అనుకుంటున్నారా? ఈ చర్యను రద్దు చేయడం సాధ్యపడదు.", en: "Are you sure you want to delete this log? This action cannot be undone." },
+      log_deleted_success: { te: "లాగ్ విజయవంతంగా తొలగించబడింది!", en: "Log deleted successfully!" },
+      sms_send_error: { te: "SMS పంపడానికి ఫోన్ నంబర్ లేదు.", en: "No phone number available to send SMS." },
+      sms_body_template: { 
+          te: "మీ ట్రాక్టర్ పని వివరాలు:\nతేదీ: {date}\nపేరు: {name}\n{hourlyDetails}\n{tripDetails}\nమొత్తం ఆదాయం: {totalEarnings}\nనోట్: {noteContent}\nచెల్లింపు స్థితి: {paymentStatus}\n\nధన్యవాదాలు", 
+          en: "Your tractor work details:\nDate: {date}\nName: {name}\n{hourlyDetails}\n{tripDetails}\nTotal Earnings: {totalEarnings}\nNote: {noteContent}\nPayment Status: {paymentStatus}\n\nThank you" 
+      },
+      sms_hourly_template: { te: "పని సమయం: {startTime} - {endTime} ({duration})\nగంటకు రేటు: ₹{rate} / hr\nగంటల ఆదాయం: {earnings}", en: "Work Time: {startTime} - {endTime} ({duration})\nRate per hour: ₹{rate} / hr\nHourly Earnings: {earnings}" },
+      sms_trip_template: { te: "ట్రిప్పులు: {trips} ({tripsDisplay})\nఒక ట్రిప్‌కు ధర: ₹{costPerTrip}\nట్రిప్ ఆదాయం: {earnings}", en: "Trips: {trips} ({tripsDisplay})\nCost per trip: ₹{costPerTrip}\nTrip Earnings: {earnings}" },
+       // TTS Translations
+      total_amount_announce: {
+        te: "మీ మొత్తం మొత్తం {amount}",
+        en: "Your total amount is {amount}",
+        hi: "आपकी कुल राशि {amount} है",
+        ar: "المبلغ الإجمالي الخاص بك هو {amount}",
+        ur: "آپ کی کل رقم {amount} ਹੈ"
+      },
+      // New Nav Translations
+      nav_home_label: { te: "హోమ్", en: "Home", hi: "होम", ar: "الరئيسية", ur: "ہوم" },
+      nav_logs_label: { te: "లాగ్‌లు", en: "Logs", hi: "लॉग", ar: "السجلات", ur: "لاگز" },
+      // PWA Install Prompt Translations
+      install_pwa_message: {
+        te: "త్వరిత యాక్సెస్ మరియు స్థానిక యాప్ లాంటి అనుభవం కోసం ఈ యాప్‌ను మీ పరికరంలో ఇన్‌స్టాల్ చేయండి.",
+        en: "Install this app on your device for quick access and a native app-like experience.",
+        hi: "त्वरित पहुंच और एक देशी ऐप जैसे अनुभव के लिए इस ऐप को अपने डिवाइस पर इंस्टॉल करें।",
+        ar: "قم بتثبيت هذا التطبيق على جهازك للوصول السريع وتجربة تشبه التطبيق الأصلي.",
+        ur: "فوری رسائی اور مقامی ایپ جیسے تجربے کے لیے اس ایپ کو اپنے آلے پر انسٹال کریں۔"
+      },
+      install_pwa_later_btn: { te: "తర్వాత", en: "Later", hi: "बाद में", ar: "لاحقًا", ur: "بعد میں" },
+      install_pwa_install_btn: { te: "ఇన్‌స్టాల్ చేయి", en: "Install", hi: "इंस्टॉल करें", ar: "تثبيت", ur: "انسٹال کریں" },
+      // Time Adjustment Translations
+      update_button: { te: "నవీకరించు", en: "Update" },
+      subtract_minutes_placeholder: { te: "నిమిషాలు తీసివేయండి", en: "Subtract Mins" },
+      undo_button: { te: "చర్యరద్దు", en: "Undo" },
+      enter_minutes_error: { te: "దయచేసి తీసివేయడానికి నిమిషాల యొక్క సరైన ధనాత్మక సంఖ్యను నమోదు చేయండి.", en: "Please enter a valid positive number of minutes to subtract." },
+      log_not_found_error: { te: "సరిదిద్దడానికి లాగ్ లేదా గంటవారీ డేటా కనుగొనబడలేదు.", en: "Could not find the log or hourly data to adjust." },
+      time_adjustment_error: { te: "తగ్గింపుల తర్వాత సర్దుబాటు చేసిన ముగింపు సమయం ప్రారంభ సమయానికి ముందు లేదా అదే సమయానికి ఉండకూడదు.", en: "Adjusted end time cannot be before or same as start time after deductions." },
+      update_success_message: { te: "ముగింపు సమయం మరియు ఆదాయాలు విజయవంతంగా నవీకరించబడ్డాయి!", en: "End time and earnings updated successfully!" },
+      update_fail_message: { te: "లాగ్‌ను నవీకరించడంలో విఫలమైంది.", en: "Failed to update the log." },
+      undo_error_message: { te: "ఈ లాగ్ కోసం చర్యరద్దు చేయడానికి ఇటీవలి మార్పు లేదు.", en: "No recent change to undo for this log." },
+      undo_success_message: { te: "సర్దుబాటు చర్యరద్దు చేయబడింది.", en: "Adjustment undone successfully." },
+      undo_fail_message: { te: "మార్పును చర్యరద్దు చేయడంలో విఫలమైంది.", en: "Failed to undo the change." },
+      // Dynamic Placeholder Translations
+      customer_name_placeholder_dynamic: {
+        te: "రైతు పేరు...",
+        en: "Farmer Name...",
+        hi: "किसान का नाम...",
+        ar: "اسم المزارع...",
+        ur: "کسان کا نام..."
+      },
+      customer_phone_placeholder_dynamic: {
+        te: "ఉదా., 923XXXXXXX",
+        en: "e.g., 923XXXXXXX",
+        hi: "उदा., 923XXXXXXX",
+        ar: "مثال، 923XXXXXXX",
+        ur: "مثال کے طور پر، 923XXXXXXX"
+      },
+      // --- NEW: Break/Pause Translations ---
+      break_button: { te: "విరామం", en: "Break", hi: "विराम", ar: "استراحة", ur: "وقفہ" },
+      resume_button: { te: "పునఃప్రారంభించు", en: "Resume", hi: "फिर से शुरू करें", ar: "استئناف", ur: "دوبارہ شروع کریں" },
+      break_label: { te: "విరామం తీసుకోండి", en: "Take a Break", hi: "ब्रेक लें", ar: "خذ استراحة", ur: "وقفہ لیں" },
+      paused_duration_log: { te: "విరామ సమయం", en: "Paused Duration", hi: "विराम की अवधि", ar: "مدة الإيقاف", ur: "وقفے کا دورانیہ" },
+      paused_deduction_log: { te: "విరామం తగ్గింపు", en: "Paused Deduction", hi: "विराम कटौती", ar: "خصم الإيقاف", ur: "وقفے کی کٹوتی" },
+      paused_at: { te: "ఆపబడింది", en: "Stopped", hi: "रुका हुआ", ar: "متوقف", ur: "رک گیا" },
+      resumed_at: { te: "ప్రారంభించబడింది", en: "Started", hi: "शुरू हुआ", ar: "بدأ", ur: "شروع ہوا" }
+    };
+
+    // --- Helper Functions ---
+    function T(key) {
+      return translations[key]?.[currentLang] || key;
+    }
+    
+    function formatMillisecondsToHMS(ms) {
+      if (!ms || ms < 0) return { hours: 0, minutes: 0, seconds: 0 };
+      let totalSeconds = Math.floor(ms / 1000);
+      let hours = Math.floor(totalSeconds / 3600);
+      totalSeconds %= 3600;
+      let minutes = Math.floor(totalSeconds / 60);
+      let seconds = totalSeconds % 60;
+      return { hours, minutes, seconds };
+    }
+
+    // --- FIX: New helper function to format duration properly ---
+    function formatDurationFromMinutes(totalMinutes) {
+        if (isNaN(totalMinutes) || totalMinutes <= 0) return '0:00 hrs';
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = Math.round(totalMinutes % 60);
+        return `${hours}:${String(minutes).padStart(2, '0')} hrs`;
+    }
+
+    function showMessage(message, type = 'success', duration = 3000) {
+      const messageBox = document.getElementById('messageBox');
+      messageBox.textContent = message;
+      messageBox.className = `message-box show ${type}`; 
+      setTimeout(() => {
+        messageBox.classList.remove('show');
+      }, duration); 
+    }
+
+    function formatTime12Hour(timeString) {
+      if (!timeString) return '';
+      const [hours, minutes] = timeString.split(':').map(Number);
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const formattedHours = hours % 12 || 12;
+      const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+      return `${formattedHours}:${formattedMinutes} ${ampm}`;
+    }
+
+    // --- Core UI Logic Functions ---
+    function setLanguage(langCode) {
+      currentLang = langCode;
+      
+      document.getElementById('languageSelectorMenu').value = langCode;
+      
+      document.getElementById('welcomeHeading').innerHTML = T('welcome_heading').replace('{userName}', mainUserDisplayName || 'User');
+
+      document.getElementById('tagline').textContent = T('tagline');
+      document.getElementById('customerNameLabel').textContent = T('customer_name_label');
+      document.getElementById('customerPhoneLabel').textContent = T('customer_phone_label');
+      document.getElementById('dateLabel').textContent = T('date_label');
+      document.getElementById('startTimeLabel').textContent = T('start_time_label');
+      document.getElementById('endTimeLabel').textContent = T('end_time_label');
+      
+      // NEW: Set Break Button labels
+      document.getElementById('breakLabel').textContent = T('break_label');
+      document.getElementById('breakButtonText').textContent = isPaused ? T('resume_button') : T('break_button');
+
+      document.getElementById('ratePerHourLabel').textContent = T('rate_per_hour_label');
+      document.getElementById('numberOfTripsLabel').textContent = T('total_trips_label');
+      document.getElementById('costPerTripLabel').textContent = T('cost_per_trip_label');
+      document.getElementById('calculateBtnText').textContent = T('calculate_button');
+      document.getElementById('saveBtnText').textContent = T('save_button');
+      
+      document.getElementById('hourlyTimeLabel').textContent = T('hourly_time_label');
+      document.getElementById('hourlyEarningsLabel').textContent = T('hourly_earnings_label');
+      document.getElementById('tripCountLabel').textContent = T('trip_count_display_label');
+      document.getElementById('tripEarningsLabel').textContent = T('trip_earnings_label');
+      document.getElementById('combinedEarningsLabel').textContent = T('combined_earnings_label');
+      document.getElementById('noteContentLabel').textContent = T('note_content_label');
+      document.getElementById('noteContent').placeholder = T('note_content_placeholder');
+      document.getElementById('logsHeading').textContent = T('logs_heading');
+      document.getElementById('logsTagline').textContent = T('logs_tagline');
+      document.getElementById('logSearchInput').placeholder = T('search_logs_placeholder');
+      document.getElementById('confirmModalCancelBtn').textContent = T('cancel_button');
+      document.getElementById('confirmModalConfirmBtn').textContent = T('confirm_button');
+
+      // Update new nav labels
+      document.getElementById('navHomeLabel').textContent = T('nav_home_label');
+      document.getElementById('navLogsLabel').textContent = T('nav_logs_label');
+
+      // If logs are visible, re-render them with new language
+      if (document.getElementById('logsSection').classList.contains('hidden') === false) {
+        renderLogs(allUserLogs);
+      }
+      
+      // Restart placeholder typing effect with new language
+      setupPlaceholderEffects();
+    }
+    
+    function updateNavUI(activeView) {
+        const dashboardSection = document.getElementById('dashboardSection');
+        const logsSection = document.getElementById('logsSection');
+        const navDashboard = document.getElementById('nav-dashboard');
+        const navLogs = document.getElementById('nav-logs');
+
+        // Remove animation class from all views first
+        dashboardSection.classList.remove('view-fade-in');
+        logsSection.classList.remove('view-fade-in');
+        
+        if (activeView === 'dashboard') {
+            dashboardSection.classList.add('view-fade-in');
+            navDashboard.classList.add('active', 'text-green-600');
+            navDashboard.classList.remove('text-gray-500');
+            navLogs.classList.remove('active', 'text-green-600');
+            navLogs.classList.add('text-gray-500');
+        } else { // logs
+            logsSection.classList.add('view-fade-in');
+            navLogs.classList.add('active', 'text-green-600');
+            navLogs.classList.remove('text-gray-500');
+            navDashboard.classList.remove('active', 'text-green-600');
+            navDashboard.classList.add('text-gray-500');
+        }
+    }
+
+    function showSection(sectionId) {
+        const sections = ['dashboardSection', 'logsSection'];
+        sections.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                 element.classList.toggle('hidden', id !== sectionId);
+            }
+        });
+    }
+
+    function showDashboardView() {
+      showSection('dashboardSection');
+      updateNavUI('dashboard');
+      setCurrentDate();
+      document.getElementById('logSearchInput').value = '';
+    }
+
+    function showLogsView() {
+      showSection('logsSection');
+      updateNavUI('logs');
+      // Logs are now loaded via the onSnapshot listener, so no need to call loadLogs() here
+      if (document.getElementById('hamburgerSidebar').classList.contains('show')) {
+          toggleHamburgerMenu();
+      }
+    }
+
+    function setCurrentDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        document.getElementById('workDate').value = `${year}-${month}-${day}`;
+    }
+
+    // --- Time Dropdown Functions ---
+    function populateTimeDropdowns() {
+        const startHour = document.getElementById('startTimeHour');
+        const endHour = document.getElementById('endTimeHour');
+        const startMinute = document.getElementById('startTimeMinute');
+        const endMinute = document.getElementById('endTimeMinute');
+        const startAmPm = document.getElementById('startTimeAmPm');
+        const endAmPm = document.getElementById('endTimeAmPm');
+
+        // Clear existing options to prevent duplication on re-renders
+        startHour.innerHTML = '';
+        endHour.innerHTML = '';
+        startMinute.innerHTML = '';
+        endMinute.innerHTML = '';
+
+        // Populate hours
+        for (let i = 1; i <= 12; i++) {
+            const option = `<option value="${i}">${i}</option>`;
+            startHour.innerHTML += option;
+            endHour.innerHTML += option;
+        }
+
+        // Populate minutes
+        for (let i = 0; i < 60; i++) {
+            const val = String(i).padStart(2, '0');
+            const option = `<option value="${val}">${val}</option>`;
+            startMinute.innerHTML += option;
+            endMinute.innerHTML += option;
+        }
+
+        // Populate AM/PM
+        startAmPm.innerHTML = '<option value="AM">AM</option><option value="PM">PM</option>';
+        endAmPm.innerHTML = '<option value="AM">AM</option><option value="PM">PM</option>';
+    }
+
+    function getTimeFromDropdowns(type) {
+        const hourEl = document.getElementById(`${type}TimeHour`);
+        const minuteEl = document.getElementById(`${type}TimeMinute`);
+        const amPmEl = document.getElementById(`${type}TimeAmPm`);
+
+        let hour = parseInt(hourEl.value, 10);
+        const minute = minuteEl.value;
+        const amPm = amPmEl.value;
+
+        if (amPm === 'PM' && hour !== 12) {
+            hour += 12;
+        } else if (amPm === 'AM' && hour === 12) { // Midnight case: 12 AM is 00 hours
+            hour = 0;
+        }
+
+        return `${String(hour).padStart(2, '0')}:${minute}`;
+    }
+
+    // --- Live Clock and Lock Feature ---
+    function updateLiveTime() {
+      const now = new Date();
+      const hours24 = now.getHours();
+      const minutes = now.getMinutes();
+
+      const ampm = hours24 >= 12 ? 'PM' : 'AM';
+      const hours12 = hours24 % 12 || 12;
+
+      if (!isStartTimeLocked) {
+        document.getElementById('startTimeHour').value = hours12;
+        document.getElementById('startTimeMinute').value = String(minutes).padStart(2, '0');
+        document.getElementById('startTimeAmPm').value = ampm;
+      }
+      // MODIFIED: Do not update End Time if locked OR if paused
+      if (!isEndTimeLocked && !isPaused) {
+        document.getElementById('endTimeHour').value = hours12;
+        document.getElementById('endTimeMinute').value = String(minutes).padStart(2, '0');
+        document.getElementById('endTimeAmPm').value = ampm;
+      }
+    }
+
+    function updateLockUI(type) {
+      const button = document.getElementById(`${type}TimeLockBtn`);
+      const openIcon = button.querySelector('.open-lock');
+      const closedIcon = button.querySelector('.closed-lock');
+      const isLocked = (type === 'start') ? isStartTimeLocked : isEndTimeLocked;
+
+      if (isLocked) {
+        button.classList.remove('text-green-500');
+        button.classList.add('text-red-500');
+        openIcon.classList.add('hidden');
+        closedIcon.classList.remove('hidden');
+      } else {
+        button.classList.remove('text-red-500');
+        button.classList.add('text-green-500');
+        openIcon.classList.remove('hidden');
+        closedIcon.classList.add('hidden');
+      }
+    }
+
+    async function toggleLock(type) {
+        // 1. Toggle the local state flag
+        if (type === 'start') {
+            isStartTimeLocked = !isStartTimeLocked;
+        } else if (type === 'end') {
+            isEndTimeLocked = !isEndTimeLocked;
+            
+            // NEW: If user locks end time while paused, resume
+            if (isEndTimeLocked && isPaused) {
+              toggleBreak();
+            }
+        }
+        
+        // 2. Update UI and persist state to Firestore
+        if (window.currentUserId) {
+            const userProfileRef = window.doc(window.db, 'users', window.currentUserId);
+            try {
+                // Construct the complete lock state object from the current UI/state
+                const lockStateData = {
+                    isStartTimeLocked: isStartTimeLocked,
+                    lockedStartTime: isStartTimeLocked ? {
+                        hour: document.getElementById('startTimeHour').value,
+                        minute: document.getElementById('startTimeMinute').value,
+                        ampm: document.getElementById('startTimeAmPm').value,
+                    } : null,
+                    isEndTimeLocked: isEndTimeLocked,
+                    lockedEndTime: isEndTimeLocked ? {
+                        hour: document.getElementById('endTimeHour').value,
+                        minute: document.getElementById('endTimeMinute').value,
+                        ampm: document.getElementById('endTimeAmPm').value,
+                    } : null,
+                };
+                await window.updateDoc(userProfileRef, { lockState: lockStateData });
+            } catch (error) {
+                console.error("Error saving lock state:", error);
+                showMessage("Could not save lock state.", "error");
+                // Revert state on failure
+                if (type === 'start') isStartTimeLocked = !isStartTimeLocked;
+                if (type === 'end') isEndTimeLocked = !isEndTimeLocked;
+            }
+        }
+
+        // 3. Update UI icons
+        updateLockUI(type);
+        
+        // 4. If a lock was just released, update its time to live
+        if ((type === 'start' && !isStartTimeLocked) || (type === 'end' && !isEndTimeLocked)) {
+            updateLiveTime();
+        }
+    }
+    // --- End Live Clock Feature ---
+
+    // --- NEW: Break/Pause Function ---
+    function toggleBreak() {
+        // Cannot pause if the End Time is manually locked
+        if (!isPaused && isEndTimeLocked) {
+            showMessage("Cannot pause when End Time is locked. Unlock End Time to use the break feature.", "error");
+            return;
+        }
+
+        isPaused = !isPaused;
+        const breakButton = document.getElementById('breakButton');
+        const breakButtonText = document.getElementById('breakButtonText');
+        const breakIconPause = document.getElementById('breakIconPause');
+        const breakIconResume = document.getElementById('breakIconResume');
+        const noteContent = document.getElementById('noteContent');
+
+        // Get current time formatted
+        const now = new Date();
+        const hours12 = now.getHours() % 12 || 12;
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+        const formattedTime = `${hours12}:${minutes} ${ampm}`;
+
+        if (isPaused) {
+            // --- PAUSING ---
+            // 1. Freeze End Time (handled by updateLiveTime)
+            
+            // 2. Record pause start time
+            pauseStartTime = now;
+            
+            // 3. Update Note
+            const stopText = `\n${formattedTime} - ${T('paused_at')}`;
+            noteContent.value += stopText;
+            noteContent.scrollTop = noteContent.scrollHeight; // Scroll to bottom
+
+            // 4. Update Button UI
+            breakButtonText.textContent = T('resume_button');
+            breakButton.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
+            breakButton.classList.add('bg-green-600', 'hover:bg-green-700');
+            breakIconPause.classList.add('hidden');
+            breakIconResume.classList.remove('hidden');
+
+        } else {
+            // --- RESUMING ---
+            // 1. Unfreeze End Time (handled by updateLiveTime)
+            updateLiveTime(); // Immediately update to current time
+            
+            // 2. Calculate paused duration
+            if (pauseStartTime) {
+                const pauseEndTime = now;
+                totalPausedMilliseconds += (pauseEndTime.getTime() - pauseStartTime.getTime());
+                pauseStartTime = null;
+            }
+
+            // 3. Update Note
+            const startText = `\n${formattedTime} - ${T('resumed_at')}`;
+            noteContent.value += startText;
+            noteContent.scrollTop = noteContent.scrollHeight; // Scroll to bottom
+
+            // 4. Update Button UI
+            breakButtonText.textContent = T('break_button');
+            breakButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+            breakButton.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
+            breakIconPause.classList.remove('hidden');
+            breakIconResume.classList.add('hidden');
+        }
+    }
+
+
+    // --- TTS Functions ---
+    let currentlyHighlightedElement = null;
+    let speechWasCancelled = false;
+
+    function cleanupSpeechUI() {
+        if (currentlyHighlightedElement) {
+            currentlyHighlightedElement.classList.remove('tts-highlight');
+            currentlyHighlightedElement = null;
+        }
+    }
+
+    function speakQueue(queue) {
+        if (!queue || queue.length === 0) return;
+        
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+        cleanupSpeechUI();
+        speechWasCancelled = false;
+
+        const processNext = () => {
+            cleanupSpeechUI();
+
+            if (speechWasCancelled || queue.length === 0) {
+                speechWasCancelled = false;
+                return;
+            }
+
+            const item = queue.shift();
+            const element = document.getElementById(item.elementId);
+            const utterance = new SpeechSynthesisUtterance(item.text);
+            const langMap = { te: 'te-IN', en: 'en-US', hi: 'hi-IN', ar: 'ar-SA', ur: 'ur-PK' };
+            utterance.lang = langMap[currentLang] || 'en-US';
+            utterance.rate = 0.9;
+
+            utterance.onstart = () => {
+                if (element) {
+                    currentlyHighlightedElement = element;
+                    element.classList.add('tts-highlight');
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            };
+            
+            utterance.onend = processNext;
+            utterance.onerror = () => {
+                 console.error("Speech synthesis error for:", item.text);
+                 processNext(); // Skip to next item on error
+            };
+
+            speechSynthesis.speak(utterance);
+        };
+        
+        processNext();
+    }
+    
+    function speakAnnouncement(text, langCode) {
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+      }
+      cleanupSpeechUI();
+      speechWasCancelled = false;
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      const langMap = { te: 'te-IN', en: 'en-US', hi: 'hi-IN', ar: 'ar-SA', ur: 'ur-PK' };
+      utterance.lang = langMap[langCode] || 'en-US';
+      utterance.rate = 0.9;
+      speechSynthesis.speak(utterance);
+    }
+
+    function talkBackLog(logId) {
+      const record = allUserLogs.find(rec => rec.id === logId);
+      if (!record) return;
+
+      const queue = [];
+
+      queue.push({ elementId: `log-name-${logId}`, text: document.getElementById(`log-name-${logId}`).textContent });
+      
+      const phoneElement = document.getElementById(`log-phone-${logId}`);
+      if (phoneElement && phoneElement.textContent.includes(':') && phoneElement.textContent.split(':')[1].trim()) {
+        queue.push({ elementId: `log-phone-${logId}`, text: phoneElement.textContent });
+      }
+
+      if (record.hourly) {
+        queue.push({ elementId: `log-h-start-${logId}`, text: document.getElementById(`log-h-start-${logId}`).textContent });
+        queue.push({ elementId: `log-h-end-time-display-${logId}`, text: document.getElementById(`log-h-end-time-display-${logId}`).textContent });
+        
+        // NEW: Read pause details
+        const pauseDurationEl = document.getElementById(`log-h-pause-duration-${logId}`);
+        if(pauseDurationEl) queue.push({ elementId: `log-h-pause-duration-${logId}`, text: pauseDurationEl.textContent });
+        
+        const pauseDeductionEl = document.getElementById(`log-h-pause-deduction-${logId}`);
+        if(pauseDeductionEl) queue.push({ elementId: `log-h-pause-deduction-${logId}`, text: pauseDeductionEl.textContent });
+        
+        queue.push({ elementId: `log-h-rate-${logId}`, text: document.getElementById(`log-h-rate-${logId}`).textContent });
+        queue.push({ elementId: `log-h-duration-${logId}`, text: document.getElementById(`log-h-duration-${logId}`).textContent });
+        queue.push({ elementId: `log-h-earnings-${logId}`, text: document.getElementById(`log-h-earnings-${logId}`).textContent });
+      }
+      if (record.trip) {
+        queue.push({ elementId: `log-t-count-${logId}`, text: document.getElementById(`log-t-count-${logId}`).textContent });
+        queue.push({ elementId: `log-t-cost-${logId}`, text: document.getElementById(`log-t-cost-${logId}`).textContent });
+        queue.push({ elementId: `log-t-display-${logId}`, text: document.getElementById(`log-t-display-${logId}`).textContent });
+        queue.push({ elementId: `log-t-earnings-${logId}`, text: document.getElementById(`log-t-earnings-${logId}`).textContent });
+      }
+      if (record.noteContent) {
+        queue.push({ elementId: `log-note-${logId}`, text: document.getElementById(`log-note-${logId}`).textContent });
+      }
+
+      queue.push({ elementId: `combinedEarnings_${logId}`, text: document.getElementById(`combinedEarnings_${logId}`).textContent });
+
+      speakQueue(queue);
+    }
+    // --- End TTS Functions ---
+
+    // --- NEW: Dynamic Placeholder Typing Effect ---
+    function startTypingEffect(elementId, text, speed = 120, delay = 2500) {
+        if (placeholderTimeouts[elementId]) clearTimeout(placeholderTimeouts[elementId]);
+        
+        const element = document.getElementById(elementId);
+        // Do not start typing if element doesn't exist or is currently focused by the user
+        if (!element || document.activeElement === element) {
+            if(element) element.placeholder = text; // Set full placeholder if focused
+            return;
+        }
+        
+        let i = 0;
+        element.placeholder = '';
+
+        function type() {
+            // Stop if the user has focused on the input while typing was in progress
+            if (document.activeElement === element) {
+                element.placeholder = text;
+                return;
+            }
+            if (i < text.length) {
+                element.placeholder += text.charAt(i);
+                i++;
+                placeholderTimeouts[elementId] = setTimeout(type, speed);
+            } else {
+                // Wait at the end, then restart the animation
+                placeholderTimeouts[elementId] = setTimeout(() => {
+                    element.placeholder = '';
+                    i = 0;
+                    type();
+                }, delay);
+            }
+        }
+        
+        type();
+    }
+
+    function setupTypingListeners() {
+        const inputs = [
+            { id: 'customerName', key: 'customer_name_placeholder_dynamic' },
+            { id: 'customerPhoneNumber', key: 'customer_phone_placeholder_dynamic' }
+        ];
+        inputs.forEach(({id, key}) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('focus', () => {
+                    if (placeholderTimeouts[id]) clearTimeout(placeholderTimeouts[id]);
+                    element.placeholder = T(key); // Show full text on focus
+                });
+                element.addEventListener('blur', () => {
+                    if (element.value === '') {
+                        startTypingEffect(id, T(key)); // Restart effect on blur if empty
+                    }
+                });
+            }
+        });
+    }
+
+    function setupPlaceholderEffects() {
+        // Clear all existing timeouts before starting new ones
+        Object.values(placeholderTimeouts).forEach(clearTimeout);
+        
+        const inputs = [
+            { id: 'customerName', key: 'customer_name_placeholder_dynamic' },
+            { id: 'customerPhoneNumber', key: 'customer_phone_placeholder_dynamic' }
+        ];
+        inputs.forEach(({id, key}) => {
+            startTypingEffect(id, T(key));
+        });
+    }
+
+
+    // --- NEW: Speech Recognition for Name Field ---
+    function startSpeechRecognition() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            showMessage('Speech recognition is not supported in this browser.', 'error');
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        const langMap = { te: 'te-IN', en: 'en-US', hi: 'hi-IN', ar: 'ar-SA', ur: 'ur-PK' };
+        recognition.lang = langMap[currentLang] || 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        const micButton = document.getElementById('micButton');
+        const customerNameInput = document.getElementById('customerName');
+
+        micButton.classList.add('recording');
+
+        recognition.onresult = (event) => {
+            const speechResult = event.results[0][0].transcript;
+            customerNameInput.value = speechResult;
+        };
+
+        recognition.onspeechend = () => {
+            recognition.stop();
+        };
+
+        recognition.onend = () => {
+            micButton.classList.remove('recording');
+        };
+
+        recognition.onerror = (event) => {
+            micButton.classList.remove('recording');
+            console.error('Speech recognition error:', event.error);
+            showMessage('Speech recognition error: ' + event.error, 'error');
+        };
+        
+        recognition.start();
+    }
+
+
+    // --- MODIFIED: `calculateAllEarnings` function ---
+    function calculateAllEarnings() {
+      const start = getTimeFromDropdowns('start');
+      const end = getTimeFromDropdowns('end');
+      const rate = parseFloat(document.getElementById('ratePerHour').value);
+      const hourlyPausedTimeEl = document.getElementById('hourlyPausedTime');
+
+      let hourlyEarnings = 0;
+      let hourlyCalculationSuccessful = false;
+      hourlyPausedTimeEl.textContent = ''; // Clear pause display
+
+      if (start && end && !isNaN(rate) && rate >= 0) {
+        const [startH, startM] = start.split(":").map(Number);
+        const [endH, endM] = end.split(":").map(Number);
+
+        let startMinutes = startH * 60 + startM;
+        let endMinutes = endH * 60 + endM;
+        if (endMinutes < startMinutes) {
+          endMinutes += 24 * 60; // Handle overnight work
+        }
+
+        const durationMinutes = endMinutes - startMinutes;
+
+        // --- NEW: Deduct paused time ---
+        // If we are still paused, calculate temporary pause duration
+        let currentTotalPausedMs = totalPausedMilliseconds;
+        if (isPaused && pauseStartTime) {
+            currentTotalPausedMs += (new Date().getTime() - pauseStartTime.getTime());
+        }
+        
+        const pausedMinutes = Math.round(currentTotalPausedMs / 60000);
+        const adjustedDurationMinutes = durationMinutes - pausedMinutes;
+
+        if (adjustedDurationMinutes >= 1) {
+          const ratePerMinute = rate / 60;
+          hourlyEarnings = Math.round(adjustedDurationMinutes * ratePerMinute);
+
+          document.getElementById('hourlyTotalTime').textContent = formatDurationFromMinutes(adjustedDurationMinutes);
+          document.getElementById('hourlyTotalEarnings').textContent = `₹${hourlyEarnings}`;
+          hourlyCalculationSuccessful = true;
+
+          // --- NEW: Display paused time deduction in the results area ---
+          if (pausedMinutes > 0) {
+            const pausedDurationText = formatDurationFromMinutes(pausedMinutes);
+            hourlyPausedTimeEl.textContent = `(- ${pausedDurationText} ${T('paused_duration_log')})`;
+          }
+          
+        } else {
+          document.getElementById('hourlyTotalTime').textContent = '0:00 hrs';
+          document.getElementById('hourlyTotalEarnings').textContent = '₹0';
+          if (start && end && durationMinutes < 1) {
+             showMessage(T('end_time_error'), 'error');
+          }
+        }
+      } else {
+        document.getElementById('hourlyTotalTime').textContent = '0:00 hrs';
+        document.getElementById('hourlyTotalEarnings').textContent = '₹0';
+        hourlyPausedTimeEl.textContent = ''; // Clear display
+        if (start || end || rate > 0) {
+             showMessage(T('fill_time_rate_error'), 'error');
+        }
+      }
+
+      const numberOfTrips = parseFloat(document.getElementById('numberOfTrips').value); 
+      const costPerTrip = parseFloat(document.getElementById('costPerTrip').value);
+      let tripEarnings = 0;
+      let tripCalculationSuccessful = false;
+
+      if (!isNaN(numberOfTrips) && numberOfTrips >= 0 && !isNaN(costPerTrip) && costPerTrip >= 0) {
+        tripEarnings = Math.round(numberOfTrips * costPerTrip);
+        document.getElementById('tripTotalTrips').textContent = `${numberOfTrips.toFixed(1)} ${T('trips_count_log').toLowerCase()}`;
+        document.getElementById('tripTotalEarnings').textContent = `₹${tripEarnings}`;
+        tripCalculationSuccessful = true;
+      } else {
+        document.getElementById('tripTotalTrips').textContent = '0 trips';
+        document.getElementById('tripTotalEarnings').textContent = '₹0';
+        if (numberOfTrips > 0 || costPerTrip > 0) {
+            showMessage(T('enter_valid_trips_cost_error'), 'error');
+        }
+      }
+
+      const combinedTotal = hourlyEarnings + tripEarnings;
+      document.getElementById('combinedTotalEarnings').textContent = `₹${combinedTotal}`;
+
+      if (hourlyCalculationSuccessful || tripCalculationSuccessful) {
+        showMessage(T('combined_calculation_success'), 'success');
+        const announcementText = T('total_amount_announce').replace('{amount}', `₹${combinedTotal}`);
+        speakAnnouncement(announcementText, currentLang);
+      } else if (!start && !end && isNaN(rate) && isNaN(numberOfTrips) && isNaN(costPerTrip)) {
+      } else {
+        if (!hourlyCalculationSuccessful && !tripCalculationSuccessful) {
+            showMessage(T('fill_all_details_calculate_save_error'), 'error');
+        }
+      }
+    }
+    
+    // --- NEW: Function to clear customer form ---
+    // --- MODIFIED: To reset break/pause state ---
+    function resetCustomerForm() {
+        document.getElementById('customerName').value = '';
+        document.getElementById('customerPhoneNumber').value = '';
+        document.getElementById('noteContent').value = '';
+        document.getElementById('ratePerHour').value = '2000';
+        document.getElementById('numberOfTrips').value = '0';
+        document.getElementById('costPerTrip').value = '500';
+
+        // Reset time locks and timers
+        if (isStartTimeLocked) toggleLock('start');
+        if (isEndTimeLocked) toggleLock('end');
+        
+        // Reset calculation displays
+        document.getElementById('hourlyTotalTime').textContent = '0:00 hrs';
+        document.getElementById('hourlyTotalEarnings').textContent = '₹0';
+        document.getElementById('hourlyPausedTime').textContent = ''; // Clear display
+        document.getElementById('tripTotalTrips').textContent = '0 trips';
+        document.getElementById('tripTotalEarnings').textContent = '₹0';
+        document.getElementById('combinedTotalEarnings').textContent = '₹0';
+
+        // --- NEW: Reset pause state ---
+        isPaused = false;
+        pauseStartTime = null;
+        totalPausedMilliseconds = 0;
+
+        // Reset break button UI
+        const breakButton = document.getElementById('breakButton');
+        const breakButtonText = document.getElementById('breakButtonText');
+        const breakIconPause = document.getElementById('breakIconPause');
+        const breakIconResume = document.getElementById('breakIconResume');
+
+        breakButtonText.textContent = T('break_button');
+        breakButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+        breakButton.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
+        breakIconPause.classList.remove('hidden');
+        breakIconResume.classList.add('hidden');
+        // --- End Reset ---
+
+        // Must be called AFTER resetting pause state
+        updateLiveTime(); // Reset times to current time
+        setCurrentDate(); // Reset date to today
+
+        showMessage(T('form_cleared_message'), 'success');
+    }
+
+
+    // --- MODIFIED: Function to save customer data ---
+    async function saveCombinedData() {
+        if (!window.currentUserId) {
+            showMessage('You must be logged in to save data.', 'error');
+            return;
+        }
+
+        // If currently paused, resume before saving
+        if (isPaused) {
+            toggleBreak();
+        }
+        // Recalculate one last time to ensure pause data is final
+        calculateAllEarnings();
+
+        const customerName = document.getElementById('customerName').value.trim();
+        const customerPhoneNumber = document.getElementById('customerPhoneNumber').value.trim(); // Phone is now optional
+
+        if (!customerName) {
+            showMessage(T('customer_name_missing_error'), 'error');
+            return;
+        }
+
+        const date = document.getElementById('workDate').value;
+        const start = getTimeFromDropdowns('start');
+        const end = getTimeFromDropdowns('end');
+        const rate = parseFloat(document.getElementById('ratePerHour').value);
+        const numberOfTrips = parseFloat(document.getElementById('numberOfTrips').value);
+        const costPerTrip = parseFloat(document.getElementById('costPerTrip').value);
+        const noteContent = document.getElementById('noteContent').value.trim();
+
+        const hourlyTime = document.getElementById('hourlyTotalTime').textContent;
+        const hourlyEarnings = document.getElementById('hourlyTotalEarnings').textContent;
+        const hourlyEarningsValue = parseFloat(hourlyEarnings.replace('₹', ''));
+
+        const tripTripsDisplay = document.getElementById('tripTotalTrips').textContent;
+        const tripEarnings = document.getElementById('tripTotalEarnings').textContent;
+        const tripEarningsValue = parseFloat(tripEarnings.replace('₹', ''));
+        
+        const combinedEarnings = document.getElementById('combinedTotalEarnings').textContent;
+
+        if (hourlyEarningsValue === 0 && tripEarningsValue === 0) {
+            showMessage(T('fill_all_details_calculate_save_error'), 'error');
+            return;
+        }
+
+        // --- NEW: Prepare Pause Data for saving ---
+        const pausedMinutes = Math.round(totalPausedMilliseconds / 60000);
+        let pauseData = null;
+        if (pausedMinutes > 0) {
+            const pausedDurationText = formatDurationFromMinutes(pausedMinutes);
+            
+            // Calculate original duration *without* pause deduction
+            const [startH, startM] = start.split(":").map(Number);
+            const [endH, endM] = end.split(":").map(Number);
+            let startMinutes = startH * 60 + startM;
+            let endMinutes = endH * 60 + endM;
+            if (endMinutes < startMinutes) endMinutes += 24 * 60;
+            const originalDurationMinutes = endMinutes - startMinutes;
+            
+            const ratePerMinute = rate / 60;
+            const originalEarnings = Math.round(originalDurationMinutes * ratePerMinute);
+            const deductionAmount = originalEarnings - hourlyEarningsValue;
+
+            pauseData = {
+                pausedDuration: pausedDurationText,
+                pausedMinutes: pausedMinutes,
+                deductionAmount: `₹${deductionAmount}`
+            };
+        }
+        // --- End Pause Data Prep ---
+
+        // This is a CUSTOMER record
+        const record = {
+            userId: window.currentUserId,
+            customerName: customerName,
+            customerPhoneNumber: customerPhoneNumber,
+            date,
+            noteContent: noteContent,
+            timestamp: window.serverTimestamp(),
+            combinedTotalEarnings: combinedEarnings,
+            paymentStatus: 'default',
+            isMarkedPaid: false, 
+            hourly: hourlyEarningsValue > 0 ? { 
+                start, 
+                end, 
+                rate, 
+                time: hourlyTime, 
+                earnings: hourlyEarnings,
+                pauseData: pauseData // <-- NEW: Added pause data
+            } : null,
+            trip: tripEarningsValue > 0 ? { numberOfTrips, costPerTrip, tripsDisplay: tripTripsDisplay, earnings: tripEarnings } : null
+        };
+        
+        if (!record.hourly && !record.trip) {
+            showMessage(T('fill_all_details_calculate_save_error'), 'error');
+            return;
+        }
+
+        try {
+            const recordsCollectionRef = window.collection(window.db, 'users', window.currentUserId, 'records');
+            await window.addDoc(recordsCollectionRef, record);
+            showMessage(T('data_saved_success'), 'success');
+            resetCustomerForm();
+            
+        } catch (error) {
+            console.error("Error adding document: ", error);
+            showMessage("Failed to save data to the cloud.", "error");
+        }
+    }
+
+    function filterLogs() {
+        const searchTerm = document.getElementById('logSearchInput').value.toLowerCase();
+        if (!searchTerm) {
+            renderLogs(allUserLogs); // Show all if search is empty
+            return;
+        }
+        const filteredRecords = allUserLogs.filter(record => 
+            (record.customerName && record.customerName.toLowerCase().includes(searchTerm)) || 
+            (record.customerPhoneNumber && record.customerPhoneNumber.includes(searchTerm))
+        );
+        renderLogs(filteredRecords);
+    }
+
+    // --- MODIFIED: `renderLogs` function ---
+    function renderLogs(recordsToDisplay) {
+      const logsContainer = document.getElementById('logsContainer');
+      logsContainer.innerHTML = '';
+
+      if (recordsToDisplay.length === 0) {
+        logsContainer.innerHTML = `<p class="text-center text-gray-500 p-8">${T('no_logs_saved')}</p>`;
+        return;
+      }
+
+      // Sort by timestamp (descending) before rendering
+      const sortedRecords = recordsToDisplay.sort((a, b) => {
+        const timeA = a.timestamp ? a.timestamp.toMillis() : 0;
+        const timeB = b.timestamp ? b.timestamp.toMillis() : 0;
+        return timeB - timeA;
+      });
+
+      sortedRecords.forEach(record => {
+        const logCard = document.createElement('div');
+        logCard.className = 'bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative';
+        logCard.id = `log-${record.id}`;
+        
+        if (record.isMarkedPaid) {
+          logCard.classList.add('paid-log');
+        }
+
+        let hourlyDetailsHtml = '';
+        if (record.hourly) {
+          const formattedStartTime = formatTime12Hour(record.hourly.start);
+          const formattedEndTime = formatTime12Hour(record.hourly.end);
+          
+          let manualDeductedHtml = '';
+          if (record.hourly.minutesSubtracted) {
+              manualDeductedHtml = `<p class="text-sm text-red-500"><span class="font-medium">Deducted (Manual):</span> ${record.hourly.minutesSubtracted} mins</p>`;
+          }
+
+          // --- NEW: Display Pause Data ---
+          let pauseDetailsHtml = '';
+          if (record.hourly.pauseData) {
+              pauseDetailsHtml = `
+                  <p id="log-h-pause-duration-${record.id}" class="text-sm text-red-500"><span class="font-medium">${T('paused_duration_log')}:</span> ${record.hourly.pauseData.pausedDuration}</p>
+                  <p id="log-h-pause-deduction-${record.id}" class="text-sm text-red-500"><span class="font-medium">${T('paused_deduction_log')}:</span> ${record.hourly.pauseData.deductionAmount}</p>
+              `;
+          }
+          // --- End Pause Data Display ---
+
+          const undoButtonHtml = undoState[record.id] ?
+            `<button onclick="undoEndTimeAdjustment('${record.id}')" class="text-xs text-blue-600 hover:underline font-semibold">${T('undo_button')}</button>` :
+            '';
+
+          const endTimeAdjustmentHtml = `
+            <div class="text-sm text-gray-700 mb-1">
+                <div class="flex items-center justify-between">
+                    <div id="log-h-end-time-display-${record.id}"><span class="font-medium">${T('end_time_label')}:</span> ${formattedEndTime}</div>
+                    ${undoButtonHtml}
+                </div>
+                <div class="flex items-center gap-2 mt-1">
+                    <input type="number" min="1" oninput="this.value = Math.abs(this.value)" id="adjust-minutes-${record.id}" class="w-24 border border-gray-300 rounded-md p-1 text-sm" placeholder="${T('subtract_minutes_placeholder')}">
+                    <button onclick="adjustEndTime('${record.id}')" class="px-2 py-1 text-xs font-semibold rounded-md bg-orange-100 text-orange-700 hover:bg-orange-200">${T('update_button')}</button>
+                </div>
+            </div>
+          `;
+
+          hourlyDetailsHtml = `
+            <h4 class="font-semibold text-gray-700 mt-2 mb-1 border-t border-gray-100 pt-2">${T('hourly_time_label')}</h4>
+            <p id="log-h-start-${record.id}" class="text-sm text-gray-700 mb-1"><span class="font-medium">${T('start_time_label')}:</span> ${formattedStartTime}</p>
+            ${endTimeAdjustmentHtml}
+            ${manualDeductedHtml ? `<div class="mt-1 mb-1">${manualDeductedHtml}</div>` : ''}
+            ${pauseDetailsHtml ? `<div class="mt-1 mb-1">${pauseDetailsHtml}</div>` : ''} <!-- Added Pause HTML -->
+            <p id="log-h-rate-${record.id}" class="text-sm text-gray-700 mb-1"><span class="font-medium">${T('rate')}:</span> ₹${record.hourly.rate} / hr</p>
+            <p id="log-h-duration-${record.id}" class="text-base text-gray-800"><span class="font-semibold">${T('duration')}:</span> ${record.hourly.time}</p>
+            <p id="log-h-earnings-${record.id}" class="text-base text-gray-800"><span class="font-semibold">${T('earnings')}:</span> ${record.hourly.earnings}</p>
+          `;
+        }
+
+        let tripDetailsHtml = '';
+        if (record.trip) {
+          tripDetailsHtml = `
+            <h4 class="font-semibold text-gray-700 mt-2 mb-1 border-t border-gray-100 pt-2">${T('trip_earnings_label')}</h4>
+            <p id="log-t-count-${record.id}" class="text-sm text-gray-700 mb-1"><span class="font-medium">${T('trips_count_log')}:</span> ${record.trip.numberOfTrips}</p>
+            <p id="log-t-cost-${record.id}" class="text-sm text-gray-700 mb-1"><span class="font-medium">${T('cost_per_trip_log')}:</span> ₹${record.trip.costPerTrip}</p>
+            <p id="log-t-display-${record.id}" class="text-base text-gray-800"><span class="font-semibold">${T('total_trips_display_log')}:</span> ${record.trip.tripsDisplay}</p>
+            <p id="log-t-earnings-${record.id}" class="text-base text-gray-800"><span class="font-semibold">${T('earnings')}:</span> ${record.trip.earnings}</p>
+          `;
+        }
+        
+        let noteDetailsHtml = '';
+        if (record.noteContent) {
+          // Highlight pause/resume lines
+          const highlightedNote = record.noteContent
+              .replace(new RegExp(`(${T('paused_at')})`, 'g'), `<span class="font-semibold text-red-600">$1</span>`)
+              .replace(new RegExp(`(${T('resumed_at')})`, 'g'), `<span class="font-semibold text-green-600">$1</span>`);
+
+          noteDetailsHtml = `
+            <div class="mt-3 pt-3 border-t border-gray-100">
+              <h4 class="font-semibold text-gray-700 mb-1">${T('note_content_label')}:</h4>
+              <p id="log-note-${record.id}" class="text-sm text-gray-700 whitespace-pre-wrap">${highlightedNote}</p>
+            </div>
+          `;
+        }
+        
+        const phoneHtml = record.customerPhoneNumber ? `<p id="log-phone-${record.id}" class="text-sm text-gray-700 mb-1"><span class="font-medium">${T('phone')}:</span> ${record.customerPhoneNumber}</p>` : '';
+
+
+        let paymentColorClass = 'text-blue-700';
+        if (record.paymentStatus === 'paid') paymentColorClass = 'text-green-600';
+        else if (record.paymentStatus === 'due') paymentColorClass = 'text-red-600';
+        else if (record.paymentStatus === 'advance') paymentColorClass = 'text-pink-600';
+
+        const savedDate = record.timestamp ? record.timestamp.toDate() : new Date();
+
+        logCard.innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="font-semibold text-lg text-green-800">${record.date}</h3>
+            <span class="text-xs text-gray-500">${T('saved_on')}: ${savedDate.toLocaleDateString(currentLang)} ${savedDate.toLocaleTimeString(currentLang)}</span>
+          </div>
+          <p id="log-name-${record.id}" class="text-sm text-gray-700 mb-1"><span class="font-medium">${T('name')}:</span> ${record.customerName}</p>
+          ${phoneHtml}
+          ${hourlyDetailsHtml}
+          ${tripDetailsHtml}
+          <p class="text-xl font-bold ${paymentColorClass} mt-2 border-t pt-2 border-gray-200" id="combinedEarnings_${record.id}">${T('combined_earnings_label')}: ${record.combinedTotalEarnings}</p>
+          ${noteDetailsHtml}
+          <div class="flex justify-end items-center gap-2 mt-3" style="flex-wrap: wrap;">
+            <button onclick="talkBackLog('${record.id}')" title="Read log details aloud" class="p-2 text-sm font-semibold rounded-full bg-yellow-100 text-yellow-700 hover:bg-yellow-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.828 2.828a1 1 0 011.414 0A5.98 5.98 0 0115 10a5.98 5.98 0 01-1.757 4.243 1 1 0 01-1.414-1.414A3.986 3.986 0 0013 10a3.986 3.986 0 00-1.172-2.828 1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <button onclick="updatePaymentStatus('${record.id}', 'paid')" class="px-3 py-1 text-sm font-semibold rounded-md bg-green-100 text-green-700 hover:bg-green-200 flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                <span>${T('paid_status')}</span>
+            </button>
+            <button onclick="sendLogViaSms('${record.id}')" class="px-3 py-1 text-sm font-semibold rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
+                <span>${T('sms_button')}</span>
+            </button>
+            <button onclick="confirmDeleteLog('${record.id}')" class="px-3 py-1 text-sm font-semibold rounded-md bg-red-100 text-red-700 hover:bg-red-200 flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                <span>${T('delete_button')}</span>
+            </button>
+          </div>
+        `;
+        logsContainer.appendChild(logCard);
+      });
+    }
+
+    function confirmDeleteLog(logId) {
+        const modal = document.getElementById('customConfirmModal');
+        const confirmMsg = document.getElementById('confirmModalMessage');
+        const confirmBtn = document.getElementById('confirmModalConfirmBtn');
+        const cancelBtn = document.getElementById('confirmModalCancelBtn');
+        
+        confirmMsg.textContent = T('delete_confirmation_message');
+
+        confirmBtn.onclick = () => {
+            deleteLog(logId);
+            modal.classList.add('hidden');
+        };
+
+        cancelBtn.onclick = () => {
+            modal.classList.add('hidden');
+        };
+
+        modal.classList.remove('hidden');
+    }
+
+    async function deleteLog(logId) {
+        if (!window.currentUserId) return;
+        try {
+            const logDocRef = window.doc(window.db, 'users', window.currentUserId, 'records', logId);
+            await window.deleteDoc(logDocRef);
+            showMessage(T('log_deleted_success'), 'success');
+            // The onSnapshot listener will handle the UI update automatically.
+        } catch (error) {
+            console.error("Error deleting log:", error);
+            showMessage('Failed to delete log.', 'error');
+        }
+    }
+
+    function toggleHamburgerMenu() {
+        document.getElementById('hamburgerSidebar').classList.toggle('show');
+        document.getElementById('hamburgerOverlay').classList.toggle('show');
+    }
+
+    async function updatePaymentStatus(logId, newStatus) {
+        if (!window.currentUserId) return;
+        
+        const logDocRef = window.doc(window.db, 'users', window.currentUserId, 'records', logId);
+        const isPaid = newStatus === 'paid';
+
+        try {
+            await window.updateDoc(logDocRef, {
+                paymentStatus: newStatus,
+                isMarkedPaid: isPaid
+            });
+            showMessage(`${T(newStatus + '_status')} status updated!`, 'success');
+            // UI updates automatically via onSnapshot listener.
+        } catch (error) {
+            console.error("Error updating payment status: ", error);
+            showMessage('Error: Could not update status.', 'error');
+        }
+    }
+
+    function callPhoneNumber() {
+      const phoneNumber = document.getElementById('customerPhoneNumber').value.trim();
+      if (phoneNumber) {
+        window.location.href = `tel:${phoneNumber}`;
+      } else {
+        showMessage('Please enter a phone number to call.', 'error');
+      }
+    }
+    
+    async function getContact() {
+      if ('contacts' in navigator && 'ContactsManager' in window) {
+        try {
+          const contacts = await navigator.contacts.select(['name', 'tel'], { multiple: false });
+          if (contacts.length > 0) {
+            const contact = contacts[0];
+            if (contact.name && contact.name.length > 0) {
+              document.getElementById('customerName').value = contact.name[0];
+            }
+            if (contact.tel && contact.tel.length > 0) {
+              document.getElementById('customerPhoneNumber').value = contact.tel[0];
+            }
+          }
+        } catch (error) {
+          console.error('Contact picker was cancelled or failed.', error);
+        }
+      } else {
+        showMessage(T('contact_picker_not_supported'), 'error');
+      }
+    }
+
+    function sendLogViaSms(logId) {
+        const record = allUserLogs.find(rec => rec.id === logId);
+
+        if (!record) {
+            showMessage('Error: Log record not found for SMS.', 'error');
+            return;
+        }
+
+        const phoneNumber = record.customerPhoneNumber;
+        if (!phoneNumber) {
+            showMessage(T('sms_send_error'), 'error');
+            return;
+        }
+
+        let hourlySmsContent = '';
+        if (record.hourly) {
+            hourlySmsContent = T('sms_hourly_template')
+                .replace('{startTime}', formatTime12Hour(record.hourly.start))
+                .replace('{endTime}', formatTime12Hour(record.hourly.end))
+                .replace('{duration}', record.hourly.time)
+                .replace('{rate}', record.hourly.rate)
+                .replace('{earnings}', record.hourly.earnings);
+            
+            // NEW: Add pause data to SMS
+            if (record.hourly.pauseData) {
+                hourlySmsContent += `\n${T('paused_duration_log')}: ${record.hourly.pauseData.pausedDuration}`;
+            }
+        }
+
+        let tripSmsContent = '';
+        if (record.trip) {
+            tripSmsContent = T('sms_trip_template')
+                .replace('{trips}', record.trip.numberOfTrips)
+                .replace('{tripsDisplay}', record.trip.tripsDisplay)
+                .replace('{costPerTrip}', record.trip.costPerTrip)
+                .replace('{earnings}', record.trip.earnings);
+        }
+
+        let combinedDetails = [hourlySmsContent, tripSmsContent].filter(Boolean).join('\n');
+        const paymentStatusText = T(record.paymentStatus + '_status');
+
+        let smsBody = T('sms_body_template')
+            .replace('{date}', record.date)
+            .replace('{name}', record.customerName)
+            .replace('{hourlyDetails}\n{tripDetails}', combinedDetails)
+            .replace('{totalEarnings}', record.combinedTotalEarnings)
+            .replace('{noteContent}', record.noteContent || 'N/A')
+            .replace('{paymentStatus}', paymentStatusText);
+
+        smsBody = smsBody.replace(/\n\n+/g, '\n');
+        const encodedSmsBody = encodeURIComponent(smsBody);
+        window.location.href = `sms:${phoneNumber}?body=${encodedSmsBody}`;
+    }
+
+    // --- NEW: Time Adjustment and Undo Functions ---
+    async function adjustEndTime(logId) {
+        const inputElement = document.getElementById(`adjust-minutes-${logId}`);
+        const minutesToSubtract = parseInt(inputElement.value, 10);
+
+        if (isNaN(minutesToSubtract) || minutesToSubtract <= 0) {
+            showMessage(T('enter_minutes_error'), "error");
+            return;
+        }
+
+        const record = allUserLogs.find(rec => rec.id === logId);
+        if (!record || !record.hourly) {
+            showMessage(T('log_not_found_error'), "error");
+            return;
+        }
+
+        // Store original data for undo, ensuring a deep copy of the hourly object
+        undoState[logId] = {
+            hourly: JSON.parse(JSON.stringify(record.hourly)),
+            combinedTotalEarnings: record.combinedTotalEarnings
+        };
+
+        const { start, end: originalEnd, rate } = record.hourly;
+
+        // --- Calculate new end time using robust minute-based logic ---
+        const [startH, startM] = start.split(":").map(Number);
+        const startTotalMinutes = startH * 60 + startM;
+
+        let [originalEndH, originalEndM] = originalEnd.split(':').map(Number);
+        let originalEndTotalMinutes = originalEndH * 60 + originalEndM;
+
+        // Handle original overnight work (end time is on the next day)
+        if (originalEndTotalMinutes < startTotalMinutes) {
+            originalEndTotalMinutes += 24 * 60;
+        }
+
+        let newEndTotalMinutes = originalEndTotalMinutes - minutesToSubtract;
+
+        // Convert new total minutes back to HH:mm format
+        const newEndEffectiveMinutes = newEndTotalMinutes % (24 * 60);
+        const newEndH = Math.floor(newEndEffectiveMinutes / 60);
+        const newEndM = newEndEffectiveMinutes % 60;
+        const newEndTime = `${String(newEndH).padStart(2, '0')}:${String(newEndM).padStart(2, '0')}`;
+        
+        // --- Recalculate duration and earnings ---
+        // Get existing pause and manual deductions
+        const manualMinutesSubtracted = record.hourly.minutesSubtracted || 0;
+        const pausedMinutes = record.hourly.pauseData ? record.hourly.pauseData.pausedMinutes : 0;
+        
+        // Calculate the "raw" duration from start to new end
+        const rawDurationMinutes = newEndTotalMinutes - startTotalMinutes;
+        
+        // Subtract *existing* deductions from this new raw duration
+        const durationMinutes = rawDurationMinutes - pausedMinutes; // We only subtract pause time, manual deductions are now part of the history
+
+        if (durationMinutes < 1) {
+            showMessage(T('time_adjustment_error'), "error");
+            delete undoState[logId]; // Clear undo state as the operation failed
+            return;
+        }
+
+        const ratePerMinute = rate / 60;
+        const newHourlyEarnings = Math.round(durationMinutes * ratePerMinute);
+        const newHourlyTime = formatDurationFromMinutes(durationMinutes);
+
+        const newHourlyData = {
+            ...record.hourly,
+            end: newEndTime,
+            time: newHourlyTime,
+            earnings: `₹${newHourlyEarnings}`,
+            minutesSubtracted: manualMinutesSubtracted + minutesToSubtract // Add to the log of manual subtractions
+        };
+
+        const tripEarningsValue = record.trip ? parseFloat(record.trip.earnings.replace('₹', '')) : 0;
+        const newCombinedTotal = newHourlyEarnings + tripEarningsValue;
+        const newCombinedTotalEarnings = `₹${newCombinedTotal}`;
+
+        // --- Update Firestore ---
+        try {
+            const logDocRef = window.doc(window.db, 'users', window.currentUserId, 'records', logId);
+            await window.updateDoc(logDocRef, {
+                hourly: newHourlyData,
+                combinedTotalEarnings: newCombinedTotalEarnings
+            });
+            showMessage(T('update_success_message'), "success");
+            inputElement.value = ''; // Clear input
+        } catch (error) {
+            console.error("Error updating log:", error);
+            showMessage(T('update_fail_message'), "error");
+            delete undoState[logId]; // Clear undo state on failure
+        }
+    }
+
+    async function undoEndTimeAdjustment(logId) {
+        if (!undoState[logId]) {
+            showMessage(T('undo_error_message'), "error");
+            return;
+        }
+
+        const originalData = undoState[logId];
+
+        try {
+            const logDocRef = window.doc(window.db, 'users', window.currentUserId, 'records', logId);
+            await window.updateDoc(logDocRef, {
+                hourly: originalData.hourly,
+                combinedTotalEarnings: originalData.combinedTotalEarnings
+            });
+            showMessage(T('undo_success_message'), "success");
+            delete undoState[logId]; // Remove state after successful undo
+        } catch (error) {
+            console.error("Error undoing adjustment:", error);
+            showMessage(T('undo_fail_message'), "error");
+        }
+    }
+    
+    // --- UPDATED: Auto-Suggestion Functions ---
+    function setupSuggestionListener() {
+        const customerNameInput = document.getElementById('customerName');
+        const suggestionsContainer = document.getElementById('suggestionsContainer');
+
+        // Show all unique customers when the input is tapped/focused
+        customerNameInput.addEventListener('focus', () => {
+            showSuggestions(''); // Pass empty query to show all
+        });
+
+        // Filter suggestions as the user types
+        customerNameInput.addEventListener('input', (e) => {
+            const query = e.target.value;
+            showSuggestions(query);
+        });
+
+        // Hide suggestions when the input loses focus
+        customerNameInput.addEventListener('blur', () => {
+            // A small delay allows for a click on a suggestion to register before hiding
+            setTimeout(() => {
+                suggestionsContainer.classList.remove('show');
+            }, 200);
+        });
+    }
+
+    function showSuggestions(query) {
+        const lowerCaseQuery = query.toLowerCase();
+
+        // Create a unique list of customers from all logs, keeping the most recent entry.
+        const uniqueCustomers = new Map();
+        [...allUserLogs]
+          .filter(log => log.timestamp) // Ensure log has a timestamp
+          .sort((a, b) => b.timestamp.toMillis() - a.timestamp.toMillis()) // Sort by most recent
+          .forEach(log => {
+            if (log.customerName) {
+                const key = log.customerName.toLowerCase();
+                if (!uniqueCustomers.has(key)) { // Only add the first (most recent) entry
+                    uniqueCustomers.set(key, {
+                        name: log.customerName,
+                        phone: log.customerPhoneNumber || ''
+                    });
+                }
+            }
+        });
+        
+        const allUniqueCustomers = Array.from(uniqueCustomers.values());
+
+        // If there's a query, filter the list. Otherwise, show the whole list.
+        const filtered = query.length === 0 
+            ? allUniqueCustomers
+            : allUniqueCustomers.filter(({ name, phone }) => 
+                name.toLowerCase().includes(lowerCaseQuery) || 
+                (phone && phone.includes(lowerCaseQuery)) // Also search by phone number
+            );
+
+        renderSuggestions(filtered);
+    }
+
+    function renderSuggestions(suggestions) {
+        const suggestionsContainer = document.getElementById('suggestionsContainer');
+        suggestionsContainer.innerHTML = '';
+
+        if (suggestions.length === 0) {
+            suggestionsContainer.classList.remove('show');
+            return;
+        }
+
+        suggestions.slice(0, 5).forEach(suggestion => { // Limit to 5 suggestions
+            const div = document.createElement('div');
+            div.className = 'p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-100 last:border-b-0';
+            div.innerHTML = `
+                <p class="font-medium text-gray-800">${suggestion.name}</p>
+                ${suggestion.phone ? `<p class="text-sm text-gray-500">${suggestion.phone}</p>` : ''}
+            `;
+            div.addEventListener('mousedown', () => {
+                selectSuggestion(suggestion);
+            });
+            suggestionsContainer.appendChild(div);
+        });
+
+        suggestionsContainer.classList.add('show');
+    }
+    
+    function selectSuggestion(suggestion) {
+        document.getElementById('customerName').value = suggestion.name;
+        if (suggestion.phone) {
+            document.getElementById('customerPhoneNumber').value = suggestion.phone;
+        }
+        document.getElementById('suggestionsContainer').classList.remove('show');
+    }
+
+
+    // --- PWA Setup Functions ---
+    function setupPWA() {
+      // 1. Create and link manifest dynamically
+      const manifest = {
+        "name": "ManaTractor Dashboard",
+        "short_name": "ManaTractor",
+        "start_url": ".",
+        "display": "standalone",
+        "background_color": "#f0fdf4",
+        "theme_color": "#16a34a",
+        "description": "Easily track your tractor work, time & income.",
+        "icons": [
+          {
+            "src": "https://res.cloudinary.com/drt6xl4x3/image/upload/v1760299740/manatractor_logo_n0noj8.jpg",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+          },
+          {
+            "src": "https://res.cloudinary.com/drt6xl4x3/image/upload/v1760299740/manatractor_logo_n0noj8.jpg",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+          }
+        ]
+      };
+      const stringifiedManifest = JSON.stringify(manifest);
+      const blob = new Blob([stringifiedManifest], {type: 'application/json'});
+      const manifestURL = URL.createObjectURL(blob);
+      const linkEl = document.createElement('link');
+      linkEl.rel = 'manifest';
+      linkEl.href = manifestURL;
+      document.head.appendChild(linkEl);
+
+      // 2. Register Service Worker from a script string
+      if ('serviceWorker' in navigator) {
+        const swScript = `
+          const CACHE_NAME = 'manatractor-cache-v1';
+          const urlsToCache = [
+              './', // Caches the root HTML file
+              'https://cdn.tailwindcss.com',
+              'https://res.cloudinary.com/drt6xl4x3/image/upload/v1760299740/manatractor_logo_n0noj8.jpg'
+          ];
+          self.addEventListener('install', event => {
+              self.skipWaiting();
+              event.waitUntil(
+                  caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+              );
+          });
+          self.addEventListener('activate', event => {
+              event.waitUntil(clients.claim());
+          });
+          self.addEventListener('fetch', event => {
+              if (event.request.method !== 'GET') return;
+              event.respondWith(
+                  caches.match(event.request).then(response => {
+                      return response || fetch(event.request);
+                  })
+              );
+          });
+        `;
+        const swBlob = new Blob([swScript], { type: 'application/javascript' });
+        const swURL = URL.createObjectURL(swBlob);
+
+        navigator.serviceWorker.register(swURL)
+            .then(reg => console.log('Service worker registered.', reg))
+            .catch(err => console.error('Service worker registration failed:', err));
+      }
+      
+      // 3. Handle the 'beforeinstallprompt' event to show custom prompt
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        const lastPromptTime = localStorage.getItem('pwaInstallPromptLastShown'); // Using LS for non-critical UI state
+        const now = new Date().getTime();
+        const threeDays = 3 * 24 * 60 * 60 * 1000;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+
+        if (!isStandalone && (!lastPromptTime || (now - lastPromptTime > threeDays))) {
+          showInstallPrompt(deferredPrompt);
+        }
+      });
+    }
+
+    function showInstallPrompt(promptEvent) {
+      if(!promptEvent) return;
+      const modal = document.getElementById('installPwaModal');
+      document.getElementById('installPwaMessage').textContent = T('install_pwa_message');
+      document.getElementById('installPwaCancelBtn').textContent = T('install_pwa_later_btn');
+      document.getElementById('installPwaConfirmBtn').textContent = T('install_pwa_install_btn');
+      
+      modal.classList.remove('hidden');
+
+      const installBtn = document.getElementById('installPwaConfirmBtn');
+      const cancelBtn = document.getElementById('installPwaCancelBtn');
+
+      installBtn.onclick = () => {
+        modal.classList.add('hidden');
+        promptEvent.prompt();
+        promptEvent.userChoice.then((choiceResult) => {
+          const outcome = choiceResult.outcome === 'accepted' ? 'accepted' : 'dismissed';
+          console.log(`User ${outcome} the install prompt`);
+          localStorage.setItem('pwaInstallPromptLastShown', new Date().getTime());
+        });
+      };
+
+      cancelBtn.onclick = () => {
+        modal.classList.add('hidden');
+        localStorage.setItem('pwaInstallPromptLastShown', new Date().getTime());
+      };
+    }
+
+    // --- NEW: Terms & Conditions Logic ---
+    function showTermsModal(lang) {
+        const modal = document.getElementById('termsModal');
+        const modalContent = document.getElementById('termsModalContent');
+        const contentData = legalContent[lang] || legalContent['en']; // Fallback to English
+
+        document.getElementById('termsTitle').textContent = contentData.title;
+        document.getElementById('termsBody').innerHTML = contentData.content;
+        document.getElementById('termsCheckboxLabel').textContent = contentData.checkboxLabel;
+        document.getElementById('termsConfirmBtn').textContent = contentData.continueButton;
+        
+        modal.classList.remove('hidden');
+        setTimeout(() => { // Allow display change to register before starting animation
+            modal.classList.add('show');
+            modalContent.classList.remove('opacity-0', 'scale-95');
+        }, 10);
+    }
+    
+    function hideTermsModal() {
+        const modal = document.getElementById('termsModal');
+        const modalContent = document.getElementById('termsModalContent');
+        modalContent.classList.add('opacity-0', 'scale-95');
+        setTimeout(() => {
+             modal.classList.add('hidden');
+        }, 300); // Match animation duration
+    }
+
+    // --- MODIFIED: Saves main user's identity ---
+    async function acceptTerms() {
+        if (!window.currentUserId || !window.currentUser) {
+             showMessage("Error: User not found. Please log in again.", "error");
+             return;
+        }
+        const userProfileRef = window.doc(window.db, 'users', window.currentUserId);
+
+        try {
+            // This is the MAIN USER record.
+            await window.setDoc(userProfileRef, {
+                termsAccepted: true,
+                acceptedAt: window.serverTimestamp(),
+                email: window.currentUser.email,
+                displayName: window.currentUser.displayName
+            }, { merge: true });
+
+            hideTermsModal();
+            
+            const docSnap = await window.getDoc(userProfileRef);
+            if (!docSnap.data().preferredLanguage) {
+                // It's a new user, now show language modal
+                document.getElementById('languageModal').classList.remove('hidden');
+            } else {
+                // Existing user who just accepted terms, continue with their saved language
+                const data = docSnap.data();
+                mainUserDisplayName = data.displayName || mainUserDisplayName;
+                finishAppInitialization(data.preferredLanguage, data);
+            }
+
+        } catch (error) {
+            console.error("Error setting terms acceptance: ", error);
+            showMessage("Could not save preferences. Please try again.", "error");
+        }
+    }
+
+    async function selectInitialLanguage(langCode) {
+        document.getElementById('languageModal').classList.add('hidden');
+        
+        if (window.currentUserId) {
+            const userProfileRef = window.doc(window.db, 'users', window.currentUserId);
+            try {
+                // Profile was created at terms acceptance. Now, just add the preferred language.
+                await window.setDoc(userProfileRef, { 
+                    preferredLanguage: langCode
+                }, { merge: true });
+            } catch (error) {
+                console.error("Error saving initial language: ", error);
+            }
+        }
+        finishAppInitialization(langCode, {});
+    }
+    
+    // NEW: Applies lock state read from Firestore
+    function applyLockState(lockState) {
+        if (lockState && lockState.isStartTimeLocked && lockState.lockedStartTime) {
+            isStartTimeLocked = true;
+            
+            const { hour, minute, ampm } = lockState.lockedStartTime;
+            document.getElementById('startTimeHour').value = hour;
+            document.getElementById('startTimeMinute').value = minute;
+            document.getElementById('startTimeAmPm').value = ampm;
+
+            updateLockUI('start');
+        }
+        if (lockState && lockState.isEndTimeLocked && lockState.lockedEndTime) {
+            isEndTimeLocked = true;
+
+            const { hour, minute, ampm } = lockState.lockedEndTime;
+            document.getElementById('endTimeHour').value = hour;
+            document.getElementById('endTimeMinute').value = minute;
+            document.getElementById('endTimeAmPm').value = ampm;
+
+            updateLockUI('end');
+        }
+    }
+
+    function finishAppInitialization(userLang, userData) {
+        setLanguage(userLang);
+        showDashboardView();
+        
+        populateTimeDropdowns();
+        
+        // Apply lock state AFTER populating dropdowns and BEFORE setting live time
+        if (userData && userData.lockState) {
+            applyLockState(userData.lockState);
+        }
+
+        updateLiveTime(); // This will respect the isStartTimeLocked flag
+        if(liveClockInterval) clearInterval(liveClockInterval);
+        liveClockInterval = setInterval(updateLiveTime, 1000); 
+
+        setupPWA();
+        setupTypingListeners(); // Setup event listeners for placeholders once
+        setupPlaceholderEffects(); // Start the initial typing effect
+        setupSuggestionListener(); // Setup listener for auto-suggestions
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('button')) {
+                if (speechSynthesis.speaking) {
+                    speechWasCancelled = true;
+                    speechSynthesis.cancel();
+                    cleanupSpeechUI();
+                }
+            }
+        }, true);
+        
+        setupLogListener(window.currentUserId);
+    }
+
+    // --- MODIFIED: Handles app logic after login ---
+    async function initializeAppLogic(user) {
+        const userProfileRef = window.doc(window.db, 'users', user.uid);
+        const docSnap = await window.getDoc(userProfileRef);
+
+        mainUserDisplayName = user.displayName || extractNameFromEmail(user.email);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+
+            if (data.termsAccepted) {
+                mainUserDisplayName = data.displayName || mainUserDisplayName;
+                const userLang = data.preferredLanguage || 'te';
+                finishAppInitialization(userLang, data);
+            } else {
+                showTermsModal('en'); 
+            }
+        } else {
+            showTermsModal('en'); 
+        }
+    }
+
+    function setupLogListener(userId) {
+      if (unsubscribeLogs) {
+        unsubscribeLogs(); // Detach any existing listener
+      }
+      const recordsCollectionRef = window.collection(window.db, 'users', userId, 'records');
+      const q = window.query(recordsCollectionRef);
+
+      unsubscribeLogs = window.onSnapshot(q, (querySnapshot) => {
+        allUserLogs = [];
+        querySnapshot.forEach((doc) => {
+          allUserLogs.push({ id: doc.id, ...doc.data() });
+        });
+        filterLogs(); // This will render the logs initially and on any update
+      });
+    }
+    
+    // Setup listeners for Terms modal when document is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        const termsCheckbox = document.getElementById('termsCheckbox');
+        const termsConfirmBtn = document.getElementById('termsConfirmBtn');
+
+        termsCheckbox.addEventListener('change', () => {
+            termsConfirmBtn.disabled = !termsCheckbox.checked;
+        });
+
+        termsConfirmBtn.addEventListener('click', acceptTerms);
+    });
+
+  </script>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, doc, deleteDoc, updateDoc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    
+    // IMPORTANT: Replace with your actual Firebase config object
+    const firebaseConfig = {
+                   apiKey: "AIzaSyA-7w4YspeNiyHgnMx8R5NZSCPaGYmMNak",
+  authDomain: "test-test-39764.firebaseapp.com",
+  projectId: "test-test-39764",
+  storageBucket: "test-test-39764.firebasestorage.app",
+  messagingSenderId: "844520701327",
+  appId: "1:844520701327:web:07f0c4384115592fcf1ffa"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    // Make firestore functions globally available to the other script tag
+    window.db = db;
+    window.collection = collection;
+    window.addDoc = addDoc;
+    window.onSnapshot = onSnapshot;
+    window.query = query;
+    window.doc = doc;
+    window.deleteDoc = deleteDoc;
+    window.updateDoc = updateDoc;
+    window.setDoc = setDoc;
+    window.getDoc = getDoc;
+    window.serverTimestamp = serverTimestamp;
+    window.currentUserId = null;
+    window.currentUser = null; // To hold the full user object
+
+    const loginSection = document.getElementById('loginSection');
+    const appContainer = document.getElementById('appContainer');
+    const loadingSection = document.getElementById('loadingSection'); 
+    const progressBar = document.getElementById('progressBar'); 
+    const loginButton = document.getElementById('loginButton');
+    const logoutButton = document.getElementById('logoutButton');
+    const userProfilePic = document.getElementById('userProfilePic');
+    const userProfileEmail = document.getElementById('userProfileEmail');
+    
+    function extractNameFromEmail(email) {
+      if (!email) return 'User';
+      const namePart = email.split('@')[0];
+      const match = namePart.match(/^[a-zA-Z]+/);
+      if (match && match[0]) {
+        const name = match[0];
+        return name.charAt(0).toUpperCase() + name.slice(1);
+      }
+      return 'User';
+    }
+    
+    loginButton.addEventListener('click', () => {
+        signInWithPopup(auth, provider)
+        .catch((error) => {
+            console.error('Sign-in error:', error.message);
+        });
+    });
+
+    logoutButton.addEventListener('click', () => {
+        // Clear lock state on logout for a clean start next time
+        if (window.currentUserId) {
+            const userProfileRef = window.doc(window.db, 'users', window.currentUserId);
+            window.updateDoc(userProfileRef, { 
+                lockState: { isStartTimeLocked: false, lockedStartTime: null } 
+            }).catch(err => console.error("Could not clear lock state on logout", err));
+        }
+
+        signOut(auth).catch((error) => {
+            console.error('Sign-out error:', error);
+        });
+    });
+
+    // --- MODIFIED: Handles Authentication state changes and loading screen ---
+    if (localStorage.getItem('hasLoggedInBefore') === 'true') {
+        loadingSection.classList.remove('hidden');
+        progressBar.classList.add('progress-bar-animate');
+    } else {
+        loginSection.classList.remove('hidden');
+    }
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            localStorage.setItem('hasLoggedInBefore', 'true');
+            window.currentUserId = user.uid;
+            window.currentUser = user;
+            
+            loadingSection.classList.add('hidden');
+            loginSection.classList.add('hidden');
+            appContainer.classList.remove('hidden');
+
+            userProfilePic.src = user.photoURL || 'https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png';
+            userProfileEmail.textContent = user.email;
+            
+            initializeAppLogic(user);
+
+        } else {
+            localStorage.removeItem('hasLoggedInBefore');
+            window.currentUserId = null;
+            window.currentUser = null;
+            if (unsubscribeLogs) {
+              unsubscribeLogs();
+              unsubscribeLogs = null;
+            }
+            allUserLogs = [];
+            
+            // Reset local state on logout
+            isStartTimeLocked = false;
+            isEndTimeLocked = false;
+            // NEW: Reset pause state on logout
+            isPaused = false;
+            pauseStartTime = null;
+            totalPausedMilliseconds = 0;
+
+
+            loadingSection.classList.add('hidden');
+            appContainer.classList.add('hidden');
+            loginSection.classList.remove('hidden');
+            if(liveClockInterval) clearInterval(liveClockInterval);
+        }
+    });
+
+  </script>
+</body>
+</html>
