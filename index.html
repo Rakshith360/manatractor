@@ -311,6 +311,7 @@
                 <option value="te">తెలుగు</option>
                 <option value="en">English</option>
                 <option value="hi">हिन्दी</option>
+                <option value="pa">پنجابی</option>
                 <option value="ar">العربية</option>
                 <option value="ur">اردو</option>
             </select>
@@ -548,6 +549,7 @@
               <button onclick="selectInitialLanguage('te')" class="w-full bg-green-500 text-white rounded-lg p-3 font-semibold hover:bg-green-600 transition-colors">తెలుగు</button>
               <button onclick="selectInitialLanguage('en')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">English</button>
               <button onclick="selectInitialLanguage('hi')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">हिन्दी</button>
+              <button onclick="selectInitialLanguage('hi')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">پنجابی</button>
               <button onclick="selectInitialLanguage('ar')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">العربية</button>
               <button onclick="selectInitialLanguage('ur')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">اردو</button>
           </div>
@@ -1284,8 +1286,16 @@
       ar: "مثال، 923XXXXXXX",
       ur: "مثال کے طور پر، 923XXXXXXX",
       pa: "ਉਦਾਹਰਨ, 923XXXXXXX"
-    }
+    },
+     break_button: { te: "విరామం", en: "Break", hi: "विराम", ar: "استراحة", ur: "وقفہ" },
+      resume_button: { te: "పునఃప్రారంభించు", en: "Resume", hi: "फिर से शुरू करें", ar: "استئناف", ur: "دوبارہ شروع کریں" },
+      break_label: { te: "విరామం తీసుకోండి", en: "Take a Break", hi: "ब्रेक लें", ar: "خذ استراحة", ur: "وقفہ لیں" },
+      paused_duration_log: { te: "విరామ సమయం", en: "Paused Duration", hi: "विराम की अवधि", ar: "مدة الإيقاف", ur: "وقفے کا دورانیہ" },
+      paused_deduction_log: { te: "విరామం తగ్గింపు", en: "Paused Deduction", hi: "विराम कटौती", ar: "خصم الإيقاف", ur: "وقفے کی کٹوتی" },
+      paused_at: { te: "ఆపబడింది", en: "Stopped", hi: "रुका हुआ", ar: "متوقف", ur: "رک گیا" },
+      resumed_at: { te: "ప్రారంభించబడింది", en: "Started", hi: "शुरू हुआ", ar: "بدأ", ur: "شروع ہوا" }
   };
+    
 
     // --- Helper Functions ---
     function T(key) {
