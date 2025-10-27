@@ -310,7 +310,10 @@
             <select id="languageSelectorMenu" onchange="setLanguage(this.value); toggleHamburgerMenu();" class="bg-white border border-gray-300 rounded-lg p-2 text-sm text-gray-700 shadow-sm focus:ring-green-500 focus:border-green-500 w-full">
                 <option value="te">తెలుగు</option>
                 <option value="en">English</option>
-               
+                <option value="hi">हिन्दी</option>
+                <option value="pa">پنجابی</option>
+                <option value="ar">العربية</option>
+                <option value="ur">اردو</option>
             </select>
         </div>
 
@@ -440,8 +443,7 @@
                   <svg id="breakIconResume" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
                   </svg>
-                  <!-- MODIFIED: Button text changed -->
-                  <span id="breakButtonText">Start / Stop</span>
+                  <span id="breakButtonText">Break</span>
                 </button>
               </div>
     
@@ -449,14 +451,20 @@
               <div class="flex-1 sm:col-span-1">
                 <label id="endTimeLabel" class="block text-sm font-medium text-gray-700 mb-1"></label>
                  <div class="relative">
-                  <!-- MODIFIED: Removed pr-10 -->
-                  <div class="flex items-center gap-1">
+                  <div class="flex items-center gap-1 pr-10">
                     <select id="endTimeHour" class="w-full border border-gray-300 rounded-lg p-2 bg-white appearance-none text-center"></select>
                     <span class="font-bold text-gray-500">:</span>
                     <select id="endTimeMinute" class="w-full border border-gray-300 rounded-lg p-2 bg-white appearance-none text-center"></select>
                     <select id="endTimeAmPm" class="w-full border border-gray-300 rounded-lg p-2 bg-white appearance-none"></select>
                   </div>
-                  <!-- REMOVED: End Time Lock Button -->
+                  <button id="endTimeLockBtn" onclick="toggleLock('end')" class="lock-button absolute inset-y-0 right-0 pr-3 flex items-center focus:outline-none text-green-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 open-lock" viewBox="0 0 20 20" fill="currentColor">
+                       <path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v2H7V7a3 3 0 013-3z"/>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 closed-lock hidden" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10 2a3 3 0 00-3 3v1H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V8a2 2 0 00-2-2h-1V5a3 3 0 00-3-3zm-1 4V5a1 1 0 112 0v1H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
@@ -575,7 +583,10 @@
           <div class="flex flex-col gap-3">
               <button onclick="selectInitialLanguage('te')" class="w-full bg-green-500 text-white rounded-lg p-3 font-semibold hover:bg-green-600 transition-colors">తెలుగు</button>
               <button onclick="selectInitialLanguage('en')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">English</button>
- 
+              <button onclick="selectInitialLanguage('hi')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">हिन्दी</button>
+               <button onclick="selectInitialLanguage('hi')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">پنجابی</button>
+              <button onclick="selectInitialLanguage('ar')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">العربية</button>
+              <button onclick="selectInitialLanguage('ur')" class="w-full bg-gray-200 text-gray-800 rounded-lg p-3 font-semibold hover:bg-gray-300 transition-colors">اردو</button>
           </div>
         </div>
       </div>
@@ -622,7 +633,7 @@
     let currentLang = 'te'; // Default language
     let mainUserDisplayName = ''; // Holds the MAIN USER's name for the welcome message
     let isStartTimeLocked = false;
-    // REMOVED: isEndTimeLocked
+    let isEndTimeLocked = false;
     let liveClockInterval; // To hold the setInterval ID
     let allUserLogs = []; // Holds all logs from Firestore for filtering
     let unsubscribeLogs = null; // To detach Firestore listener on logout
@@ -675,9 +686,9 @@
 <p>మీకు సేవను అందించడానికి మాకు నిజంగా అవసరమైనప్పుడు మాత్రమే మేము వ్యక్తిగత సమాచారాన్ని అడుగుతాము. మేము దానిని మీ జ్ఞానం మరియు సమ్మతితో, సరసమైన మరియు చట్టబద్ధమైన మార్గాల ద్వారా సేకరిస్తాము. మేము దానిని ఎందుకు సేకరిస్తున్నాము మరియు అది ఎలా ఉపయోగించబడుతుందో కూడా మీకు తెలియజేస్తాము.</p>
 <p>మీరు అభ్యర్థించిన సేవను మీకు అందించడానికి అవసరమైనంత కాలం మాత్రమే మేము సేకరించిన సమాచారాన్ని నిలుపుకుంటాము. మేము ఏ డేటాను నిల్వ చేస్తాము, నష్టం మరియు దొంగతనం, అలాగే అనధికార ప్రాప్యత, బహిర్గతం, కాపీ చేయడం, ఉపయోగించడం లేదా సవరించడం వంటి వాటిని నిరోధించడానికి వాణిజ్యపరంగా ఆమోదయోగ్యమైన మార్గాల్లో మేము రక్షిస్తాము.</p>`
         }
-    }; 
-      
-       // --- Translation Data (Completed) ---
+    };
+
+     // --- Translation Data (Completed) ---
   const translations = {
     // Dashboard Section
     welcome_heading: { 
@@ -1311,7 +1322,7 @@
       ur: "مثال کے طور پر، 923XXXXXXX",
       pa: "ਉਦਾਹਰਨ, 923XXXXXXX"
     },
- // --- NEW: Break/Pause Translations ---
+      // --- NEW: Break/Pause Translations ---
       break_button: { te: "విరామం", en: "Break", hi: "विराम", ar: "استراحة", ur: "وقفہ" },
       resume_button: { te: "పునఃప్రారంభించు", en: "Resume", hi: "फिर से शुरू करें", ar: "استئناف", ur: "دوبارہ شروع کریں" },
       break_label: { te: "విరామం తీసుకోండి", en: "Take a Break", hi: "ब्रेक लें", ar: "خذ استراحة", ur: "وقفہ لیں" },
@@ -1322,7 +1333,6 @@
       // --- NEW: Lock Status Translations ---
       lock_status_on: { te: "ON", en: "ON", hi: "ON", ar: "ON", ur: "ON" },
       lock_status_off: { te: "OFF", en: "OFF", hi: "OFF", ar: "OFF", ur: "OFF" }
-    
     };
     // --- Helper Functions ---
     function T(key) {
@@ -1561,9 +1571,8 @@
         document.getElementById('startTimeMinute').value = String(minutes).padStart(2, '0');
         document.getElementById('startTimeAmPm').value = ampm;
       }
-      // MODIFIED: Do not update End Time if paused
-      // REMOVED: isEndTimeLocked check
-      if (!isPaused) {
+      // MODIFIED: Do not update End Time if locked OR if paused
+      if (!isEndTimeLocked && !isPaused) {
         document.getElementById('endTimeHour').value = hours12;
         document.getElementById('endTimeMinute').value = String(minutes).padStart(2, '0');
         document.getElementById('endTimeAmPm').value = ampm;
@@ -1574,8 +1583,7 @@
       const button = document.getElementById(`${type}TimeLockBtn`);
       const openIcon = button.querySelector('.open-lock');
       const closedIcon = button.querySelector('.closed-lock');
-      // MODIFIED: Only checks start time lock
-      const isLocked = isStartTimeLocked;
+      const isLocked = (type === 'start') ? isStartTimeLocked : isEndTimeLocked;
 
       // NEW: Get status text element (only for start button)
       const statusText = (type === 'start') ? document.getElementById('startTimeLockStatus') : null;
@@ -1611,16 +1619,20 @@
         // 1. Toggle the local state flag
         if (type === 'start') {
             isStartTimeLocked = !isStartTimeLocked;
-        // REMOVED: 'end' type logic
-        } else {
-            return; // Do nothing if type is not 'start'
+        } else if (type === 'end') {
+            isEndTimeLocked = !isEndTimeLocked;
+            
+            // NEW: If user locks end time while paused, resume
+            if (isEndTimeLocked && isPaused) {
+              toggleBreak();
+            }
         }
         
         // 2. Update UI and persist state to Firestore
         if (window.currentUserId) {
             const userProfileRef = window.doc(window.db, 'users', window.currentUserId);
             try {
-                // MODIFIED: Construct lock state object only with start time
+                // Construct the complete lock state object from the current UI/state
                 const lockStateData = {
                     isStartTimeLocked: isStartTimeLocked,
                     lockedStartTime: isStartTimeLocked ? {
@@ -1628,7 +1640,12 @@
                         minute: document.getElementById('startTimeMinute').value,
                         ampm: document.getElementById('startTimeAmPm').value,
                     } : null,
-                    // REMOVED: End time lock properties
+                    isEndTimeLocked: isEndTimeLocked,
+                    lockedEndTime: isEndTimeLocked ? {
+                        hour: document.getElementById('endTimeHour').value,
+                        minute: document.getElementById('endTimeMinute').value,
+                        ampm: document.getElementById('endTimeAmPm').value,
+                    } : null,
                 };
                 await window.updateDoc(userProfileRef, { lockState: lockStateData });
             } catch (error) {
@@ -1636,6 +1653,7 @@
                 showMessage("Could not save lock state.", "error");
                 // Revert state on failure
                 if (type === 'start') isStartTimeLocked = !isStartTimeLocked;
+                if (type === 'end') isEndTimeLocked = !isEndTimeLocked;
             }
         }
 
@@ -1643,8 +1661,7 @@
         updateLockUI(type);
         
         // 4. If a lock was just released, update its time to live
-        // MODIFIED: Only checks for 'start' type
-        if (type === 'start' && !isStartTimeLocked) {
+        if ((type === 'start' && !isStartTimeLocked) || (type === 'end' && !isEndTimeLocked)) {
             updateLiveTime();
         }
     }
@@ -1652,7 +1669,12 @@
 
     // --- NEW: Break/Pause Function ---
     function toggleBreak() {
-        // REMOVED: End Time Lock check
+        // Cannot pause if the End Time is manually locked
+        if (!isPaused && isEndTimeLocked) {
+            showMessage("Cannot pause when End Time is locked. Unlock End Time to use the break feature.", "error");
+            return;
+        }
+
         isPaused = !isPaused;
         const breakButton = document.getElementById('breakButton');
         const breakButtonText = document.getElementById('breakButtonText');
@@ -1744,8 +1766,7 @@
             const item = queue.shift();
             const element = document.getElementById(item.elementId);
             const utterance = new SpeechSynthesisUtterance(item.text);
-        const langMap = { te: 'te-IN', en: 'en-US', hi: 'hi-IN', ar: 'ar-SA', ur: 'ur-PK', pa: 'pa-IN' };
-       
+            const langMap = { te: 'te-IN', en: 'en-US', hi: 'hi-IN', ar: 'ar-SA', ur: 'ur-PK', pa: 'pa-IN' };
             utterance.lang = langMap[currentLang] || 'en-US';
             utterance.rate = 0.9;
 
@@ -1777,8 +1798,7 @@
       speechWasCancelled = false;
 
       const utterance = new SpeechSynthesisUtterance(text);
-        const langMap = { te: 'te-IN', en: 'en-US', hi: 'hi-IN', ar: 'ar-SA', ur: 'ur-PK', pa: 'pa-IN' };
-     
+      const langMap = { te: 'te-IN', en: 'en-US', hi: 'hi-IN', ar: 'ar-SA', ur: 'ur-PK', pa: 'pa-IN' };
       utterance.lang = langMap[langCode] || 'en-US';
       utterance.rate = 0.9;
       speechSynthesis.speak(utterance);
@@ -1910,7 +1930,6 @@
 
         const recognition = new SpeechRecognition();
         const langMap = { te: 'te-IN', en: 'en-US', hi: 'hi-IN', ar: 'ar-SA', ur: 'ur-PK', pa: 'pa-IN' };
-        
         recognition.lang = langMap[currentLang] || 'en-US';
         recognition.interimResults = false;
         recognition.maxAlternatives = 1;
@@ -2051,7 +2070,7 @@
 
         // Reset time locks and timers
         if (isStartTimeLocked) toggleLock('start');
-        // REMOVED: End time lock toggle
+        if (isEndTimeLocked) toggleLock('end');
         
         // Reset calculation displays
         document.getElementById('hourlyTotalTime').textContent = '0:00 hrs';
@@ -2909,7 +2928,16 @@
 
             updateLockUI('start');
         }
-        // REMOVED: End time lock logic
+        if (lockState && lockState.isEndTimeLocked && lockState.lockedEndTime) {
+            isEndTimeLocked = true;
+
+            const { hour, minute, ampm } = lockState.lockedEndTime;
+            document.getElementById('endTimeHour').value = hour;
+            document.getElementById('endTimeMinute').value = minute;
+            document.getElementById('endTimeAmPm').value = ampm;
+
+            updateLockUI('end');
+        }
     }
 
     function finishAppInitialization(userLang, userData) {
@@ -3005,7 +3033,7 @@
     
     // IMPORTANT: Replace with your actual Firebase config object
     const firebaseConfig = {
-                      apiKey: "AIzaSyA-7w4YspeNiyHgnMx8R5NZSCPaGYmMNak",
+                     apiKey: "AIzaSyA-7w4YspeNiyHgnMx8R5NZSCPaGYmMNak",
   authDomain: "test-test-39764.firebaseapp.com",
   projectId: "test-test-39764",
   storageBucket: "test-test-39764.firebasestorage.app",
@@ -3065,7 +3093,6 @@
         // Clear lock state on logout for a clean start next time
         if (window.currentUserId) {
             const userProfileRef = window.doc(window.db, 'users', window.currentUserId);
-            // MODIFIED: Only clears start time lock
             window.updateDoc(userProfileRef, { 
                 lockState: { isStartTimeLocked: false, lockedStartTime: null } 
             }).catch(err => console.error("Could not clear lock state on logout", err));
@@ -3111,7 +3138,7 @@
             
             // Reset local state on logout
             isStartTimeLocked = false;
-            // REMOVED: isEndTimeLocked
+            isEndTimeLocked = false;
             // NEW: Reset pause state on logout
             isPaused = false;
             pauseStartTime = null;
@@ -3128,3 +3155,5 @@
   </script>
 </body>
 </html>
+
+
